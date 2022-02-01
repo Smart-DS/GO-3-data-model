@@ -35,7 +35,14 @@ class FileParser(abc.ABC):
 
 
 def create_objects(format_docs_dir):
-    input_objects = {}; output_objects = {};
+    input_objects = {
+        "static": {},
+        "timeseries": {}
+    }
+    output_objects = {
+        "static": {},
+        "timeseries": {}
+    }
     with open(format_docs_dir / "main.tex", encoding="utf8") as f:
         main_file = f.read()
 
@@ -50,24 +57,43 @@ def create_objects(format_docs_dir):
 
     for candidate, text in candidates.items():
         candidate = candidate.replace(" ","")
-        tmp = _split(text, r"^\\paragraph\{(.+)\}\s*$")
+        tmp = _split(text, r"^\\paragraph\{(.+)\}.*$")
         if "Input Attributes" in tmp:
+            logger.info(f"Processing {candidate} input attributes")
             # process input attribute table
-            obj = get_object_from_table(candidate, tmp["Input Attributes"])
-            if obj is not None:
-                input_objects[candidate] = obj
+            static_obj, timeseries_obj = get_objects_from_table(candidate, tmp["Input Attributes"])
+            if (static_obj is None) and (timeseries_obj is None):
+                logger.info(f"Unable to extract input attributes for {candidate}")
+            else:
+                if static_obj:
+                    input_objects["static"][candidate] = static_obj
+                if timeseries_obj:
+                    input_objects["timeseries"][candidate] = timeseries_obj
+        else:
+            logger.info(f"No input attributes for {candidate}")
         
         if "Output Attributes" in tmp:
+            logger.info(f"Processing {candidate} output attributes")
             # process output attribute table
-            obj = get_object_from_table(candidate, tmp["Output Attributes"])
-            if obj is not None:
-                output_objects[candidate] = obj
+            static_obj, timeseries_obj = get_objects_from_table(candidate, tmp["Output Attributes"])
+            if (static_obj is None) and (timeseries_obj is None):
+                logger.info(f"Unable to extract output attributes for {candidate}")
+            else:
+                if static_obj:
+                    output_objects["static"][candidate] = static_obj
+                if timeseries_obj:
+                    output_objects["timeseries"][candidate] = timeseries_obj
+        else:
+            logger.info(f"No output attributes for {candidate}")
 
     return input_objects, output_objects
 
 
-def get_object_from_table(object_name, astr):
-    result = f"class {object_name}(BidDSJsonBaseModel):\n"
+def get_objects_from_table(object_name, astr):
+    static_result = f"class {object_name}(BidDSJsonBaseModel):\n"
+    timeseries_result = f"class {object_name}(BidDSJsonBaseModel):\n"
+    has_static = False; has_timeseries = False
+
     table_started = False; expect_meta = True
     for ln in astr.split("\n"):
         if not table_started:
@@ -82,49 +108,103 @@ def get_object_from_table(object_name, astr):
             expect_meta = True
             continue
         if ln.strip().startswith("{\\tt"):
-            result += parse_field(ln)
+            sec, field = parse_field(ln)
+            if field:
+                if sec == "S":
+                    static_result += field
+                    has_static = True
+                elif sec == "T":
+                    timeseries_result += field
+                    has_timeseries = True
+                else:
+                    assert sec == "B", repr(sec)
+                    static_result += field
+                    timeseries_result += field
         elif expect_meta:
             meta = ln.split("&")[0].strip()
-            result += f"\n    # {meta}\n"
+            static_result += f"\n    # {meta}\n"
+            timeseries_result += f"\n    # {meta}\n"
             continue
 
-    return result if table_started else None
+    if not has_static:
+        static_result = None
+    if not has_timeseries:
+        timeseries_result = None
+
+    return (static_result, timeseries_result) if table_started else (None, None)
 
 
 types_map = {
+    "uid": "str",
+    "uids": "List[str]",
+    "String": "str",
     "Int": "int",
     "Float": "float",
-    "\\$/p.u.": "float"
+    "\\$/p.u.": "float",
+    "Float, p.u": "float",
+    "Float, p.u.": "float",
+    "Float, p.u./hr": "float",
+    "Float, \\$/p.u.": "float",
+    "Float, radian": "float",
+    "Float, hr": "float",
+    "p.u.": "float",
+    "bool: true/false": "bool"
 }
 
 def parse_field(ln):
     name, desc, req, sec, sym = ln.split("&")
+    sec = sec.strip()
     
     # get name
     m = re.match("\{\\\\tt\S* (.+)\}", name.strip())
     if not m:
         logger.warning(f"Unable to extract name from {name!r}")
-        return ""
+        return sec, ""
     name = m.group(1).replace("\\_", "_")
 
     # get description and type
     m = re.match("(.*)\((.*)\)", desc.strip())
     if not m:
         logger.warning(f"Unable to partition {desc!r} into description and type")
-        return ""
+        return sec, ""
     desc = m.group(1); type = m.group(2)
 
-    if not type in types_map:
-        logger.warning(f"Unable to extract type from {desc!r}")
-        return ""
-    type = types_map[type]
+    choices = None
+    if type in types_map:
+        type = types_map[type]
+    else:
+        if type.startswith("String:"):
+            # choices list
+            choices = type.split(":")[1].strip().split(",")
+            choices = [choice.strip().replace("\\_","_") for choice in choices]
+            # TODO: Consider turning choices into an Enum and then setting type 
+            # to be that Enum
+            type = "String"
+        elif type.startswith("Binary:"):
+            choices = [0,1]
+            type = "int"
+        else:
+            logger.warning(f"Unable to extract type from {type!r}")
+            return sec, ""
+    
+    if not req:
+        type = f"Optional[{type}]"
+
+    sep = "," if choices else ""
     
     result = f"""
     {name}: {type} = Field(
         title = "{name}",
-        description = "{desc}"
+        description = "{desc}"{sep}"""
+   
+    if choices:
+        choices_str = str([choice for choice in choices]).replace("'", '"')
+        result+= f"""
+        options = {choices_str}"""
+    
+    result += """
     )\n"""
-    return result
+    return sec, result
 
     
 def _split(astr, fmt):
@@ -176,20 +256,28 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    logging.basicConfig()
+    logging.basicConfig(level=logging.INFO)
 
     format_docs_dir = input_path / args.format_version
     if not format_docs_dir.exists():
         raise ValueError(f"{format_docs_dir} does not exist")
 
     input_objects, output_objects = create_objects(format_docs_dir)
-    # TEMPORARY FOR INPECTION
+    # TEMPORARY FOR INSPECTION
     with open(datamodel_path / "all_objects.py", "w") as f:
         f.write("# Input Objects ----------------------------------------------------------------\n\n")
-        for name, obj in input_objects.items():
+        f.write("# ------ Static ----------------------------------------------------------------\n\n")
+        for name, obj in input_objects["static"].items():
+            f.write(obj + "\n\n")
+        f.write("# -- Timeseries ----------------------------------------------------------------\n\n")
+        for name, obj in input_objects["timeseries"].items():
             f.write(obj + "\n\n")
         f.write("# Output Objects ----------------------------------------------------------------\n\n")
-        for name, obj in input_objects.items():
+        f.write("# ------ Static ----------------------------------------------------------------\n\n")
+        for name, obj in input_objects["static"].items():
+            f.write(obj + "\n\n")
+        f.write("# -- Timeseries ----------------------------------------------------------------\n\n")
+        for name, obj in input_objects["timeseries"].items():
             f.write(obj + "\n\n")
 
     create_models(format_docs_dir, input_objects, output_objects)
