@@ -28,7 +28,7 @@ class General(BidDSJsonBaseModel):
         description = "Bus violation costs for reactive power violation  "
     )
 
-    v_bus_vio_cost: float = Field(
+    v_bus_vio_cost: Optional[float] = Field(
         title = "v_bus_vio_cost",
         description = "Bus violation costs for voltage violation "
     )
@@ -40,7 +40,7 @@ class General(BidDSJsonBaseModel):
 
     # Optional attributes
 
-    base_norm_mva: float = Field(
+    base_norm_mva: Optional[float] = Field(
         title = "base_norm_mva",
         description = "Base MVA normalization constant "
     )
@@ -81,38 +81,38 @@ class Bus(BidDSJsonBaseModel):
 
     # Location/Operation information
 
-    base_nom_volt: float = Field(
+    base_nom_volt: Optional[float] = Field(
         title = "base_nom_volt",
         description = "Bus nominal voltage "
     )
 
-    type: String = Field(
+    type: Optional[String] = Field(
         title = "type",
         description = "Bus type ",
         options = ["PQ", "PV", "Slack", "Not_used"]
     )
 
-    longitude: float = Field(
+    longitude: Optional[float] = Field(
         title = "longitude",
         description = "Bus location - longitude "
     )
 
-    latitude: float = Field(
+    latitude: Optional[float] = Field(
         title = "latitude",
         description = "Bus location - latitude "
     )
 
-    city: str = Field(
+    city: Optional[str] = Field(
         title = "city",
         description = "Bus city location "
     )
 
-    state: str = Field(
+    state: Optional[str] = Field(
         title = "state",
         description = "Bus state location "
     )
 
-    country: str = Field(
+    country: Optional[str] = Field(
         title = "country",
         description = "Bus country location "
     )
@@ -169,7 +169,7 @@ class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJso
         description = "Unique identifier for connecting bus "
     )
 
-    vm_setpoint: float = Field(
+    vm_setpoint: Optional[float] = Field(
         title = "vm_setpoint",
         description = "Voltage magnitude setpoint "
     )
@@ -259,7 +259,7 @@ class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJso
         description = "Configuration unique identifier "
     )
 
-    description: str = Field(
+    description: Optional[str] = Field(
         title = "description",
         description = "Configuration description "
     )
@@ -397,7 +397,7 @@ class ACTransmissionLine(BidDSJsonBaseModel):
         description = "MVA limit, nominal rating "
     )
 
-    mva_ub_sht: float = Field(
+    mva_ub_sht: Optional[float] = Field(
         title = "mva_ub_sht",
         description = "MVA limit, short term rating "
     )
@@ -509,7 +509,7 @@ class TwoWindingTransformer(BidDSJsonBaseModel):
         description = "MVA limit, nominal rating "
     )
 
-    mva_ub_sht: float = Field(
+    mva_ub_sht: Optional[float] = Field(
         title = "mva_ub_sht",
         description = "MVA limit, short term rating "
     )
@@ -821,7 +821,7 @@ class General(BidDSJsonBaseModel):
         description = "Bus violation costs for reactive power violation  "
     )
 
-    v_bus_vio_cost: float = Field(
+    v_bus_vio_cost: Optional[float] = Field(
         title = "v_bus_vio_cost",
         description = "Bus violation costs for voltage violation "
     )
@@ -833,7 +833,7 @@ class General(BidDSJsonBaseModel):
 
     # Optional attributes
 
-    base_norm_mva: float = Field(
+    base_norm_mva: Optional[float] = Field(
         title = "base_norm_mva",
         description = "Base MVA normalization constant "
     )
@@ -874,38 +874,38 @@ class Bus(BidDSJsonBaseModel):
 
     # Location/Operation information
 
-    base_nom_volt: float = Field(
+    base_nom_volt: Optional[float] = Field(
         title = "base_nom_volt",
         description = "Bus nominal voltage "
     )
 
-    type: String = Field(
+    type: Optional[String] = Field(
         title = "type",
         description = "Bus type ",
         options = ["PQ", "PV", "Slack", "Not_used"]
     )
 
-    longitude: float = Field(
+    longitude: Optional[float] = Field(
         title = "longitude",
         description = "Bus location - longitude "
     )
 
-    latitude: float = Field(
+    latitude: Optional[float] = Field(
         title = "latitude",
         description = "Bus location - latitude "
     )
 
-    city: str = Field(
+    city: Optional[str] = Field(
         title = "city",
         description = "Bus city location "
     )
 
-    state: str = Field(
+    state: Optional[str] = Field(
         title = "state",
         description = "Bus state location "
     )
 
-    country: str = Field(
+    country: Optional[str] = Field(
         title = "country",
         description = "Bus country location "
     )
@@ -962,7 +962,7 @@ class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJso
         description = "Unique identifier for connecting bus "
     )
 
-    vm_setpoint: float = Field(
+    vm_setpoint: Optional[float] = Field(
         title = "vm_setpoint",
         description = "Voltage magnitude setpoint "
     )
@@ -1052,7 +1052,7 @@ class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJso
         description = "Configuration unique identifier "
     )
 
-    description: str = Field(
+    description: Optional[str] = Field(
         title = "description",
         description = "Configuration description "
     )
@@ -1190,7 +1190,7 @@ class ACTransmissionLine(BidDSJsonBaseModel):
         description = "MVA limit, nominal rating "
     )
 
-    mva_ub_sht: float = Field(
+    mva_ub_sht: Optional[float] = Field(
         title = "mva_ub_sht",
         description = "MVA limit, short term rating "
     )
@@ -1302,7 +1302,7 @@ class TwoWindingTransformer(BidDSJsonBaseModel):
         description = "MVA limit, nominal rating "
     )
 
-    mva_ub_sht: float = Field(
+    mva_ub_sht: Optional[float] = Field(
         title = "mva_ub_sht",
         description = "MVA limit, short term rating "
     )

@@ -187,7 +187,7 @@ def parse_field(ln):
             logger.warning(f"Unable to extract type from {type!r}")
             return sec, ""
     
-    if not req:
+    if req.lower().strip() == "n":
         type = f"Optional[{type}]"
 
     sep = "," if choices else ""
