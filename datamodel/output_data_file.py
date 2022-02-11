@@ -1,4 +1,3 @@
-
 import logging
 from datetime import datetime, timedelta
 import json
@@ -11,4 +10,3 @@ from typing import String, Dict, List, Optional, Union
 
 from .base import BidDSJsonBaseModel
 
-        

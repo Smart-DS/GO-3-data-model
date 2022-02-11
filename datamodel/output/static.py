@@ -8,5 +8,5 @@ from pydantic import BaseModel, Field, ValidationError
 from pydantic.json import isoformat, timedelta_isoformat
 from typing import String, Dict, List, Optional, Union
 
-from .base import BidDSJsonBaseModel
+from datamodel.base import BidDSJsonBaseModel
 

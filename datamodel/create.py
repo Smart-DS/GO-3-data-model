@@ -1,5 +1,6 @@
 import abc
 import argparse
+import enum
 import logging
 from pathlib import Path
 import re
@@ -11,27 +12,18 @@ logger = logging.getLogger(__name__)
 
 # After objects have been created, these files say how to assemble them
 models = {
-    "Input Data File": [
+    ("input", "data"): [
         "static_json",
         "time_series",
         # ("main", "Contingencies"), # contingencies are currently in the main 
         # file and poorly defined from a parsing perspective
         "parsing_mapping"
     ],
-    "Output Data File": [
+    ("output", "data"): [
         "solution",
         "parsing_mapping"
     ]
 }
-
-
-class FileParser(abc.ABC):
-    def __init__(self, filepath):
-        self.filepath = filepath
-
-    @abc.abstractmethod
-    def append(self, datamodel):
-        pass
 
 
 def create_objects(format_docs_dir):
@@ -231,9 +223,165 @@ def _split(astr, fmt):
 
 
 def create_models(format_docs_dir, input_objects, output_objects):
-    for model_name, files in models.items():
-        datamodel = """
-import logging
+    for names, files in models.items():
+        object_refs = input_objects if names[0] == 'input' else output_objects
+        object_store = {}
+        imports = set()
+
+        for file in files:
+            object_ref = None
+            object_preamble = f"datamodel.{names[0]}"
+            if file.startswith("static"):
+                object_ref = object_refs["static"]
+                object_preamble += ".static"
+            elif file.startswith("time_series"):
+                object_ref = object_refs["timeseries"]
+                object_preamble += ".timeseries"
+            elif file.startswith("parsing_mapping"):
+                object_ref = object_store
+                object_preamble = ""
+            if object_preamble:
+                imports.add(object_preamble)
+
+            with open(format_docs_dir / f"{file}.tex", encoding="utf8") as f:
+                file_text = f.read()
+
+            subsections = _split(file_text, r"^\\subsection\{(.+)\}\s*$")
+
+            if object_preamble:
+                orig_name = list(subsections.keys())[0]
+                object_name = orig_name.title().replace(" ","")
+                logger.info(f"Creating {object_name} object")
+                obj = get_object_from_subsection(object_name, 
+                    subsections[orig_name], object_ref, object_preamble) if object_ref else None
+                if obj is None:
+                    logger.warning(f"Unable to parse {object_name} from first "
+                        f"subsection of {file}.tex")
+                    continue
+                object_store[object_name] = obj
+            else:
+                orig_name = f"{names[0].title()} Data File"
+                if not orig_name in subsections:
+                    logger.warning(f"Unable to find subsection {orig_name}")
+                    continue
+                object_name = orig_name.title().replace(" ","")
+                logger.info(f"Creating {object_name} object")
+                obj = get_object_from_subsection(object_name, 
+                    subsections[orig_name], object_ref, object_preamble) if object_ref else None
+                if obj is None:
+                    logger.warning(f"Unable to parse {object_name} from first "
+                        f"subsection of {file}.tex")
+                    continue
+                object_store[object_name] = obj
+
+        write_file(datamodel_path, names, object_store, imports=imports)
+
+
+def get_object_from_subsection(object_name, astr, object_ref, object_preamble):
+    result = f"class {object_name}(BidDSJsonBaseModel):\n"
+
+    obj_ref_map = {key.lower(): key for key in object_ref.keys()}
+
+    def get_dict_str(adict):
+        items = [f"{k}: {v}" for k, v in adict.items()]
+        result = "{\n  "
+        result += "\n  ".join(items)
+        result += "\n}"
+        return result
+
+    # first try to parse form itemized list
+    items_started = False; found_object = None; contains_objects = False
+    for ln in astr.split("\n"):
+        if not items_started:
+            if ln.startswith("\\begin{itemize}"):
+                items_started = True
+            continue
+        if ln.startswith("\\end{itemize}"):
+            break
+        if ln.strip().startswith("%"): # comment character
+            continue
+        if ln.strip().startswith("\\item"):
+            found_object = None
+            m = re.match(r".+\\texttt\{(.+)\}.+", ln.strip())
+            if m:
+                contains_objects = True
+                name = m.group(1).replace("\"","").replace("\\_","_").replace(":","_")
+                key = name.replace("_","")
+                if key in obj_ref_map:
+                    found_object = (name, obj_ref_map[key])
+                    continue
+            logger.warning(f"Unable to locate object in {ln.strip()}.")
+            if m:
+                logger.warning(f"Was able to parse object name {name} "
+                    f"({m.group(1)}), but key {key} not in map:\n"
+                    f"{get_dict_str(obj_ref_map)}")
+        if found_object:
+            name = found_object[0]
+            type = f"{object_preamble}.{found_object[1]}"
+            if "list" in ln.strip():
+                name += "es" if name.endswith("s") else "s"
+                type = f"List[{type}]"
+            result += f"""
+    {name}: {type} = Field(
+        title = "{name}"
+    )\n"""
+            found_object = None
+    
+    if items_started and contains_objects:
+        return result
+
+    # now try to parse from verbatim section
+    verbatim_started = False; found_object = None; contains_objects = False
+    for ln in astr.split("\n"):
+        if not verbatim_started:
+            if ln.startswith("\\begin{verbatim}"):
+                verbatim_started = True
+            continue
+        if ln.startswith("\\end{verbatim}"):
+            break
+        m = re.match(r"(.+): [\{\[].*", ln.strip())
+        if m:
+            contains_objects = True
+            name = m.group(1).replace("\"","").replace("”","")
+            key = name.replace("_","")
+            if key in obj_ref_map:
+                found_object = (name, obj_ref_map[key])
+            else:
+                logger.warning(f"Was able to parse object name {name} "
+                    f"({m.group(1)}), but key {key} not in map:\n"
+                    f"{get_dict_str(obj_ref_map)}")
+        if found_object:
+            name = found_object[0]
+            type = found_object[1]
+            if object_preamble:
+                type = f"{object_preamble}.{type}"
+            result += f"""
+    {name}: {type} = Field(
+        title = "{name}"
+    )\n"""
+            found_object = None
+
+    if contains_objects:
+        return result
+
+    return None
+
+
+def write_file(datamodel_path, names, objects, imports = []):
+    n = len(names)
+    p = datamodel_path
+    for i, name in enumerate(names):
+        if i == n-1:
+            p = p / f"{name}.py"
+            break
+        p = p / name
+        if not p.exists():
+            p.mkdir()
+            (p / "__init__.py").touch()
+    
+    with open(p, "w") as f:
+        f.write(
+"""import logging
 from datetime import datetime, timedelta
 import json
 import os
@@ -243,16 +391,14 @@ from pydantic import BaseModel, Field, ValidationError
 from pydantic.json import isoformat, timedelta_isoformat
 from typing import String, Dict, List, Optional, Union
 
-from .base import BidDSJsonBaseModel\n
-        """
+from datamodel.base import BidDSJsonBaseModel\n""")
+        for to_import in imports:
+            f.write(f"import {to_import}\n")
 
-        for file in files:
-            pass
-            # file_parser = FileParser(format_docs_dir / f"{file}.tex")
-            # file_parser.append(datamodel)
-
-        with open(datamodel_path / (model_name.replace(" ","_").lower() + ".py"), "w") as f:
-            f.write(datamodel)
+        f.write("\n")
+        for name, obj in objects.items():
+            f.write(obj + "\n\n")
+    return
 
 
 if __name__ == "__main__":
@@ -268,33 +414,13 @@ if __name__ == "__main__":
         raise ValueError(f"{format_docs_dir} does not exist")
 
     input_objects, output_objects = create_objects(format_docs_dir)
-    # TEMPORARY FOR INSPECTION
-    with open(datamodel_path / "all_objects.py", "w") as f:
-        f.write(
-"""import logging
-from datetime import datetime, timedelta
-import json
-import os
-from pathlib import Path
-
-from pydantic import BaseModel, Field, ValidationError
-from pydantic.json import isoformat, timedelta_isoformat
-from typing import String, Dict, List, Optional, Union
-
-from .base import BidDSJsonBaseModel\n\n""")
-        f.write("# Input Objects ----------------------------------------------------------------\n\n")
-        f.write("# ------ Static ----------------------------------------------------------------\n\n")
-        for name, obj in input_objects["static"].items():
-            f.write(obj + "\n\n")
-        f.write("# -- Timeseries ----------------------------------------------------------------\n\n")
-        for name, obj in input_objects["timeseries"].items():
-            f.write(obj + "\n\n")
-        f.write("# Output Objects ----------------------------------------------------------------\n\n")
-        f.write("# ------ Static ----------------------------------------------------------------\n\n")
-        for name, obj in input_objects["static"].items():
-            f.write(obj + "\n\n")
-        f.write("# -- Timeseries ----------------------------------------------------------------\n\n")
-        for name, obj in input_objects["timeseries"].items():
-            f.write(obj + "\n\n")
+    object_files = {
+        ("input", "static"): input_objects["static"],
+        ("input", "timeseries"): input_objects["timeseries"],
+        ("output", "static"): output_objects["static"],
+        ("output", "timeseries"): output_objects["timeseries"],
+    }
+    for dirs, objs in object_files.items():
+        write_file(datamodel_path, dirs, objs)
 
     create_models(format_docs_dir, input_objects, output_objects)
