@@ -6,7 +6,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field, ValidationError
 from pydantic.json import isoformat, timedelta_isoformat
-from typing import String, Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 from datamodel.base import BidDSJsonBaseModel
 import datamodel.input.timeseries
@@ -44,6 +44,9 @@ class TimeSeriesInput(BidDSJsonBaseModel):
 
 class InputDataFile(BidDSJsonBaseModel):
 
+    class Config:
+        title = "InputDataFile"
+        
     network: Network = Field(
         title = "network"
     )

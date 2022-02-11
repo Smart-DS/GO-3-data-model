@@ -1,0 +1,502 @@
+{
+    "title": "InputDataFile",
+    "description": "Base data model for all dsgrid data models",
+    "type": "object",
+    "properties": {
+        "network": {
+            "title": "network",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Network"
+                }
+            ]
+        },
+        "time_series_input": {
+            "title": "time_series_input",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/TimeSeriesInput"
+                }
+            ]
+        }
+    },
+    "required": [
+        "network",
+        "time_series_input"
+    ],
+    "additionalProperties": false,
+    "definitions": {
+        "datamodel__input__static__General": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "base_norm_mva": {
+                    "title": "base_norm_mva",
+                    "description": "Base MVA normalization constant ",
+                    "type": "number"
+                }
+            },
+            "additionalProperties": false
+        },
+        "Bus": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "Bus unique identifier ",
+                    "type": "string"
+                },
+                "vm_ub": {
+                    "title": "vm_ub",
+                    "description": "Voltage magnitude upper bound ",
+                    "type": "number"
+                },
+                "vm_lb": {
+                    "title": "vm_lb",
+                    "description": "Voltage magnitude lower bound ",
+                    "type": "number"
+                },
+                "con_loss_factor": {
+                    "title": "con_loss_factor",
+                    "description": "Contingency participation loss factor ",
+                    "type": "number"
+                },
+                "active_reserve_uids": {
+                    "title": "active_reserve_uids",
+                    "description": "List of active reserve zones ",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "reactive_reserve_uids": {
+                    "title": "reactive_reserve_uids",
+                    "description": "List of reactive reserve zones ",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "base_nom_volt": {
+                    "title": "base_nom_volt",
+                    "description": "Bus nominal voltage ",
+                    "type": "number"
+                },
+                "type": {
+                    "title": "type",
+                    "description": "Bus type ",
+                    "options": [
+                        "PQ"
+                    ],
+                    "type": "string"
+                },
+                "area": {
+                    "title": "area",
+                    "description": "Bus control area ",
+                    "type": "string"
+                },
+                "zone": {
+                    "title": "zone",
+                    "description": "Bus control zone ",
+                    "type": "string"
+                },
+                "longitude": {
+                    "title": "longitude",
+                    "description": "Bus location - longitude ",
+                    "type": "number"
+                },
+                "latitude": {
+                    "title": "latitude",
+                    "description": "Bus location - latitude ",
+                    "type": "number"
+                },
+                "city": {
+                    "title": "city",
+                    "description": "Bus city location ",
+                    "type": "string"
+                },
+                "county": {
+                    "title": "county",
+                    "description": "Bus county location ",
+                    "type": "string"
+                },
+                "state": {
+                    "title": "state",
+                    "description": "Bus state location ",
+                    "type": "string"
+                },
+                "country": {
+                    "title": "country",
+                    "description": "Bus country location ",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "uid",
+                "vm_ub",
+                "vm_lb",
+                "con_loss_factor",
+                "active_reserve_uids",
+                "reactive_reserve_uids"
+            ],
+            "additionalProperties": false
+        },
+        "Shunt": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "Shunt unique identifier ",
+                    "type": "string"
+                },
+                "bus": {
+                    "title": "bus",
+                    "description": "Unique identifier for connecting bus ",
+                    "type": "string"
+                },
+                "gs": {
+                    "title": "gs",
+                    "description": "Shunt conductance for one step ",
+                    "type": "number"
+                },
+                "bs": {
+                    "title": "bs",
+                    "description": "Shunt susceptance for one step ",
+                    "type": "number"
+                },
+                "steps_ub": {
+                    "title": "steps_ub",
+                    "description": "Maximum number of steps ",
+                    "type": "integer"
+                },
+                "steps_lb": {
+                    "title": "steps_lb",
+                    "description": "Minimum number of steps ",
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "uid",
+                "bus",
+                "gs",
+                "bs",
+                "steps_ub",
+                "steps_lb"
+            ],
+            "additionalProperties": false
+        },
+        "TwoWindingTransformer": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "Transformer unique identifier ",
+                    "type": "string"
+                },
+                "fr_bus": {
+                    "title": "fr_bus",
+                    "description": "Unique identifier for connecting from/tap bus ",
+                    "type": "string"
+                },
+                "to_bus": {
+                    "title": "to_bus",
+                    "description": "Unique identifier for connecting to bus ",
+                    "type": "string"
+                },
+                "r": {
+                    "title": "r",
+                    "description": "Series resistance ",
+                    "type": "number"
+                },
+                "x": {
+                    "title": "x",
+                    "description": "Series reactance  ",
+                    "type": "number"
+                },
+                "b_lk": {
+                    "title": "b_lk",
+                    "description": "Susceptance for transformer leakage ",
+                    "type": "number"
+                },
+                "tm_ub": {
+                    "title": "tm_ub",
+                    "description": "Upper bound for off-nominal taps ratio ",
+                    "type": "number"
+                },
+                "tm_lb": {
+                    "title": "tm_lb",
+                    "description": "Lower bound for off-nominal taps ratio ",
+                    "type": "number"
+                },
+                "ta_ub": {
+                    "title": "ta_ub",
+                    "description": "Upper bound for phase shifting angle ",
+                    "type": "number"
+                },
+                "ta_lb": {
+                    "title": "ta_lb",
+                    "description": "Lower bound for phase shifting angle ",
+                    "type": "number"
+                },
+                "mva_ub_nom": {
+                    "title": "mva_ub_nom",
+                    "description": "MVA limit, nominal rating ",
+                    "type": "number"
+                },
+                "mva_ub_sht": {
+                    "title": "mva_ub_sht",
+                    "description": "MVA limit, short term rating ",
+                    "type": "number"
+                },
+                "mva_ub_em": {
+                    "title": "mva_ub_em",
+                    "description": "MVA limit, emergency rating ",
+                    "type": "number"
+                },
+                "standby_cost": {
+                    "title": "standby_cost",
+                    "description": "Transformer fixed standby cost ",
+                    "type": "number"
+                },
+                "connection_cost": {
+                    "title": "connection_cost",
+                    "description": "Transformer connection cost ",
+                    "type": "number"
+                },
+                "disconnection_cost": {
+                    "title": "disconnection_cost",
+                    "description": "Transformer disconnection cost ",
+                    "type": "number"
+                },
+                "additional_shunt": {
+                    "title": "additional_shunt",
+                    "description": "Transformer has additional shunt components ",
+                    "type": "boolean"
+                },
+                "g_fr": {
+                    "title": "g_fr",
+                    "description": "Conductance for shunt component at from bus ",
+                    "type": "number"
+                },
+                "b_fr": {
+                    "title": "b_fr",
+                    "description": "Susceptance for shunt component at from bus ",
+                    "type": "number"
+                },
+                "g_to": {
+                    "title": "g_to",
+                    "description": "Conductance for shunt component at to bus ",
+                    "type": "number"
+                },
+                "b_to": {
+                    "title": "b_to",
+                    "description": "Susceptance for shunt component at to bus ",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "uid",
+                "fr_bus",
+                "to_bus",
+                "r",
+                "x",
+                "b_lk",
+                "tm_ub",
+                "tm_lb",
+                "ta_ub",
+                "ta_lb",
+                "mva_ub_nom",
+                "mva_ub_em",
+                "standby_cost",
+                "connection_cost",
+                "disconnection_cost",
+                "additional_shunt",
+                "g_fr",
+                "b_fr",
+                "g_to",
+                "b_to"
+            ],
+            "additionalProperties": false
+        },
+        "DCLine": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "DC line unique identifier ",
+                    "type": "string"
+                },
+                "fr_bus": {
+                    "title": "fr_bus",
+                    "description": "Unique identifier for connecting from bus ",
+                    "type": "string"
+                },
+                "to_bus": {
+                    "title": "to_bus",
+                    "description": "Unique identifier for connecting to bus ",
+                    "type": "string"
+                },
+                "pdc_fr_ub": {
+                    "title": "pdc_fr_ub",
+                    "description": "Maximum active power, from bus ",
+                    "type": "number"
+                },
+                "pdc_fr_lb": {
+                    "title": "pdc_fr_lb",
+                    "description": "Minimum active power, from bus ",
+                    "type": "number"
+                },
+                "qdc_fr_ub": {
+                    "title": "qdc_fr_ub",
+                    "description": "Maximum reactive power, from bus ",
+                    "type": "number"
+                },
+                "qdc_fr_lb": {
+                    "title": "qdc_fr_lb",
+                    "description": "Minimum reactive power, from bus ",
+                    "type": "number"
+                },
+                "qdc_to_ub": {
+                    "title": "qdc_to_ub",
+                    "description": "Maximum reactive power, to bus ",
+                    "type": "number"
+                },
+                "qdc_to_lb": {
+                    "title": "qdc_to_lb",
+                    "description": "Minimum reactive power, to bus ",
+                    "type": "number"
+                },
+                "standby_cost": {
+                    "title": "standby_cost",
+                    "description": "{DC line fixed standby cost ",
+                    "type": "number"
+                },
+                "connection_cost": {
+                    "title": "connection_cost",
+                    "description": "{DC line connection cost ",
+                    "type": "number"
+                },
+                "disconnection_cost": {
+                    "title": "disconnection_cost",
+                    "description": "{DC line disconnection cost ",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "uid",
+                "fr_bus",
+                "to_bus",
+                "pdc_fr_ub",
+                "pdc_fr_lb",
+                "qdc_fr_ub",
+                "qdc_fr_lb",
+                "qdc_to_ub",
+                "qdc_to_lb",
+                "standby_cost",
+                "connection_cost",
+                "disconnection_cost"
+            ],
+            "additionalProperties": false
+        },
+        "Network": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "general": {
+                    "title": "general",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/datamodel__input__static__General"
+                        }
+                    ]
+                },
+                "buses": {
+                    "title": "buses",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Bus"
+                    }
+                },
+                "shunts": {
+                    "title": "shunts",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Shunt"
+                    }
+                },
+                "two_winding_transformers": {
+                    "title": "two_winding_transformers",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TwoWindingTransformer"
+                    }
+                },
+                "dc_lines": {
+                    "title": "dc_lines",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/DCLine"
+                    }
+                }
+            },
+            "required": [
+                "general",
+                "buses",
+                "shunts",
+                "two_winding_transformers",
+                "dc_lines"
+            ],
+            "additionalProperties": false
+        },
+        "datamodel__input__timeseries__General": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "time_periods": {
+                    "title": "time_periods",
+                    "description": "The number of time periods ",
+                    "type": "integer"
+                },
+                "interval_duration": {
+                    "title": "interval_duration",
+                    "description": "Time duration of the intervals in hours ",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "time_periods",
+                "interval_duration"
+            ],
+            "additionalProperties": false
+        },
+        "TimeSeriesInput": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "generals": {
+                    "title": "generals",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/datamodel__input__timeseries__General"
+                    }
+                }
+            },
+            "required": [
+                "generals"
+            ],
+            "additionalProperties": false
+        }
+    }
+}

@@ -176,7 +176,7 @@ def parse_field(ln):
             choices = [choice.strip().replace("\\_","_") for choice in choices]
             # TODO: Consider turning choices into an Enum and then setting type 
             # to be that Enum
-            type = "String"
+            type = "str"
         elif type.startswith("Binary:"):
             choices = [0,1]
             type = "int"
@@ -227,6 +227,7 @@ def create_models(format_docs_dir, input_objects, output_objects):
         object_refs = input_objects if names[0] == 'input' else output_objects
         object_store = {}
         imports = set()
+        schema_object = None
 
         for file in files:
             object_ref = None
@@ -266,19 +267,29 @@ def create_models(format_docs_dir, input_objects, output_objects):
                     continue
                 object_name = orig_name.title().replace(" ","")
                 logger.info(f"Creating {object_name} object")
-                obj = get_object_from_subsection(object_name, 
-                    subsections[orig_name], object_ref, object_preamble) if object_ref else None
+                obj = get_object_from_subsection(
+                    object_name, 
+                    subsections[orig_name], 
+                    object_ref, 
+                    object_preamble, 
+                    is_schema=True) if object_ref else None
                 if obj is None:
                     logger.warning(f"Unable to parse {object_name} from first "
                         f"subsection of {file}.tex")
                     continue
                 object_store[object_name] = obj
 
-        write_file(datamodel_path, names, object_store, imports=imports)
+        write_file(datamodel_path, names, object_store, imports=imports)            
 
 
-def get_object_from_subsection(object_name, astr, object_ref, object_preamble):
+def get_object_from_subsection(object_name, astr, object_ref, object_preamble, is_schema=False):
     result = f"class {object_name}(BidDSJsonBaseModel):\n"
+
+    if is_schema:
+        result += f"""
+    class Config:
+        title = "{object_name}"
+        """
 
     obj_ref_map = {key.lower(): key for key in object_ref.keys()}
 
@@ -389,7 +400,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field, ValidationError
 from pydantic.json import isoformat, timedelta_isoformat
-from typing import String, Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 from datamodel.base import BidDSJsonBaseModel\n""")
         for to_import in imports:
@@ -424,3 +435,11 @@ if __name__ == "__main__":
         write_file(datamodel_path, dirs, objs)
 
     create_models(format_docs_dir, input_objects, output_objects)
+
+    # write out schemas
+    p = datamodel_path / "schemas"
+    if not p.exists():
+        p.mkdir()
+
+    from datamodel.input.data import InputDataFile
+    InputDataFile.save_schema(p / "input_data_file_schema.json", indent=4)
