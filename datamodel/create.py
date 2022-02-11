@@ -56,7 +56,7 @@ def create_objects(format_docs_dir):
     candidates = _split(section, r"^\\subsection\{(.+)\}\s*$")
 
     for candidate, text in candidates.items():
-        candidate = candidate.replace(" ","")
+        candidate = candidate.replace(" ","").replace("-","").replace("\\&","").replace(":","_")
         tmp = _split(text, r"^\\paragraph\{(.+)\}.*$")
         if "Input Attributes" in tmp:
             logger.info(f"Processing {candidate} input attributes")
@@ -137,16 +137,15 @@ def get_objects_from_table(object_name, astr):
 types_map = {
     "uid": "str",
     "uids": "List[str]",
+    "Array of cost blocks": "List[float]",
     "String": "str",
     "Int": "int",
+    "Integer": "int",
     "Float": "float",
+    "Fraction": "float",
     "\\$/p.u.": "float",
-    "Float, p.u": "float",
-    "Float, p.u.": "float",
-    "Float, p.u./hr": "float",
-    "Float, \\$/p.u.": "float",
-    "Float, radian": "float",
-    "Float, hr": "float",
+    "\\$/pu-h": "float",
+    "\\$/pu-hr": "float",
     "p.u.": "float",
     "bool: true/false": "bool"
 }
@@ -168,6 +167,12 @@ def parse_field(ln):
         logger.warning(f"Unable to partition {desc!r} into description and type")
         return sec, ""
     desc = m.group(1); type = m.group(2)
+
+    tmp = type.split(',')
+    type = tmp[0].strip()
+    if len(tmp) > 1:
+        # TODO: Put units somewhere in the Pydantic model
+        units = ','.join(tmp[1:]).lstrip()
 
     choices = None
     if type in types_map:
@@ -236,7 +241,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field, ValidationError
 from pydantic.json import isoformat, timedelta_isoformat
-from typing import Dict, List, Optional, Union
+from typing import String, Dict, List, Optional, Union
 
 from .base import BidDSJsonBaseModel\n
         """
@@ -265,6 +270,18 @@ if __name__ == "__main__":
     input_objects, output_objects = create_objects(format_docs_dir)
     # TEMPORARY FOR INSPECTION
     with open(datamodel_path / "all_objects.py", "w") as f:
+        f.write(
+"""import logging
+from datetime import datetime, timedelta
+import json
+import os
+from pathlib import Path
+
+from pydantic import BaseModel, Field, ValidationError
+from pydantic.json import isoformat, timedelta_isoformat
+from typing import String, Dict, List, Optional, Union
+
+from .base import BidDSJsonBaseModel\n\n""")
         f.write("# Input Objects ----------------------------------------------------------------\n\n")
         f.write("# ------ Static ----------------------------------------------------------------\n\n")
         for name, obj in input_objects["static"].items():

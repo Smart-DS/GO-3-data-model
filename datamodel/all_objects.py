@@ -1,3 +1,15 @@
+import logging
+from datetime import datetime, timedelta
+import json
+import os
+from pathlib import Path
+
+from pydantic import BaseModel, Field, ValidationError
+from pydantic.json import isoformat, timedelta_isoformat
+from typing import String, Dict, List, Optional, Union
+
+from .base import BidDSJsonBaseModel
+
 # Input Objects ----------------------------------------------------------------
 
 # ------ Static ----------------------------------------------------------------
@@ -6,43 +18,36 @@ class General(BidDSJsonBaseModel):
 
     # Global time attributes
 
-    # Global violation attributes
-
-    p_vio_cost: float = Field(
-        title = "p_vio_cost",
-        description = "System violation costs for active power violation "
-    )
-
-    q_vio_cost: float = Field(
-        title = "q_vio_cost",
-        description = "System violation costs for reactive power violation "
-    )
-
-    p_bus_vio_cost: float = Field(
-        title = "p_bus_vio_cost",
-        description = "Bus violation costs for active power violation "
-    )
-
-    q_bus_vio_cost: float = Field(
-        title = "q_bus_vio_cost",
-        description = "Bus violation costs for reactive power violation  "
-    )
-
-    v_bus_vio_cost: Optional[float] = Field(
-        title = "v_bus_vio_cost",
-        description = "Bus violation costs for voltage violation "
-    )
-
-    mva_branch_vio_cost: float = Field(
-        title = "mva_branch_vio_cost",
-        description = "Branch violation costs for thermal violation "
-    )
-
-    # Optional attributes
+    # Normalization attributes
 
     base_norm_mva: Optional[float] = Field(
         title = "base_norm_mva",
         description = "Base MVA normalization constant "
+    )
+
+
+class ViolationCostsParameters(BidDSJsonBaseModel):
+
+    # Global violation attributes
+
+    p_bus_vio_cost: float = Field(
+        title = "p_bus_vio_cost",
+        description = "Bus marginal costs for active power violation "
+    )
+
+    q_bus_vio_cost: float = Field(
+        title = "q_bus_vio_cost",
+        description = "Bus marginal costs for reactive power violation  "
+    )
+
+    v_bus_vio_cost: float = Field(
+        title = "v_bus_vio_cost",
+        description = "Bus marginal costs for voltage violation "
+    )
+
+    mva_branch_vio_cost: float = Field(
+        title = "mva_branch_vio_cost",
+        description = "Branch marginal costs for thermal violation "
     )
 
 
@@ -65,21 +70,26 @@ class Bus(BidDSJsonBaseModel):
         description = "Voltage magnitude lower bound "
     )
 
-    # {\color{red} {\tt con\_loss\_factor}}
-
-    area: str = Field(
-        title = "area",
-        description = "Bus control area "
+    con_loss_factor: float = Field(
+        title = "con_loss_factor",
+        description = "Contingency participation loss factor "
     )
 
-    zone: str = Field(
-        title = "zone",
-        description = "Bus control zone "
+    active_reserve_uids: List[str] = Field(
+        title = "active_reserve_uids",
+        description = "List of active reserve zones "
     )
 
     # 
 
-    # Location/Operation information
+    reactive_reserve_uids: List[str] = Field(
+        title = "reactive_reserve_uids",
+        description = "List of reactive reserve zones "
+    )
+
+    # 
+
+    # Operations information
 
     base_nom_volt: Optional[float] = Field(
         title = "base_nom_volt",
@@ -89,7 +99,19 @@ class Bus(BidDSJsonBaseModel):
     type: Optional[String] = Field(
         title = "type",
         description = "Bus type ",
-        options = ["PQ", "PV", "Slack", "Not_used"]
+        options = ["PQ"]
+    )
+
+    # Location information
+
+    area: Optional[str] = Field(
+        title = "area",
+        description = "Bus control area "
+    )
+
+    zone: Optional[str] = Field(
+        title = "zone",
+        description = "Bus control zone "
     )
 
     longitude: Optional[float] = Field(
@@ -107,6 +129,11 @@ class Bus(BidDSJsonBaseModel):
         description = "Bus city location "
     )
 
+    county: Optional[str] = Field(
+        title = "county",
+        description = "Bus county location "
+    )
+
     state: Optional[str] = Field(
         title = "state",
         description = "Bus state location "
@@ -116,8 +143,6 @@ class Bus(BidDSJsonBaseModel):
         title = "country",
         description = "Bus country location "
     )
-
-    # 
 
 
 class Shunt(BidDSJsonBaseModel):
@@ -136,12 +161,12 @@ class Shunt(BidDSJsonBaseModel):
 
     gs: float = Field(
         title = "gs",
-        description = "Shunt conductance "
+        description = "Shunt conductance for one step "
     )
 
     bs: float = Field(
         title = "bs",
-        description = "Shunt susceptance "
+        description = "Shunt susceptance for one step "
     )
 
     steps_ub: int = Field(
@@ -155,13 +180,13 @@ class Shunt(BidDSJsonBaseModel):
     )
 
 
-class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJsonBaseModel):
+class ProducingDevices_SingleModeGeneratingUnits(BidDSJsonBaseModel):
 
     # Input attributes
 
     uid: str = Field(
         title = "uid",
-        description = "Dispatchable device unique identifier "
+        description = "Producing device unique identifier "
     )
 
     bus: str = Field(
@@ -176,13 +201,101 @@ class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJso
 
     startup_cost: float = Field(
         title = "startup_cost",
-        description = "Dispatchable device startup cost "
+        description = "Producing device startup cost "
     )
 
     shutdown_cost: float = Field(
         title = "shutdown_cost",
-        description = "Dispatchable device shutdown cost "
+        description = "Producing device shutdown cost "
     )
+
+    startup_num_ub: int = Field(
+        title = "startup_num_ub",
+        description = "Maximum startups "
+    )
+
+    # 
+
+    # 
+
+    # 
+
+    on_cost: float = Field(
+        title = "on_cost",
+        description = "Producing device fixed operating cost "
+    )
+
+    in_service_time_lb: float = Field(
+        title = "in_service_time_lb",
+        description = "Minimum uptime (hr) to operate/in service "
+    )
+
+    down_time_lb: float = Field(
+        title = "down_time_lb",
+        description = "Minimum (hr) downtime "
+    )
+
+    pg_ramp_ub: float = Field(
+        title = "pg_ramp_ub",
+        description = "Maximum ramp up on operating cond."
+    )
+
+    pg_ramp_lb: float = Field(
+        title = "pg_ramp_lb",
+        description = "Maximum ramp down on operating cond."
+    )
+
+    pg_startup_ramp_ub: float = Field(
+        title = "pg_startup_ramp_ub",
+        description = "Maximum ramp up on startup "
+    )
+
+    pg_shutdown_ramp_lb: float = Field(
+        title = "pg_shutdown_ramp_lb",
+        description = "Maximum ramp down on shutdown "
+    )
+
+    pg_regulation_up_ub: float = Field(
+        title = "pg_regulation_up_ub",
+        description = "Maximum regulation up reserve "
+    )
+
+    pg_regulation_down_ub: float = Field(
+        title = "pg_regulation_down_ub",
+        description = "Maximum regulation down reserve "
+    )
+
+    pg_spin_ub: float = Field(
+        title = "pg_spin_ub",
+        description = "Maximum spinning reserve "
+    )
+
+    pg_nonspin_ub: float = Field(
+        title = "pg_nonspin_ub",
+        description = "Maximum non-spinning reserve "
+    )
+
+    pg_flexi_up_online_ub: float = Field(
+        title = "pg_flexi_up_online_ub",
+        description = "Maximum flexible ramp up reserve when online "
+    )
+
+    pg_flexi_down_online_ub: float = Field(
+        title = "pg_flexi_down_online_ub",
+        description = "Maximum flexible ramp down reserve when online "
+    )
+
+    pg_flexi_up_offline_ub: float = Field(
+        title = "pg_flexi_up_offline_ub",
+        description = "Maximum flexible ramp up reserve when offline "
+    )
+
+    pg_flexi_down_offline_ub: float = Field(
+        title = "pg_flexi_down_offline_ub",
+        description = "Maximum flexible ramp down reserve when offline "
+    )
+
+    # Flags for extra parameters
 
     q_linear_cap: bool = Field(
         title = "q_linear_cap",
@@ -199,30 +312,114 @@ class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJso
         description = "Device has storage capability "
     )
 
-    config_num: int = Field(
-        title = "config_num",
-        description = "Number of operating modes/configurations "
+
+class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
+
+    # Input attributes
+
+    uid: str = Field(
+        title = "uid",
+        description = "Producing device unique identifier "
+    )
+
+    bus: str = Field(
+        title = "bus",
+        description = "Unique identifier for connecting bus "
+    )
+
+    vm_setpoint: Optional[float] = Field(
+        title = "vm_setpoint",
+        description = "Voltage magnitude setpoint "
+    )
+
+    startup_cost: float = Field(
+        title = "startup_cost",
+        description = "Producing device startup cost "
+    )
+
+    shutdown_cost: float = Field(
+        title = "shutdown_cost",
+        description = "Producing device shutdown cost "
+    )
+
+    startup_num_ub: int = Field(
+        title = "startup_num_ub",
+        description = "Maximum startups "
+    )
+
+    in_service_time_lb: float = Field(
+        title = "in_service_time_lb",
+        description = "Minimum uptime (hr) to operate/in service "
+    )
+
+    down_time_lb: float = Field(
+        title = "down_time_lb",
+        description = "Minimum (hr) downtime "
+    )
+
+    pg_startup_ramp_ub: float = Field(
+        title = "pg_startup_ramp_ub",
+        description = "Maximum ramp up on startup "
+    )
+
+    pg_shutdown_ramp_lb: float = Field(
+        title = "pg_shutdown_ramp_lb",
+        description = "Maximum ramp down on shutdown "
+    )
+
+    pg_regulation_up_ub: float = Field(
+        title = "pg_regulation_up_ub",
+        description = "Maximum regulation up reserve "
+    )
+
+    pg_regulation_down_ub: float = Field(
+        title = "pg_regulation_down_ub",
+        description = "Maximum regulation down reserve "
+    )
+
+    pg_spin_ub: float = Field(
+        title = "pg_spin_ub",
+        description = "Maximum spinning reserve "
+    )
+
+    pg_nonspin_ub: float = Field(
+        title = "pg_nonspin_ub",
+        description = "Maximum non-spinning reserve "
+    )
+
+    pg_flexi_up_online_ub: float = Field(
+        title = "pg_flexi_up_online_ub",
+        description = "Maximum flexible ramp up reserve when online "
+    )
+
+    pg_flexi_down_online_ub: float = Field(
+        title = "pg_flexi_down_online_ub",
+        description = "Maximum flexible ramp down reserve when online "
+    )
+
+    pg_flexi_up_offline_ub: float = Field(
+        title = "pg_flexi_up_offline_ub",
+        description = "Maximum flexible ramp up reserve when offline "
+    )
+
+    pg_flexi_down_offline_ub: float = Field(
+        title = "pg_flexi_down_offline_ub",
+        description = "Maximum flexible ramp down reserve when offline "
     )
 
     # \hline \hline
 
     # Initial status attributes within:
 
-    on_status_ub: int = Field(
-        title = "on_status_ub",
-        description = "On status indicator upper bound for initial time step ",
+    on_status: int = Field(
+        title = "on_status",
+        description = "On status indicator for initial time step ",
         options = [0, 1]
     )
 
-    on_status_lb: int = Field(
-        title = "on_status_lb",
-        description = "On status indicator lower bound for initial time step ",
-        options = [0, 1]
-    )
-
-    select_config: str = Field(
-        title = "select_config",
-        description = "Active configuration uid for initial time step "
+    select_mode: str = Field(
+        title = "select_mode",
+        description = "Active mode uid for initial time step "
     )
 
     pg: float = Field(
@@ -240,6 +437,8 @@ class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJso
         description = "Energy storage for initial time step "
     )
 
+    # 
+
     accu_down_time: float = Field(
         title = "accu_down_time",
         description = "Accumulated down time "
@@ -252,16 +451,52 @@ class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJso
 
     # \hline \hline
 
-    # Configuration attributes ---
+    # Flags for extra parameters
+
+    q_linear_cap: bool = Field(
+        title = "q_linear_cap",
+        description = "Device has additional reactive constraint "
+    )
+
+    q_bound_cap: bool = Field(
+        title = "q_bound_cap",
+        description = "Device has additional reactive bounds "
+    )
+
+    storage_cap: bool = Field(
+        title = "storage_cap",
+        description = "Device has storage capability "
+    )
+
+    # \hline \hline
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # \begin{center}
+
+    # \small
+
+    # \begin{tabular}{ l | l | c | c | c |}
+
+    # Mode attributes
+
+    mode_num: int = Field(
+        title = "mode_num",
+        description = "Number of operating modes "
+    )
+
+    # Inner mode attributes ---
 
     uid: str = Field(
         title = "uid",
-        description = "Configuration unique identifier "
+        description = "Mode unique identifier "
     )
 
     description: Optional[str] = Field(
         title = "description",
-        description = "Configuration description "
+        description = "Mode description "
     )
 
     # 
@@ -272,89 +507,19 @@ class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJso
 
     on_cost: float = Field(
         title = "on_cost",
-        description = "Dispatchable device operating cost "
+        description = "Mode fixed operating cost "
     )
 
     # 
 
-    # 
-
-    # 
-
-    # 
-
-    in_service_time_ub: float = Field(
-        title = "in_service_time_ub",
-        description = "Maximum time (hr) to operate/in service "
+    pg_ramp_ub: float = Field(
+        title = "pg_ramp_ub",
+        description = "Maximum ramp up on operating cond."
     )
 
-    in_service_time_lb: float = Field(
-        title = "in_service_time_lb",
-        description = "Minimum time (hr) to operate/in service "
-    )
-
-    down_time_ub: float = Field(
-        title = "down_time_ub",
-        description = "Maximum (hr) down time "
-    )
-
-    down_time_lb: float = Field(
-        title = "down_time_lb",
-        description = "Minimum (hr) down time "
-    )
-
-    # 
-
-    pg_nom_ramp_ub: float = Field(
-        title = "pg_nom_ramp_ub",
-        description = "Maximum ramp up from operating cond."
-    )
-
-    pg_start_ramp_ub: float = Field(
-        title = "pg_start_ramp_ub",
-        description = "Maximum ramp up from startup cond. "
-    )
-
-    pg_down_ramp_ub: float = Field(
-        title = "pg_down_ramp_ub",
-        description = "Maximum ramp up from shutdown cond. "
-    )
-
-    # 
-
-    pg_nom_ramp_lb: float = Field(
-        title = "pg_nom_ramp_lb",
-        description = "Maximum ramp down from operating cond."
-    )
-
-    pg_start_ramp_lb: float = Field(
-        title = "pg_start_ramp_lb",
-        description = "Maximum ramp down from startup cond. "
-    )
-
-    pg_down_ramp_lb: float = Field(
-        title = "pg_down_ramp_lb",
-        description = "Maximum ramp down from shutdown cond. "
-    )
-
-    pg_regulation_down_ub: float = Field(
-        title = "pg_regulation_down_ub",
-        description = "Maximum regulation down reserve "
-    )
-
-    pg_regulation_up_ub: float = Field(
-        title = "pg_regulation_up_ub",
-        description = "Maximum regulation up reserve "
-    )
-
-    pg_spin_ub: float = Field(
-        title = "pg_spin_ub",
-        description = "Maximum spinning reserve "
-    )
-
-    pg_cont_ub: float = Field(
-        title = "pg_cont_ub",
-        description = "Maximum contingency reserve "
+    pg_ramp_lb: float = Field(
+        title = "pg_ramp_lb",
+        description = "Maximum ramp down on operating cond."
     )
 
 
@@ -389,7 +554,7 @@ class ACTransmissionLine(BidDSJsonBaseModel):
 
     b_ch: float = Field(
         title = "b_ch",
-        description = "Line charge in susceptance "
+        description = "AC line charging susceptance "
     )
 
     mva_ub_nom: float = Field(
@@ -631,50 +796,62 @@ class DCLine(BidDSJsonBaseModel):
 
 class RegionalReserves(BidDSJsonBaseModel):
 
-    # Input attributes
+    # Active reserve attributes
 
     uid: str = Field(
         title = "uid",
         description = "Region reserve unique identifier "
     )
 
-    # 
-
-    # 
-
-    reserve_required: float = Field(
-        title = "reserve_required",
-        description = "Active/Reactive power reserve requirement "
+    REG_UP: float = Field(
+        title = "REG_UP",
+        description = "Regulation reserve up requirement "
     )
 
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    res_vio_cost: float = Field(
-        title = "res_vio_cost",
-        description = "Reserve violation cost/penalty "
+    REG_DOWN: float = Field(
+        title = "REG_DOWN",
+        description = "Regulation reserve down requirement "
     )
 
-    # 
+    SPIN: float = Field(
+        title = "SPIN",
+        description = "Spinning reserve requirement "
+    )
 
-    # 
+    NON_SPIN: float = Field(
+        title = "NON_SPIN",
+        description = "Non-spinning reserve requirement "
+    )
 
-    # 
+    FLEXI_RAMP_UP: float = Field(
+        title = "FLEXI_RAMP_UP",
+        description = "Flexible-ramp up requirement "
+    )
 
-    # 
+    FLEXI_RAMP_DOWN: float = Field(
+        title = "FLEXI_RAMP_DOWN",
+        description = "Flexible-ramp down requirement "
+    )
+
+    REG_UP_cost: float = Field(
+        title = "REG_UP_cost",
+        description = "Regulation reserve up marginal cost "
+    )
+
+    REG_DOWN_cost: float = Field(
+        title = "REG_DOWN_cost",
+        description = "Regulation reserve down marginal cost "
+    )
+
+    SPIN_cost: float = Field(
+        title = "SPIN_cost",
+        description = "Spinning reserve marginal cost "
+    )
+
+    NON_SPIN_cost: float = Field(
+        title = "NON_SPIN_cost",
+        description = "Non-spinning reserve marginal cost "
+    )
 
     # 
 
@@ -701,18 +878,16 @@ class General(BidDSJsonBaseModel):
         description = "Time duration of the intervals in hours "
     )
 
-    # Global violation attributes
-
-    # Optional attributes
+    # Normalization attributes
 
 
-class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJsonBaseModel):
+class ProducingDevices_SingleModeGeneratingUnits(BidDSJsonBaseModel):
 
     # Input attributes
 
     uid: str = Field(
         title = "uid",
-        description = "Dispatchable device unique identifier "
+        description = "Producing device unique identifier "
     )
 
     on_status_ub: int = Field(
@@ -727,28 +902,15 @@ class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJso
         options = [0, 1]
     )
 
-    # \hline \hline
-
-    # Initial status attributes within:
-
-    # \hline \hline
-
-    # Configuration attributes ---
-
-    uid: str = Field(
-        title = "uid",
-        description = "Configuration unique identifier "
-    )
-
-    select_ub: int = Field(
-        title = "select_ub",
-        description = "Configuration selection upper bound ",
+    startup_status_ub: int = Field(
+        title = "startup_status_ub",
+        description = "Startup procedure/status upper bound ",
         options = [0, 1]
     )
 
-    select_lb: int = Field(
-        title = "select_lb",
-        description = "Configuration selection lower bound ",
+    startup_status_lb: int = Field(
+        title = "startup_status_lb",
+        description = "Startup procedure/status lower bound ",
         options = [0, 1]
     )
 
@@ -774,15 +936,120 @@ class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJso
 
     # 
 
-    # 
+    cost: List[float] = Field(
+        title = "cost",
+        description = "Array of generation cost blocks "
+    )
 
     # 
 
     # 
 
-    # 
+    # Flags for extra parameters
+
+
+class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
+
+    # Input attributes
+
+    uid: str = Field(
+        title = "uid",
+        description = "Producing device unique identifier "
+    )
+
+    on_status_ub: int = Field(
+        title = "on_status_ub",
+        description = "On status indicator upper bound ",
+        options = [0, 1]
+    )
+
+    on_status_lb: int = Field(
+        title = "on_status_lb",
+        description = "On status indicator lower bound ",
+        options = [0, 1]
+    )
+
+    startup_status_ub: int = Field(
+        title = "startup_status_ub",
+        description = "Startup procedure/status upper bound ",
+        options = [0, 1]
+    )
+
+    startup_status_lb: int = Field(
+        title = "startup_status_lb",
+        description = "Startup procedure/status lower bound ",
+        options = [0, 1]
+    )
+
+    # \hline \hline
+
+    # Initial status attributes within:
 
     # 
+
+    # \hline \hline
+
+    # Flags for extra parameters
+
+    # \hline \hline
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # \begin{center}
+
+    # \small
+
+    # \begin{tabular}{ l | l | c | c | c |}
+
+    # Mode attributes
+
+    # Inner mode attributes ---
+
+    uid: str = Field(
+        title = "uid",
+        description = "Mode unique identifier "
+    )
+
+    select_ub: int = Field(
+        title = "select_ub",
+        description = "Mode selection upper bound ",
+        options = [0, 1]
+    )
+
+    select_lb: int = Field(
+        title = "select_lb",
+        description = "Mode selection lower bound ",
+        options = [0, 1]
+    )
+
+    pg_ub: float = Field(
+        title = "pg_ub",
+        description = "Upper bound of active dispatch "
+    )
+
+    pg_lb: float = Field(
+        title = "pg_lb",
+        description = "Lower bound of active dispatch "
+    )
+
+    qg_ub: float = Field(
+        title = "qg_ub",
+        description = "Upper bound of reactive dispatch "
+    )
+
+    qg_lb: float = Field(
+        title = "qg_lb",
+        description = "Lower bound of reactive dispatch "
+    )
+
+    # 
+
+    cost: List[float] = Field(
+        title = "cost",
+        description = "Array of generation cost blocks "
+    )
 
     # 
 
@@ -799,43 +1066,36 @@ class General(BidDSJsonBaseModel):
 
     # Global time attributes
 
-    # Global violation attributes
-
-    p_vio_cost: float = Field(
-        title = "p_vio_cost",
-        description = "System violation costs for active power violation "
-    )
-
-    q_vio_cost: float = Field(
-        title = "q_vio_cost",
-        description = "System violation costs for reactive power violation "
-    )
-
-    p_bus_vio_cost: float = Field(
-        title = "p_bus_vio_cost",
-        description = "Bus violation costs for active power violation "
-    )
-
-    q_bus_vio_cost: float = Field(
-        title = "q_bus_vio_cost",
-        description = "Bus violation costs for reactive power violation  "
-    )
-
-    v_bus_vio_cost: Optional[float] = Field(
-        title = "v_bus_vio_cost",
-        description = "Bus violation costs for voltage violation "
-    )
-
-    mva_branch_vio_cost: float = Field(
-        title = "mva_branch_vio_cost",
-        description = "Branch violation costs for thermal violation "
-    )
-
-    # Optional attributes
+    # Normalization attributes
 
     base_norm_mva: Optional[float] = Field(
         title = "base_norm_mva",
         description = "Base MVA normalization constant "
+    )
+
+
+class ViolationCostsParameters(BidDSJsonBaseModel):
+
+    # Global violation attributes
+
+    p_bus_vio_cost: float = Field(
+        title = "p_bus_vio_cost",
+        description = "Bus marginal costs for active power violation "
+    )
+
+    q_bus_vio_cost: float = Field(
+        title = "q_bus_vio_cost",
+        description = "Bus marginal costs for reactive power violation  "
+    )
+
+    v_bus_vio_cost: float = Field(
+        title = "v_bus_vio_cost",
+        description = "Bus marginal costs for voltage violation "
+    )
+
+    mva_branch_vio_cost: float = Field(
+        title = "mva_branch_vio_cost",
+        description = "Branch marginal costs for thermal violation "
     )
 
 
@@ -858,21 +1118,26 @@ class Bus(BidDSJsonBaseModel):
         description = "Voltage magnitude lower bound "
     )
 
-    # {\color{red} {\tt con\_loss\_factor}}
-
-    area: str = Field(
-        title = "area",
-        description = "Bus control area "
+    con_loss_factor: float = Field(
+        title = "con_loss_factor",
+        description = "Contingency participation loss factor "
     )
 
-    zone: str = Field(
-        title = "zone",
-        description = "Bus control zone "
+    active_reserve_uids: List[str] = Field(
+        title = "active_reserve_uids",
+        description = "List of active reserve zones "
     )
 
     # 
 
-    # Location/Operation information
+    reactive_reserve_uids: List[str] = Field(
+        title = "reactive_reserve_uids",
+        description = "List of reactive reserve zones "
+    )
+
+    # 
+
+    # Operations information
 
     base_nom_volt: Optional[float] = Field(
         title = "base_nom_volt",
@@ -882,7 +1147,19 @@ class Bus(BidDSJsonBaseModel):
     type: Optional[String] = Field(
         title = "type",
         description = "Bus type ",
-        options = ["PQ", "PV", "Slack", "Not_used"]
+        options = ["PQ"]
+    )
+
+    # Location information
+
+    area: Optional[str] = Field(
+        title = "area",
+        description = "Bus control area "
+    )
+
+    zone: Optional[str] = Field(
+        title = "zone",
+        description = "Bus control zone "
     )
 
     longitude: Optional[float] = Field(
@@ -900,6 +1177,11 @@ class Bus(BidDSJsonBaseModel):
         description = "Bus city location "
     )
 
+    county: Optional[str] = Field(
+        title = "county",
+        description = "Bus county location "
+    )
+
     state: Optional[str] = Field(
         title = "state",
         description = "Bus state location "
@@ -909,8 +1191,6 @@ class Bus(BidDSJsonBaseModel):
         title = "country",
         description = "Bus country location "
     )
-
-    # 
 
 
 class Shunt(BidDSJsonBaseModel):
@@ -929,12 +1209,12 @@ class Shunt(BidDSJsonBaseModel):
 
     gs: float = Field(
         title = "gs",
-        description = "Shunt conductance "
+        description = "Shunt conductance for one step "
     )
 
     bs: float = Field(
         title = "bs",
-        description = "Shunt susceptance "
+        description = "Shunt susceptance for one step "
     )
 
     steps_ub: int = Field(
@@ -948,13 +1228,13 @@ class Shunt(BidDSJsonBaseModel):
     )
 
 
-class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJsonBaseModel):
+class ProducingDevices_SingleModeGeneratingUnits(BidDSJsonBaseModel):
 
     # Input attributes
 
     uid: str = Field(
         title = "uid",
-        description = "Dispatchable device unique identifier "
+        description = "Producing device unique identifier "
     )
 
     bus: str = Field(
@@ -969,13 +1249,101 @@ class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJso
 
     startup_cost: float = Field(
         title = "startup_cost",
-        description = "Dispatchable device startup cost "
+        description = "Producing device startup cost "
     )
 
     shutdown_cost: float = Field(
         title = "shutdown_cost",
-        description = "Dispatchable device shutdown cost "
+        description = "Producing device shutdown cost "
     )
+
+    startup_num_ub: int = Field(
+        title = "startup_num_ub",
+        description = "Maximum startups "
+    )
+
+    # 
+
+    # 
+
+    # 
+
+    on_cost: float = Field(
+        title = "on_cost",
+        description = "Producing device fixed operating cost "
+    )
+
+    in_service_time_lb: float = Field(
+        title = "in_service_time_lb",
+        description = "Minimum uptime (hr) to operate/in service "
+    )
+
+    down_time_lb: float = Field(
+        title = "down_time_lb",
+        description = "Minimum (hr) downtime "
+    )
+
+    pg_ramp_ub: float = Field(
+        title = "pg_ramp_ub",
+        description = "Maximum ramp up on operating cond."
+    )
+
+    pg_ramp_lb: float = Field(
+        title = "pg_ramp_lb",
+        description = "Maximum ramp down on operating cond."
+    )
+
+    pg_startup_ramp_ub: float = Field(
+        title = "pg_startup_ramp_ub",
+        description = "Maximum ramp up on startup "
+    )
+
+    pg_shutdown_ramp_lb: float = Field(
+        title = "pg_shutdown_ramp_lb",
+        description = "Maximum ramp down on shutdown "
+    )
+
+    pg_regulation_up_ub: float = Field(
+        title = "pg_regulation_up_ub",
+        description = "Maximum regulation up reserve "
+    )
+
+    pg_regulation_down_ub: float = Field(
+        title = "pg_regulation_down_ub",
+        description = "Maximum regulation down reserve "
+    )
+
+    pg_spin_ub: float = Field(
+        title = "pg_spin_ub",
+        description = "Maximum spinning reserve "
+    )
+
+    pg_nonspin_ub: float = Field(
+        title = "pg_nonspin_ub",
+        description = "Maximum non-spinning reserve "
+    )
+
+    pg_flexi_up_online_ub: float = Field(
+        title = "pg_flexi_up_online_ub",
+        description = "Maximum flexible ramp up reserve when online "
+    )
+
+    pg_flexi_down_online_ub: float = Field(
+        title = "pg_flexi_down_online_ub",
+        description = "Maximum flexible ramp down reserve when online "
+    )
+
+    pg_flexi_up_offline_ub: float = Field(
+        title = "pg_flexi_up_offline_ub",
+        description = "Maximum flexible ramp up reserve when offline "
+    )
+
+    pg_flexi_down_offline_ub: float = Field(
+        title = "pg_flexi_down_offline_ub",
+        description = "Maximum flexible ramp down reserve when offline "
+    )
+
+    # Flags for extra parameters
 
     q_linear_cap: bool = Field(
         title = "q_linear_cap",
@@ -992,30 +1360,114 @@ class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJso
         description = "Device has storage capability "
     )
 
-    config_num: int = Field(
-        title = "config_num",
-        description = "Number of operating modes/configurations "
+
+class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
+
+    # Input attributes
+
+    uid: str = Field(
+        title = "uid",
+        description = "Producing device unique identifier "
+    )
+
+    bus: str = Field(
+        title = "bus",
+        description = "Unique identifier for connecting bus "
+    )
+
+    vm_setpoint: Optional[float] = Field(
+        title = "vm_setpoint",
+        description = "Voltage magnitude setpoint "
+    )
+
+    startup_cost: float = Field(
+        title = "startup_cost",
+        description = "Producing device startup cost "
+    )
+
+    shutdown_cost: float = Field(
+        title = "shutdown_cost",
+        description = "Producing device shutdown cost "
+    )
+
+    startup_num_ub: int = Field(
+        title = "startup_num_ub",
+        description = "Maximum startups "
+    )
+
+    in_service_time_lb: float = Field(
+        title = "in_service_time_lb",
+        description = "Minimum uptime (hr) to operate/in service "
+    )
+
+    down_time_lb: float = Field(
+        title = "down_time_lb",
+        description = "Minimum (hr) downtime "
+    )
+
+    pg_startup_ramp_ub: float = Field(
+        title = "pg_startup_ramp_ub",
+        description = "Maximum ramp up on startup "
+    )
+
+    pg_shutdown_ramp_lb: float = Field(
+        title = "pg_shutdown_ramp_lb",
+        description = "Maximum ramp down on shutdown "
+    )
+
+    pg_regulation_up_ub: float = Field(
+        title = "pg_regulation_up_ub",
+        description = "Maximum regulation up reserve "
+    )
+
+    pg_regulation_down_ub: float = Field(
+        title = "pg_regulation_down_ub",
+        description = "Maximum regulation down reserve "
+    )
+
+    pg_spin_ub: float = Field(
+        title = "pg_spin_ub",
+        description = "Maximum spinning reserve "
+    )
+
+    pg_nonspin_ub: float = Field(
+        title = "pg_nonspin_ub",
+        description = "Maximum non-spinning reserve "
+    )
+
+    pg_flexi_up_online_ub: float = Field(
+        title = "pg_flexi_up_online_ub",
+        description = "Maximum flexible ramp up reserve when online "
+    )
+
+    pg_flexi_down_online_ub: float = Field(
+        title = "pg_flexi_down_online_ub",
+        description = "Maximum flexible ramp down reserve when online "
+    )
+
+    pg_flexi_up_offline_ub: float = Field(
+        title = "pg_flexi_up_offline_ub",
+        description = "Maximum flexible ramp up reserve when offline "
+    )
+
+    pg_flexi_down_offline_ub: float = Field(
+        title = "pg_flexi_down_offline_ub",
+        description = "Maximum flexible ramp down reserve when offline "
     )
 
     # \hline \hline
 
     # Initial status attributes within:
 
-    on_status_ub: int = Field(
-        title = "on_status_ub",
-        description = "On status indicator upper bound for initial time step ",
+    on_status: int = Field(
+        title = "on_status",
+        description = "On status indicator for initial time step ",
         options = [0, 1]
     )
 
-    on_status_lb: int = Field(
-        title = "on_status_lb",
-        description = "On status indicator lower bound for initial time step ",
-        options = [0, 1]
-    )
-
-    select_config: str = Field(
-        title = "select_config",
-        description = "Active configuration uid for initial time step "
+    select_mode: str = Field(
+        title = "select_mode",
+        description = "Active mode uid for initial time step "
     )
 
     pg: float = Field(
@@ -1033,6 +1485,8 @@ class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJso
         description = "Energy storage for initial time step "
     )
 
+    # 
+
     accu_down_time: float = Field(
         title = "accu_down_time",
         description = "Accumulated down time "
@@ -1045,16 +1499,52 @@ class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJso
 
     # \hline \hline
 
-    # Configuration attributes ---
+    # Flags for extra parameters
+
+    q_linear_cap: bool = Field(
+        title = "q_linear_cap",
+        description = "Device has additional reactive constraint "
+    )
+
+    q_bound_cap: bool = Field(
+        title = "q_bound_cap",
+        description = "Device has additional reactive bounds "
+    )
+
+    storage_cap: bool = Field(
+        title = "storage_cap",
+        description = "Device has storage capability "
+    )
+
+    # \hline \hline
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # \begin{center}
+
+    # \small
+
+    # \begin{tabular}{ l | l | c | c | c |}
+
+    # Mode attributes
+
+    mode_num: int = Field(
+        title = "mode_num",
+        description = "Number of operating modes "
+    )
+
+    # Inner mode attributes ---
 
     uid: str = Field(
         title = "uid",
-        description = "Configuration unique identifier "
+        description = "Mode unique identifier "
     )
 
     description: Optional[str] = Field(
         title = "description",
-        description = "Configuration description "
+        description = "Mode description "
     )
 
     # 
@@ -1065,89 +1555,19 @@ class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJso
 
     on_cost: float = Field(
         title = "on_cost",
-        description = "Dispatchable device operating cost "
+        description = "Mode fixed operating cost "
     )
 
     # 
 
-    # 
-
-    # 
-
-    # 
-
-    in_service_time_ub: float = Field(
-        title = "in_service_time_ub",
-        description = "Maximum time (hr) to operate/in service "
+    pg_ramp_ub: float = Field(
+        title = "pg_ramp_ub",
+        description = "Maximum ramp up on operating cond."
     )
 
-    in_service_time_lb: float = Field(
-        title = "in_service_time_lb",
-        description = "Minimum time (hr) to operate/in service "
-    )
-
-    down_time_ub: float = Field(
-        title = "down_time_ub",
-        description = "Maximum (hr) down time "
-    )
-
-    down_time_lb: float = Field(
-        title = "down_time_lb",
-        description = "Minimum (hr) down time "
-    )
-
-    # 
-
-    pg_nom_ramp_ub: float = Field(
-        title = "pg_nom_ramp_ub",
-        description = "Maximum ramp up from operating cond."
-    )
-
-    pg_start_ramp_ub: float = Field(
-        title = "pg_start_ramp_ub",
-        description = "Maximum ramp up from startup cond. "
-    )
-
-    pg_down_ramp_ub: float = Field(
-        title = "pg_down_ramp_ub",
-        description = "Maximum ramp up from shutdown cond. "
-    )
-
-    # 
-
-    pg_nom_ramp_lb: float = Field(
-        title = "pg_nom_ramp_lb",
-        description = "Maximum ramp down from operating cond."
-    )
-
-    pg_start_ramp_lb: float = Field(
-        title = "pg_start_ramp_lb",
-        description = "Maximum ramp down from startup cond. "
-    )
-
-    pg_down_ramp_lb: float = Field(
-        title = "pg_down_ramp_lb",
-        description = "Maximum ramp down from shutdown cond. "
-    )
-
-    pg_regulation_down_ub: float = Field(
-        title = "pg_regulation_down_ub",
-        description = "Maximum regulation down reserve "
-    )
-
-    pg_regulation_up_ub: float = Field(
-        title = "pg_regulation_up_ub",
-        description = "Maximum regulation up reserve "
-    )
-
-    pg_spin_ub: float = Field(
-        title = "pg_spin_ub",
-        description = "Maximum spinning reserve "
-    )
-
-    pg_cont_ub: float = Field(
-        title = "pg_cont_ub",
-        description = "Maximum contingency reserve "
+    pg_ramp_lb: float = Field(
+        title = "pg_ramp_lb",
+        description = "Maximum ramp down on operating cond."
     )
 
 
@@ -1182,7 +1602,7 @@ class ACTransmissionLine(BidDSJsonBaseModel):
 
     b_ch: float = Field(
         title = "b_ch",
-        description = "Line charge in susceptance "
+        description = "AC line charging susceptance "
     )
 
     mva_ub_nom: float = Field(
@@ -1424,50 +1844,62 @@ class DCLine(BidDSJsonBaseModel):
 
 class RegionalReserves(BidDSJsonBaseModel):
 
-    # Input attributes
+    # Active reserve attributes
 
     uid: str = Field(
         title = "uid",
         description = "Region reserve unique identifier "
     )
 
-    # 
-
-    # 
-
-    reserve_required: float = Field(
-        title = "reserve_required",
-        description = "Active/Reactive power reserve requirement "
+    REG_UP: float = Field(
+        title = "REG_UP",
+        description = "Regulation reserve up requirement "
     )
 
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    res_vio_cost: float = Field(
-        title = "res_vio_cost",
-        description = "Reserve violation cost/penalty "
+    REG_DOWN: float = Field(
+        title = "REG_DOWN",
+        description = "Regulation reserve down requirement "
     )
 
-    # 
+    SPIN: float = Field(
+        title = "SPIN",
+        description = "Spinning reserve requirement "
+    )
 
-    # 
+    NON_SPIN: float = Field(
+        title = "NON_SPIN",
+        description = "Non-spinning reserve requirement "
+    )
 
-    # 
+    FLEXI_RAMP_UP: float = Field(
+        title = "FLEXI_RAMP_UP",
+        description = "Flexible-ramp up requirement "
+    )
 
-    # 
+    FLEXI_RAMP_DOWN: float = Field(
+        title = "FLEXI_RAMP_DOWN",
+        description = "Flexible-ramp down requirement "
+    )
+
+    REG_UP_cost: float = Field(
+        title = "REG_UP_cost",
+        description = "Regulation reserve up marginal cost "
+    )
+
+    REG_DOWN_cost: float = Field(
+        title = "REG_DOWN_cost",
+        description = "Regulation reserve down marginal cost "
+    )
+
+    SPIN_cost: float = Field(
+        title = "SPIN_cost",
+        description = "Spinning reserve marginal cost "
+    )
+
+    NON_SPIN_cost: float = Field(
+        title = "NON_SPIN_cost",
+        description = "Non-spinning reserve marginal cost "
+    )
 
     # 
 
@@ -1494,18 +1926,16 @@ class General(BidDSJsonBaseModel):
         description = "Time duration of the intervals in hours "
     )
 
-    # Global violation attributes
-
-    # Optional attributes
+    # Normalization attributes
 
 
-class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJsonBaseModel):
+class ProducingDevices_SingleModeGeneratingUnits(BidDSJsonBaseModel):
 
     # Input attributes
 
     uid: str = Field(
         title = "uid",
-        description = "Dispatchable device unique identifier "
+        description = "Producing device unique identifier "
     )
 
     on_status_ub: int = Field(
@@ -1520,28 +1950,15 @@ class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJso
         options = [0, 1]
     )
 
-    # \hline \hline
-
-    # Initial status attributes within:
-
-    # \hline \hline
-
-    # Configuration attributes ---
-
-    uid: str = Field(
-        title = "uid",
-        description = "Configuration unique identifier "
-    )
-
-    select_ub: int = Field(
-        title = "select_ub",
-        description = "Configuration selection upper bound ",
+    startup_status_ub: int = Field(
+        title = "startup_status_ub",
+        description = "Startup procedure/status upper bound ",
         options = [0, 1]
     )
 
-    select_lb: int = Field(
-        title = "select_lb",
-        description = "Configuration selection lower bound ",
+    startup_status_lb: int = Field(
+        title = "startup_status_lb",
+        description = "Startup procedure/status lower bound ",
         options = [0, 1]
     )
 
@@ -1567,15 +1984,120 @@ class DispatchableDevices:GeneratingUnits,LoadDemands,andStorageDevices(BidDSJso
 
     # 
 
-    # 
+    cost: List[float] = Field(
+        title = "cost",
+        description = "Array of generation cost blocks "
+    )
 
     # 
 
     # 
 
-    # 
+    # Flags for extra parameters
+
+
+class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
+
+    # Input attributes
+
+    uid: str = Field(
+        title = "uid",
+        description = "Producing device unique identifier "
+    )
+
+    on_status_ub: int = Field(
+        title = "on_status_ub",
+        description = "On status indicator upper bound ",
+        options = [0, 1]
+    )
+
+    on_status_lb: int = Field(
+        title = "on_status_lb",
+        description = "On status indicator lower bound ",
+        options = [0, 1]
+    )
+
+    startup_status_ub: int = Field(
+        title = "startup_status_ub",
+        description = "Startup procedure/status upper bound ",
+        options = [0, 1]
+    )
+
+    startup_status_lb: int = Field(
+        title = "startup_status_lb",
+        description = "Startup procedure/status lower bound ",
+        options = [0, 1]
+    )
+
+    # \hline \hline
+
+    # Initial status attributes within:
 
     # 
+
+    # \hline \hline
+
+    # Flags for extra parameters
+
+    # \hline \hline
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # \begin{center}
+
+    # \small
+
+    # \begin{tabular}{ l | l | c | c | c |}
+
+    # Mode attributes
+
+    # Inner mode attributes ---
+
+    uid: str = Field(
+        title = "uid",
+        description = "Mode unique identifier "
+    )
+
+    select_ub: int = Field(
+        title = "select_ub",
+        description = "Mode selection upper bound ",
+        options = [0, 1]
+    )
+
+    select_lb: int = Field(
+        title = "select_lb",
+        description = "Mode selection lower bound ",
+        options = [0, 1]
+    )
+
+    pg_ub: float = Field(
+        title = "pg_ub",
+        description = "Upper bound of active dispatch "
+    )
+
+    pg_lb: float = Field(
+        title = "pg_lb",
+        description = "Lower bound of active dispatch "
+    )
+
+    qg_ub: float = Field(
+        title = "qg_ub",
+        description = "Upper bound of reactive dispatch "
+    )
+
+    qg_lb: float = Field(
+        title = "qg_lb",
+        description = "Lower bound of reactive dispatch "
+    )
+
+    # 
+
+    cost: List[float] = Field(
+        title = "cost",
+        description = "Array of generation cost blocks "
+    )
 
     # 
 

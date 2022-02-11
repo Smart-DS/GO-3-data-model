@@ -1,0 +1,122 @@
+This section presents data input parsing and solution writing instructions for
+extracting data and storing the solutions 
+for the Challenge 3 competition.
+
+\subsection{Input Data File}
+Each input/problem data file is a JSON object that will include
+\begin{itemize}
+    \item the static network data (Section~\ref{sec:format_spec}),
+    \item the time series input data (Section~\ref{sec:time_series}), and
+    \item the contingency list (Section~\ref{sec:contingency}).
+\end{itemize}
+in JSON format. Below shows a high-level schematic structure for the input/problem data file:
+\begin{verbatim}
+{
+    "network”: {
+    ...
+    },
+    "time_series_input": {
+    ...
+    },
+    "contingency": [ ... ]
+}
+\end{verbatim}
+
+\subsection{Output Data File}
+Each output/solution data file computed by competitors should be a JSON object consists of only 
+the solution output data (Section~\ref{sec:solution_format}).
+\begin{verbatim}
+{
+    "solution_output”: {
+        ...
+    }    
+}
+\end{verbatim}
+The Competition Team may request additional information (e.g., for debugging / communication purposes)
+from competitors and request information to be placed in 
+additional fields in the solution file other than \texttt{solution\_output}. 
+
+\subsection{Numerical Accuracy \& Precision}
+Programming packages/libraries handling JSON may have various different 
+default/pre-set numerical precision when reading or writing floating point numbers.
+We recommend competitors to 
+double check the default precision,
+and change the precision if needed
+when writing any floating point values to the output/solution file.
+We also recommend competitors to use at least double precision (64 bits) 
+when reading non-integer values from JSON inputs. 
+
+% \subsection{Parsing}
+
+% For simplicity, we will only present instructions for symbols/definitions
+% requiring direct data extraction from the data format.
+% Symbols/definitions that can be derived from existing instructions and guidelines from the formulation will be skipped. 
+% As a reminder, instructions provided below are served mainly as a guideline for data parsing and pre-processing, and
+% competitors are free to use any algorithms and data structures as long as they comply with the competition rules/regulations.
+
+% \begin{center}
+% \begin{tabular}{ l | c |}
+% Index sets & Construction \\
+% \hline
+%   $I$ & The set of bus JSON objects\\
+%   $J$ & The set of generator, load, shunt, storage, \\
+%       & AC line, transformer, switch, and DC line JSON objects\\
+%   $K$ & The set of contingency JSON objects \\
+%   $M$ & {\color{red} Not yet handled} \\
+%   $N$ & The set of reserve region JSON objects\\
+%   $T$ & \{1, 2, 3, ..., $\lvert T \rvert$\}: $\lvert T \rvert$ is the value of the \texttt{time\_periods} field\\
+% \end{tabular}
+% \end{center}
+
+% \begin{center}
+% \begin{tabular}{ l | c |}
+% Device Subsets  & Construction \\
+% \hline
+%   $I_n$    & The set of bus JSON objects with \texttt{reserve\_uid} value equals to $n$ \\
+%   $J^{br}$ & The set of AC line, transformer, switch, and DC line JSON objects\\
+%   $J^{ac}$ & The set of AC line and transformer JSON objects\\
+%   $J^{dc}$ & The set of DC line JSON objects\\  
+%   $J^{ln}$ & The set of AC line JSON objects\\
+%   $J^{xf}$ & The set of transformer JSON objects\\  
+%   $J^{fpd}$ & The set of transformer JSON objects: \texttt{ta\_ub} equals to \texttt{ta\_lb}\\  
+%   $J^{vpd}$ & The set of transformer JSON objects: \texttt{ta\_ub} larger than \texttt{ta\_lb}\\    
+%   $J^{fwr}$ & The set of transformer JSON objects: \texttt{tm\_ub} equals to \texttt{tm\_lb}\\
+%   $J^{vwr}$ & The set of transformer JSON objects: \texttt{tm\_ub} larger than  \texttt{tm\_lb}\\
+%   $J^{nbr}$ & The set of generator, load, shunt, and storage JSON objects\\
+%   $J^{nds}$ & The set of shunt and load JSON objects w/ a False \texttt{dispatchable} flag\\
+%   $J^{fld}$ & The set of load JSON objects with a False \texttt{dispatchable} flag\\
+%   $J^{fsh}$ & The set of shunt objects with a False \texttt{switchable} flag\\  
+%   $J^{ssh}$ & The set of shunt objects with a True \texttt{switchable} flag\\  
+%   $J^{ds}$  & The set of generator, storage, and \\ 
+%             & load (w/ True \texttt{dispatchable} flag) JSON objects \\
+%   $J^{gen}$ & The set of generator JSON objects \\
+%   $J^{on}$ & The set of generator, storage, load (w/ True \texttt{dispatchable} flag),\\
+%             & AC line, transformer, switch, and DC line JSON objects \\
+%   $J^{ec}$ & The set of generator and load JSON objects \\
+%   $J^{pqe}$ & {\color{red} Need double check: } The set of load JSON objects \\
+%   $J^{pqmax}$ & {\color{red} Need double check:} The set of generator and storage JSON objects\\
+%   $J^{pqmin}$ & {\color{red} Need double check:} The set of generator and storage JSON objects\\
+% \end{tabular}
+% \end{center}
+
+% \begin{center}
+% \begin{tabular}{ l | c |}
+% Cost Subsets  & Construction \\
+% \hline
+%   $M_j^{ec}$    & The cost function for a generator/load/storage object device $j$\\
+%   $M_n^{rgr,-}$ & \\
+%   $M_n^{spr,-}$ & \\
+%   $M_n^{opr,-}$ & \\
+%   $M_i^{v,+}$ & \\
+%   $M_i^{v,-}$ & \\
+%   $M^{p,+}$ & \\
+%   $M^{p,-}$ & \\
+%   $M^{q,+}$ & \\
+%   $M^{q,-}$ & \\  
+%   $M_i^{p,+}$ & \\
+%   $M_i^{p,-}$ & \\
+%   $M_i^{q,+}$ & \\
+%   $M_i^{q,-}$ & \\
+%   $M_j^{s,+}$ & \\
+% \end{tabular}
+% \end{center}
