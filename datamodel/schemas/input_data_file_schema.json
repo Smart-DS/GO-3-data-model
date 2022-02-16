@@ -471,7 +471,10 @@
                 "interval_duration": {
                     "title": "interval_duration",
                     "description": "Time duration of the intervals in hours ",
-                    "type": "number"
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
                 }
             },
             "required": [

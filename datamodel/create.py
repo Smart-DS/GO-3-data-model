@@ -130,6 +130,7 @@ types_map = {
     "uid": "str",
     "uids": "List[str]",
     "Array of cost blocks": "List[float]",
+    "Array of Float": "List[float]",
     "String": "str",
     "Int": "int",
     "Integer": "int",

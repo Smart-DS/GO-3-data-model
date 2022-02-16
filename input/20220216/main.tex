@@ -1,0 +1,1052 @@
+\documentclass{article}
+\usepackage{fullpage}
+\usepackage{enumerate}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{graphicx, epsfig, epstopdf, wrapfig}
+\usepackage{amsfonts, amsmath, amsthm, amssymb, mathrsfs}
+\usepackage{times, helvet, courier}
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage[normalem]{ulem}
+%Theorem
+\newcounter{todo}[section] \setcounter{todo}{0}
+\renewcommand{\thetodo}{\arabic{section}.\arabic{todo}}
+\newenvironment{todo}[2][]{%
+\refstepcounter{todo}%
+\ifstrempty{#1}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=red!20]
+{\strut To Be Discussed~\thetodo};}}
+}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=red!20]
+{\strut To Be Discussed~\thetodo:~#1};}}%
+}%
+\mdfsetup{innertopmargin=10pt,linecolor=red!20,%
+linewidth=2pt,topline=true,%
+frametitleaboveskip=\dimexpr-\ht\strutbox\relax
+}
+\begin{mdframed}[]\relax%
+\label{#2}}{\end{mdframed}}
+
+
+\title{ARPA-E GO Competition Challenge 3 \\ Data Format}
+\author{ARPA-E GO Competition Team}
+\date{Feb 16, 2022}
+
+\begin{document}
+
+\maketitle
+
+\section{Overview}
+
+This document contains a description of the data format for the ARPA-E GO Competition Challenge 3 and beyond. It consists of a number of sections.
+\begin{enumerate}[I]
+    \item {\bf Naming conventions and attributes:} the names of \textit{\textbf{all}} the attributes for each electrical \& market components used by the competition, classified by component types into tables;
+
+    \item {\bf JSON for static electrical components:} the static network description in JSON, e.g., static labels \& data, a given system starting point, and non-time-varying parameters for each of the electrical components;
+
+    \item {\bf JSON for time-varying components:} a collection of attributes for each electrical \& market components that describe the component status over time; the system status may represent, for instance, inputs to optimization problems,  forecasts, or approximations to the optimization problems;
+    \item {\bf JSON for contingencies:} a list of contingencies describing each of the contingent cases;
+    \item {\bf JSON for competition solutions:} a collection of attributes for each electrical \& market components that describe the solutions for the competition;    
+    %  \item {\bf Economic components:} 
+    %  the generators, transmission elements, distribution elements, and/or load bids, offers, costs, and/or penalties;
+     \item {\bf Data parsing:}
+     the technical details for using the data format files specifically for the Challenge 3 formulation document.
+\end{enumerate}
+It is important to emphasize that the values of some of these attributes can be time series instead of primitive data types (e.g., integers, floating numbers, and strings). 
+In the data format, we will use arrays and inner JSON objects to represent time series. 
+This is particularly important for multi-stage periods that are ubiquitous in power systems, and essential 
+to solve optimization problems over a finite time horizon. 
+
+
+\section{Naming Conventions}
+\label{sec:naming}
+This section summarizes the attributes for all the components used throughout the data format for quick references. 
+%The naming conventions largely follow from ``The Common Electric Power Transmission System Model'' by Carleton Coffrin, et. al.
+Names, descriptions, types, and corresponding/associated formulation symbol (if exists) for each of the attributes are shown.
+Attributes that are required for the competition 
+will be marked with a `Y' in the Req column. 
+Additional optional attributes, marked with an `N' in the Req column, may also exist/present to assist competitors.
+
+For ease of reference and convenience for describing the data formats, we also 
+mark the nature of the attributes in the `Sec' column.
+For the input data format, attributes will be marked with:
+\begin{itemize}
+\item S --- if it is a static parameter and is expected to be presented in the static network file section;
+\item T --- if it is a time series and is expected to be presented in the time series data file section, and; 
+\item B --- if it is an identifier and it is necessary to be presented across both sections for identification purposes.
+\end{itemize}
+Similarly for the output data format, attribute will be marked with:
+\begin{itemize}
+\item S --- if it is a static parameter; 
+\item T --- if it is a time series, and;
+\item B --- if it is an identifier.
+\end{itemize}
+As a reminder, the attribute list could be modified in the future.
+Competitors should always refer to the latest announcement for any 
+updates.
+
+
+
+
+
+\subsection{General}
+\label{nom:top-level}
+
+\paragraph{Input Attributes}
+The attributes for the top-level/global JSON object 
+used by the input data format are listed below.
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+Global time attributes & Description (Type) & Req & Sec & Sym\\
+\hline
+  {\tt time\_periods} & The number of time periods (Int) & Y & T & $\lvert T \rvert$ \\
+  {\tt interval\_duration} & Time duration of the intervals in hours (Array of Float) & Y & T & $d_t$ \\
+\hline
+Normalization attributes & Description (Type) & Req & Sec & Sym\\
+\hline  
+{\tt base\_norm\_mva} & Base MVA normalization constant (Float)  & N & S &  \\
+  \hline
+\end{tabular}
+\end{center}
+
+\subsection{Violation Costs \& Parameters}
+\label{nom:violation}
+\paragraph{Input Attributes} The attributes for describing violation costs are listed below.
+
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+Global violation attributes & Description (Type) & Req & Sec & Sym\\
+\hline  
+%  {\tt p\_vio\_cost} & System marginal costs for active power violation (\$/pu-h) & Y & S &$c^{p, sys}$ \\
+%  {\tt q\_vio\_cost} & System marginal costs for reactive power violation (\$/pu-h) & Y & S & $c^{q,sys}$\\
+  {\tt p\_bus\_vio\_cost} & Bus marginal costs for active power violation (\$/pu-h)& Y & S & $c^{p}$\\
+  {\tt q\_bus\_vio\_cost} & Bus marginal costs for reactive power violation  (\$/pu-h)& Y & S &$c^{q}$ \\
+%  {\tt v\_bus\_vio\_cost} & Bus marginal costs for voltage violation (\$/pu-h)& Y & S & $c^{v}$\\
+  {\tt s\_vio\_cost} & Branch marginal costs for thermal violation (\$/pu-h)  & Y & S &$c^{s}$  \\  
+% \hline 
+% Global tolerance attributes & Description (Type) & Req & Sec & Sym\\
+% \hline
+%   {\tt\color{red} p\_tol} & Bus imbalance tolerance for real power (pu) & Y & S &$p^{tol}$ \\
+%   {\tt\color{red} p\_system\_tol} & System imbalance tolerance for real power (pu) & Y & S &$p^{tol,sys}$ \\
+%   {\tt\color{red} q\_tol} & Bus imbalance tolerance for reactive power (pu) & Y & S &$q^{tol}$ \\
+%   {\tt\color{red} q\_system\_tol} & System imbalance tolerance for reactive power (pu) & Y & S &$q^{tol,sys}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+
+\subsection{Bus}
+\label{nom:bus}
+\paragraph{Input Attributes} The attributes for buses used by the input data format are listed below.
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+Input attributes & Description (Type) & Req & Sec & Sym\\
+\hline
+  {\tt uid} & Bus unique identifier (String)& Y & B &  \\
+%  {\tt vm} & Voltage magnitude (Float, p.u.)& Y & T & \\
+%  {\tt va} & Voltage angle (Float, radian)& Y & T & \\ 
+  {\tt vm\_ub} & Voltage magnitude upper bound (Float, p.u.)& Y & S & $v^{max}$\\
+  {\tt vm\_lb} & Voltage magnitude lower bound (Float, p.u.)& Y & S & $v^{min}$\\
+  {\tt con\_loss\_factor} & Contingency participation loss factor (Float) & Y & S & $\alpha$\\
+  {\tt active\_reserve\_uids} & List of active reserve zones (uids) that the bus participating & Y & S & \\ 
+                     &  (Array of reserve zone uids) &  & & \\ 
+  {\tt reactive\_reserve\_uids} & List of reactive reserve zones (uids) that the bus participating & Y & S & \\ 
+                     &  (Array of reserve zone uids) &  & & \\                      
+  \hline
+  Operations information & Description (Type) & Req & Sec & Sym\\
+  \hline
+  {\tt base\_nom\_volt} & Bus nominal voltage (Float) & N & S & \\
+  {\tt type} & Bus type (String: PQ, PV, Slack, Not\_used) & N & S &\\  
+  \hline
+  Location information & Description (Type) & Req & Sec & Sym\\
+  \hline
+  {\tt area} &  Bus control area (String)& N & S & \\
+  {\tt zone} &  Bus control zone (String)& N & S & \\ 
+  {\tt longitude} & Bus location - longitude (Float) & N & S & \\
+  {\tt latitude} & Bus location - latitude (Float) & N & S & \\
+  {\tt city}     & Bus city location (String) & N & S & \\
+  {\tt county}     & Bus county location (String) & N & S & \\
+  {\tt state}    & Bus state location (String) & N & S & \\
+  {\tt country}  & Bus country location (String) & N & S & \\
+  \hline  
+\end{tabular}
+\end{center}
+\paragraph{Output Attributes} The attributes for buses used by the output data format are listed below.
+\begin{todo}[]{}
+Output solution --- preliminary conversion from the formulation model variables. 
+% Not all of them are required.
+\end{todo}
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+Output attributes & Description (Type) & Req & Sec & Sym\\
+\hline
+  {\tt uid} & Bus unique identifier (String) & Y & B & \\
+  {\tt vm} & Voltage magnitude (Float, p.u.) & Y & T & $v$ \\
+  {\tt va} & Voltage angle (Float, radian)   & N & T & $\theta$\\ 
+\hline
+\end{tabular}
+\end{center}
+
+% \subsection{Load}
+% \label{nom:load}
+% \paragraph{Input Attributes} The attributes for load demands used by the input data format are listed below.
+
+% \begin{todo}[]{}
+% Load input/output attributes have not been discussed.
+% \end{todo}
+
+% \begin{center}
+% \small
+% \begin{tabular}{ l | l | c | c | c | }
+% Input attributes & Description (Type) & Req & Sec & Sym\\
+% \hline
+%   {\tt uid} & Load unique identifier (String) & Y & B & \\
+%   {\tt bus} & Unique identifier for connecting bus (String)& Y & S &  \\      
+%   {\tt pd}  & Load active power demand (p.u.) & Y & T & $p^{fld}$\\
+%   {\tt qd}   & Load reactive power demand (p.u.)& Y & T & $q^{fld}$\\
+% %  {\tt cost\_pd\_model}      & Load cost model type  & Y & T & \\
+% %  & (String: Linear, Polynomial) & & & \\
+% %  {\tt cost\_pd\_parameters} & Load cost model parameters& Y & T & $p^{ec,0}$, \\
+% %                             & (Array of Float) &  & & $p^{ec,max}$,$c^{ec}$ \\
+%   {\tt cost} &   Load cost per load demand block (Array of Float, \$ USD) & Y & T & $c^{ec}$ \\
+%   {\tt cost\_block\_size} &   Size for load cost demand blocks (Array of Float, p.u.)& Y & T & $p^{ec,0}$, $p^{ec,max}$ \\
+%   {\tt\color{red} standby\_cost} & Load fixed standby cost (Float) & Y & T & $c^{on}$\\ 
+%   {\tt dispatchable}   & Load dispatchable flag (String: True/False) & Y & S & \\
+%   \hline \hline
+% Optional attributes & Exist if {\tt dispatchable} is True &  &  & \\
+%  \hline
+ 
+%   {\tt pd\_ub}  & Upper bound for active power demand (p.u.) & Y & T & $p^{max}$\\
+%   {\tt pd\_lb}  & Lower bound for active power demand (p.u.) & Y & T & $p^{min}$\\
+%   {\tt qd\_ub}  & Upper bound for reactive power demand (p.u.) & Y & T & $q^{max}$\\
+%   {\tt qd\_lb}  & Lower bound for reactive power demand (p.u.) & Y & T & $q^{min}$\\
+%   {\tt q\_add\_cap}   & Reactive additional capability flag (String: True/False) & Y & S & \\
+  
+%   {\tt pd\_nom\_ramp\_ub}   & Maximum load increase from operating cond.(Float, p.u./hr) & Y & S & $p^{ru,max,ro}$ \\
+%   {\tt pd\_start\_ramp\_ub} & Maximum load increase from startup cond. (Float, p.u./hr) & Y & S & $p^{ru,max,su}$\\
+%   {\tt pd\_down\_ramp\_ub}  & Maximum load increase from shutdown cond. (Float, p.u./hr) & Y & S & $p^{ru,max,sd}$\\
+%   {\tt pd\_nom\_ramp\_lb}   & Maximum load decrease from operating cond.(Float, p.u./hr) & Y & S & $p^{rd,max,ro}$ \\
+%   {\tt pd\_start\_ramp\_lb} & Maximum load decrease from startup cond. (Float, p.u./hr) & Y & S & $p^{rd,max,su}$\\
+%   {\tt pd\_down\_ramp\_lb}  & Maximum load decrease from shutdown cond. (Float, p.u./hr) & Y & S & $p^{rd,max,sd}$\\  
+
+%   {\tt connection\_cost} &    Load connection cost (Float) & Y & T & $c^{su}$\\                       
+%   {\tt disconnection\_cost} & Load disconnection cost (Float) & Y & T & $c^{sd}$\\  
+%   {\tt in\_service\_time\_ub} & Maximum time (hr) to operate/in service (Float)& Y & S &  $d^{up,max}$ \\ 
+%   {\tt in\_service\_time\_lb} & Minimum time (hr) to operate/in service (Float) & Y & S & $d^{up,min}$\\
+%   {\tt down\_time\_ub} & Maximum (hr) disconnection/down time (Float) & Y & S & $d^{dn,max}$ \\
+%   {\tt down\_time\_lb} & Minimum (hr) disconnection/down time (Float) & Y & S & $d^{dn,min}$\\
+%   {\tt pd\_regulation\_ub} & Maximum regulation reserve (Float, p.u.) & Y & S & $p^{rgr,max}$\\
+%   {\tt pd\_spin\_ub}       & Maximum spinning reserve (Float, p.u.) & Y & S & $p^{spr,max}$\\ 
+%   {\tt pd\_nonspin\_ub}    & Maximum non-spinning reserve (Float, p.u.) & Y & S & $p^{nspr,max}$\\
+%   \hline \hline
+%   Optional attributes & Exist if {\tt dispatchable} is True and {\tt q\_add\_cap} is True &  &  & \\
+%  \hline
+%   {\tt q\_0}               & Reactive demand at zero active demand (Float, p.u.) & Y & T & $q^{0}$\\
+%   {\tt q\_0\_ub}           & Maximum reactive demand at zero active demand (Float, p.u.) & Y & T & $q^{max,0}$\\
+%   {\tt q\_0\_lb}           & Minimum reactive demand at zero active demand (Float, p.u.) & Y & T & $q^{min,0}$\\
+%   {\tt pd\_ratio}          & Sensitivity of reactive over active demand (Float) & Y & T & $\beta$\\
+%   {\tt pd\_ratio\_ub}      & Upper bound for sensitivity of reactive over active demand (Float) & Y & T & $\beta^{max}$\\
+%   {\tt pd\_ratio\_lb}      & Lower bound for sensitivity of reactive over active demand (Float) & Y & T & $\beta^{min}$\\
+%   \hline
+% \end{tabular}
+% \end{center}
+
+% \paragraph{Output Attributes}
+% The attributes for load demands used by the output data format are listed below.
+% \begin{center}
+% \small
+% \begin{tabular}{ l | l | c | c | }
+% Output attributes & Description (Type) & Req & Sym\\
+% \hline
+%   {\tt uid}  & Load unique identifier (String) & Y & \\
+%   {\tt pd}   & Load active power demand (p.u.)  & Y & $p$\\
+%   {\tt qd}   & Load reactive power demand (p.u.)& Y & $q$\\
+%   {\tt pd\_regulation} & Regulation reserve (Float, p.u.)& Y &  $p^{rgr}$\\
+%   {\tt pd\_spin}       & Spinning reserve (Float, p.u.) & Y &  $p^{spr}$\\ 
+%   {\tt pd\_nonspin}    & Non-spinning reserve (Float, p.u.) & Y & $p^{nspr}$\\
+%   {\tt status}     & Connection status (String: on, off) & Y &  $u^{on}$ \\ 
+%   {\tt startup}    & Flag to indicate grid connection from disconnection (String: True/False) & N & $u^{su}$\\
+%   {\tt shutdown}   & Flag to indicate grid disconnection from connection (String: True/False) & N & $u^{sd}$\\ 
+%   {\tt remain\_on} & Flag to indicate the load will remain connected (String: True/False) & N & $u^{ro}$\\  
+%   \hline
+% \end{tabular}
+% \end{center}
+
+\subsection{Shunt}
+\label{nom:shunt}
+\paragraph{Input Attributes} The attributes for bus shunts used by the input data format are listed below.
+\begin{center}
+\small
+
+\begin{tabular}{ l | l | c | c | c | }
+Input attributes & Description (Type) & Req & Sec & Sym\\
+\hline
+  {\tt uid} & Shunt unique identifier (String) & Y & B &  \\
+  {\tt bus} & Unique identifier for connecting bus (String)& Y & S &  \\            
+  {\tt gs}  & Shunt conductance for one step (p.u.) & Y & S & $g^{sh}$ \\
+  {\tt bs}  & Shunt susceptance for one step (p.u.) & Y & S & $b^{sh}$ \\
+  {\tt steps\_ub}      & Maximum number of steps (Int)  & Y & S & $u^{sh,max}$\\
+  {\tt steps\_lb}      & Minimum number of steps (Int)  & Y & S & $u^{sh,min}$\\
+\hline
+\end{tabular}
+\end{center}
+
+\paragraph{Output Attributes} The attributes for shunts used by the output data format are listed below.
+\begin{todo}[]{}
+Output solution --- preliminary conversion from the formulation model variables. 
+% Not all of them are required.
+\end{todo}
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+Output attributes & Description (Type) & Req & Sec & Sym\\
+\hline
+  {\tt uid} & Shunt unique identifier (String) & Y & B & \\
+  {\tt steps}      & Number of steps (Int)  & Y  & T &$u^{sh}$\\
+\hline
+\end{tabular}
+\end{center}
+
+
+\subsection{Producing Devices: Single Mode Generating Units}
+\label{nom:gen_single}
+\paragraph{Input Attributes} The attributes for 
+single mode energy producing devices used by the input data format are listed below.
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+Input attributes & Description (Type) & Req & Sec & Sym\\
+\hline
+  {\tt uid} & Producing device unique identifier (String) & Y & B &  \\
+  {\tt bus} & Unique identifier for connecting bus (String)& Y & S & \\
+  {\tt vm\_setpoint} & Voltage magnitude setpoint (Float, p.u.) & N & S & \\
+  {\tt startup\_cost} & Producing device startup cost (Float) & Y & S & $c^{su}$\\
+  {\tt shutdown\_cost} & Producing device shutdown cost (Float) & Y & S & $c^{sd}$\\  
+  {\tt on\_status\_ub} & On status indicator upper bound (Binary: 0/1) & Y & T & $u^{on,max}$\\
+  {\tt on\_status\_lb} & On status indicator lower bound (Binary: 0/1) & Y & T & $u^{on,min}$\\
+%  {\tt\color{red} startup\_status\_ub} & Startup procedure/status upper bound (Binary: 0/1) & Y & T & $u^{su,max}$\\
+%  {\tt\color{red} startup\_status\_lb} & Startup procedure/status lower bound (Binary: 0/1) & Y & T & $u^{su,min}$\\
+  {\tt\color{red} startup\_num\_ub} & Maximum startups (Integer) & Y & S & $u^{su,max}$\\  
+  {\tt pg\_ub} & Upper bound of active dispatch (Float, p.u.) & Y & T & $p^{max}$ \\
+  {\tt pg\_lb} & Lower bound of active dispatch (Float, p.u.) & Y & T & $p^{min}$ \\
+  {\tt qg\_ub} & Upper bound of reactive dispatch (Float, p.u.)& Y & T & $q^{max}$\\
+  {\tt qg\_lb} & Lower bound of reactive dispatch (Float, p.u.)& Y & T & $q^{min}$\\ 
+
+  {\tt cost} &  Array of generation cost blocks (Array of cost blocks), where & Y & T &  \\
+    &  each cost block is an array with exactly two elements:   &  &   &  \\
+    &  a) generation cost (\$/p.u.-hr), and b) block size (p.u.) &  &   &$c^{en}, p^{max}$ \\
+  {\tt on\_cost} & Producing device fixed operating cost (Float) & Y & S & $c^{on}$\\
+  {\tt in\_service\_time\_lb} & Minimum uptime (hr) to operate/in service (Float) & Y & S & $d^{up,min}$\\
+  {\tt down\_time\_lb} & Minimum (hr) downtime (Float) & Y & S & $d^{dn,min}$\\
+  {\tt pg\_ramp\_ub}          & Maximum ramp up on operating cond.(Float, p.u./hr) & Y & S & $p^{ru,max}$ \\
+  {\tt pg\_ramp\_lb}          & Maximum ramp down on operating cond.(Float, pu/hr) & Y & S & $p^{rd,max}$ \\
+  {\tt pg\_startup\_ramp\_ub} & Maximum ramp up on startup (Float, p.u./hr) & Y & S & $p^{ru,max,su}$\\
+  {\tt pg\_shutdown\_ramp\_lb}& Maximum ramp down on shutdown (Float, pu/hr) & Y & S & $p^{rd,max,sd}$\\
+  {\tt pg\_regulation\_up\_ub} & Maximum regulation up reserve (Float, p.u.) & Y & S & $p^{rgu,max}$\\ 
+  {\tt pg\_regulation\_down\_ub} & Maximum regulation down reserve (Float, p.u.) & Y & S & $p^{rgd,max}$\\ 
+  {\tt pg\_spin\_ub}             & Maximum spinning reserve (Float, p.u.) & Y & S & $p^{spr,max}$\\ 
+  {\tt\color{red} pg\_nonspin\_ub}          & Maximum non-spinning reserve (Float, p.u.) & Y & S & $p^{nsp,max}$\\   
+  {\tt\color{red} pg\_flexi\_up\_online\_ub}    & Maximum flexible ramp up reserve when online (Float, p.u.) & Y & S & $p^{fru, on, max}$\\   
+  {\tt\color{red} pg\_flexi\_down\_online\_ub}  & Maximum flexible ramp down reserve when online (Float, p.u.) & Y & S & $p^{frd, on, max}$\\   
+  {\tt\color{red} pg\_flexi\_up\_offline\_ub}    & Maximum flexible ramp up reserve when offline (Float, p.u.) & Y & S & $p^{fru, off, max}$\\   
+  {\tt\color{red} pg\_flexi\_down\_offline\_ub}  & Maximum flexible ramp down reserve when offline (Float, p.u.) & Y & S & $p^{frd, off, max}$\\     
+  \hline
+  &TODO: Add costs for reserves&\\
+  \hline
+  
+  
+  {\tt initial\_status} & A JSON inner object storing data for initial time step & Y & S &  \\
+   \hline
+   Flags for extra parameters & --- indicating if there are extra parameters & Req & Sec & Sym\\
+   \hline
+     {\tt\color{red} q\_linear\_cap}      & Device has additional reactive constraint (bool: true/false) & Y & S & \\
+  {\tt\color{red} q\_bound\_cap}       & Device has additional reactive bounds (bool: true/false) & Y & S & \\
+  {\tt\color{red} storage\_cap}       & Device has storage capability (bool: true/false) & Y & S & \\
+  \hline   
+\end{tabular}
+\end{center}
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+\hline
+  Initial status attributes &  Attributes inside the inner {\tt initial\_status} JSON object &  &  & \\
+  \hline    
+  {\tt\color{red} on\_status} & On status indicator for initial time step (Binary: 0/1) & Y & S & $u^{on,0}$\\
+  {\tt\color{red} pg} & Active dispatch for initial time step (Float, p.u.) & Y & S & $p^0$ \\
+  {\tt\color{red} qg} & Reactive dispatch for initial time step (Float, p.u.)& Y & S & $q^0$ \\
+  {\tt\color{red} energy} & Energy storage for initial time step (Float, p.u.)& Y & S & $e$\\  
+                          & $\hookrightarrow$ only exists if \texttt{storage\_cap} is \texttt{true} & & & \\  
+  {\tt\color{red} accu\_down\_time} & Accumulated down time (Float, hr) & Y & S & \\  
+  {\tt\color{red} accu\_up\_time} & Accumulated up time (Float, hr) & Y & S & \\  
+ \hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+ \hline
+  Additional attributes & Exist if {\tt q\_linear\_cap} is true &  &  & \\
+  \hline
+  {\tt\color{red} q\_0}               & Reactive dispatch at zero active dispatch (Float, p.u.) & Y & S & $q^{p0}$\\
+  {\tt\color{red} pq\_ratio}          & Sensitivity of reactive w.r.t active dispatch (Float) & Y & S & $\beta$\\
+  \hline \hline
+  Additional attributes & Exist if {\tt q\_bound\_cap} is true &  &  & \\
+  \hline
+  {\tt\color{red} q\_0\_ub}           & Maximum reactive dispatch at zero active dispatch (Float, p.u.) & Y & S & $q^{max,p0}$\\
+  {\tt\color{red} q\_0\_lb}           & Minimum reactive dispatch at zero active dispatch (Float, p.u.) & Y & S & $q^{min,p0}$\\
+  {\tt\color{red} pq\_ratio\_ub}      & Upper bound for sensitivity of reactive w.r.t active dispatch (Float) & Y & S & $\beta^{max}$\\
+  {\tt\color{red} pq\_ratio\_lb}      & Lower bound for sensitivity of reactive w.r.t active dispatch (Float) & Y & S & $\beta^{min}$\\
+  \hline 
+  
+  Additional attributes & Exist if {\tt is\_storage} is true &  &  & \\
+  \hline
+  {\tt energy\_ub} & Upper bound for energy storage (Float, pu-h)& Y & T & $e^{max}$\\
+  {\tt energy\_lb} & Lower bound for energy storage (Float, pu-h)& Y & T & $e^{min}$\\ 
+  {\tt pg\_ext} & External power flow to storage facility (Float, p.u.)& Y & T & $p^{ext}$\\ 
+  {\tt storage\_efficiency} & Efficiency of storage device (Float) & Y & S & $\eta$\\
+  \hline
+\end{tabular}
+\end{center}
+
+
+\begin{todo}[]{}
+Output solution --- a preliminary version with state/configuration is drafted. 
+\end{todo}
+
+\paragraph{Output Attributes} The attributes for single mode generating units used by the output data format are listed below.
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+Output attributes & Description (Type) & Req & Sec & Sym\\
+\hline
+  {\tt uid} & Device unique identifier (String) & Y & B & \\
+  {\tt status}     & Connection status (bool: true/false) & Y & T & $u^{on}$ \\ 
+  {\tt pg} & Active dispatch (Float, p.u.)  & Y & T & $p$ \\
+  {\tt qg} & Reactive dispatch (Float, p.u.)& Y & T & $q$ \\
+  {\tt pg\_regulation\_up} & Regulation up reserve (Float, p.u.) & Y & T & $p^{rgu}$\\
+  {\tt pg\_regulation\_down} & Regulation down reserve (Float, p.u.) & Y & T & $p^{rgd}$\\ 
+  {\tt pg\_spin} & Spinning reserve (Float, p.u.) & Y & T & $p^{spr}$\\ 
+  {\tt pg\_nonspin} & Non-spinning reserve (Float, p.u.) & Y & T & $p^{nsp}$\\     
+  {\tt\color{red} pg\_flexi\_up\_online}    & Flexible ramp up reserve when online (Float, p.u.) & Y & S & $p^{fru, on}$\\   
+  {\tt\color{red} pg\_flexi\_down\_online}  & Flexible ramp down reserve when online (Float, p.u.) & Y & S & $p^{frd, on}$\\   
+  {\tt\color{red} pg\_flexi\_up\_offline}   & Flexible ramp up reserve when offline (Float, p.u.) & Y & S & $p^{fru, off}$\\   
+  {\tt\color{red} pg\_flexi\_down\_offline} & Flexible ramp down reserve when offline (Float, p.u.) & Y & S & $p^{frd, off}$\\
+  {\tt energy} & Energy storage (Float, p.u.) & Y & T & $e$\\     
+  \hline
+\end{tabular}
+\end{center}
+
+\subsection{Producing Devices: Multiple-Mode Generating Units}
+\label{nom:gen_single}
+\label{nom:gen_single}
+\paragraph{Input Attributes} The attributes for 
+multiple-mode energy producing (MMEP) devices used by the input data format are listed below.
+These devices include combine-cycle combustion units and/or storage units with multiple modes of operations. 
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+Input attributes & Description (Type) & Req & Sec & Sym\\
+\hline
+  {\tt uid} & Producing device unique identifier (String) & Y & B &  \\
+  {\tt bus} & Unique identifier for connecting bus (String)& Y & S & \\
+  {\tt vm\_setpoint} & Voltage magnitude setpoint (Float, p.u.) & N & S & \\
+  {\tt startup\_cost} & Producing device startup cost (Float) & Y & S & $c^{su}$\\
+  {\tt shutdown\_cost} & Producing device shutdown cost (Float) & Y & S & $c^{sd}$\\  
+  {\tt on\_status\_ub} & On status indicator upper bound (Binary: 0/1) & Y & T & $u^{on,max}$\\
+  {\tt on\_status\_lb} & On status indicator lower bound (Binary: 0/1) & Y & T & $u^{on,min}$\\
+%  {\tt\color{red} startup\_status\_ub} & Startup procedure/status upper bound (Binary: 0/1) & Y & T & $u^{su,max}$\\
+%  {\tt\color{red} startup\_status\_lb} & Startup procedure/status lower bound (Binary: 0/1) & Y & T & $u^{su,min}$\\
+  {\tt\color{red} startup\_num\_ub} & Maximum startups (Integer) & Y & S & $u^{su,max}$\\  
+  {\tt in\_service\_time\_lb} & Minimum uptime (hr) to operate/in service (Float) & Y & S & $d^{up,min}$\\
+%  {\tt down\_time\_ub} & Maximum (hr) down time (Float) & Y & S & $d^{dn,max}$\\
+  {\tt down\_time\_lb} & Minimum (hr) downtime (Float) & Y & S & $d^{dn,min}$\\
+%  {\tt pg\_transit\_ramp\_ub} & Array of maximum ramp up limit from each operating  & Y & S & $p^{ru}$ \\
+%     & mode/configuration (Array of Float, p.u./hr) &  &  &  \\
+  {\tt pg\_startup\_ramp\_ub} & Maximum ramp up on startup (Float, p.u./hr) & Y & S & $p^{ru,max,su}$\\
+  {\tt pg\_shutdown\_ramp\_lb}   & Maximum ramp down on shutdown (Float, pu/hr) & Y & S & $p^{rd,max,sd}$\\
+
+  {\tt initial\_status} & A JSON object storing data for the initial time step & Y & S &  \\
+  \hline \hline
+  Initial status attributes within: &  {\tt initial\_status} &  &  & \\
+  \hline    
+  {\tt\color{red} on\_status} & On status indicator for initial time step (Binary: 0/1) & Y & S & $u^{on,0}$\\
+  {\tt\color{red} select\_mode}  & Active mode uid for initial time step (uid) & Y & S & $u^{md,0}$\\
+  {\tt\color{red} pg} & Active dispatch for initial time step (Float, p.u.) & Y & S & $p^0$ \\
+  {\tt\color{red} qg} & Reactive dispatch for initial time step (Float, p.u.)& Y & S & $q^0$ \\
+  {\tt\color{red} energy} & Energy storage for initial time step (Float, p.u.)& Y & S & $e$\\  
+                          & $\hookrightarrow$ only exists if \texttt{storage\_cap} is \texttt{true} & & & \\  
+  {\tt\color{red} accu\_down\_time} & Accumulated down time (Float, hr) & Y & S & \\  
+  {\tt\color{red} accu\_up\_time} & Accumulated up time (Float, hr) & Y & S & \\  
+  \hline \hline
+  Flags for extra parameters &  --- indicating if there are extra parameters &  &  & \\
+  \hline
+  {\tt\color{red} q\_linear\_cap}      & Device has additional reactive constraint (bool: true/false) & Y & S & \\
+  {\tt\color{red} q\_bound\_cap}       & Device has additional reactive bounds (bool: true/false) & Y & S & \\
+  {\tt storage\_cap}       & Device has storage capability (bool: true/false) & Y & S & \\
+  \hline \hline
+  \end{tabular}
+\end{center}
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+  Mode attributes & Attributes related to modes  &  &  & \\
+  \hline
+  {\tt mode\_num} & Number of operating modes (Int, $\geq 2$) & Y & S & $\lvert Y \rvert$ \\
+  {\tt modes} & An array of mode JSON objects  & Y & B & $Y$ \\
+  \hline \hline
+  Inner mode attributes --- & for each mode JSON object in array {\tt modes} &  &  & \\
+  \hline    
+  {\tt uid} & Mode unique identifier (String) & Y & B &  \\
+  {\tt description} & Mode description (String) & N & S &  \\
+  {\tt select\_ub} & Mode selection upper bound (Binary: 0/1) & Y & T & $u^{md,max}$\\
+  {\tt select\_lb} & Mode selection lower bound (Binary: 0/1) & Y & T & $u^{md,min}$\\
+  {\tt\color{red} feasible\_transition} & Uids of feasible modes to transit to (Array of uids) & Y & S & $u^{tr,min}, u^{tr,max}$\\
+  {\tt\color{red} online\_subdevice} & Uids of subdevices that are online for current mode (Array of uids) & Y & S & $J^{sub,on}$\\
+  {\tt pg\_ub} & Upper bound of active dispatch (Float, p.u.) & Y & T & $p^{max}$ \\
+  {\tt pg\_lb} & Lower bound of active dispatch (Float, p.u.) & Y & T & $p^{min}$ \\
+  {\tt qg\_ub} & Upper bound of reactive dispatch (Float, p.u.)& Y & T & $q^{max}$\\
+  {\tt qg\_lb} & Lower bound of reactive dispatch (Float, p.u.)& Y & T & $q^{min}$\\ 
+
+  {\tt cost} &  Array of generation cost blocks (Array of cost blocks), where & Y & T &  \\
+    &  each cost block is an array with exactly two elements:   &  &   &  \\
+    &  a) generation cost (\$/p.u.-hr), and b) block size (p.u.) &  &   &$c^{en}, p^{max}$ \\
+  {\tt on\_cost} & Mode fixed operating cost (Float) & Y & S & $c^{md}$\\
+  {\tt mode\_transit\_cost} & An array of mode transition cost from each operating  & Y & S & $c^{tr}$ \\
+     & mode (Array of Float, \$) &  &  &  \\
+  {\tt pg\_ramp\_ub}          & Maximum ramp up on operating cond.(Float, p.u./hr) & Y & S & $p^{ru,max}$ \\
+  {\tt pg\_ramp\_lb}             & Maximum ramp down on operating cond.(Float, pu/hr) & Y & S & $p^{rd,max}$ \\
+    {\tt pg\_regulation\_up\_ub} & Maximum regulation up reserve (Float, p.u.) & Y & S & $p^{rgu,max}$\\ 
+  {\tt pg\_regulation\_down\_ub} & Maximum regulation down reserve (Float, p.u.) & Y & S & $p^{rgd,max}$\\ 
+  {\tt pg\_spin\_ub}             & Maximum spinning reserve (Float, p.u.) & Y & S & $p^{spr,max}$\\ 
+  {\tt\color{red} pg\_nonspin\_ub}          & Maximum non-spinning reserve (Float, p.u.) & Y & S & $p^{nsp,max}$\\   
+  {\tt\color{red} pg\_flexi\_up\_online\_ub}    & Maximum flexible ramp up reserve when online (Float, p.u.) & Y & S & $p^{fru, on, max}$\\   
+  {\tt\color{red} pg\_flexi\_down\_online\_ub}  & Maximum flexible ramp down reserve when online (Float, p.u.) & Y & S & $p^{frd, on, max}$\\   
+  {\tt\color{red} pg\_flexi\_up\_offline\_ub}    & Maximum flexible ramp up reserve when offline (Float, p.u.) & Y & S & $p^{fru, off, max}$\\   
+  {\tt\color{red} pg\_flexi\_down\_offline\_ub}  & Maximum flexible ramp down reserve when offline (Float, p.u.) & Y & S & $p^{frd, off, max}$\\     
+   \hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+ \hline
+   Additional mode attributes & Exist within mode JSON object if {\tt q\_linear\_cap} is true &  &  & \\
+  \hline
+  {\tt\color{red} q\_0}               & Reactive dispatch at zero active dispatch (Float, p.u.) & Y & S & $q^{p0}$\\
+  {\tt\color{red} pq\_ratio}          & Sensitivity of reactive w.r.t active dispatch (Float) & Y & S & $\beta$\\
+  \hline \hline
+  Additional mode attributes & Exist within mode JSON object if {\tt q\_bound\_cap} is true &  &  & \\
+  \hline
+  {\tt\color{red} q\_0\_ub}           & Maximum reactive dispatch at zero active dispatch (Float, p.u.) & Y & S & $q^{max,p0}$\\
+  {\tt\color{red} q\_0\_lb}           & Minimum reactive dispatch at zero active dispatch (Float, p.u.) & Y & S & $q^{min,p0}$\\
+  {\tt\color{red} pq\_ratio\_ub}      & Upper bound for sensitivity of reactive w.r.t active dispatch (Float) & Y & S & $\beta^{max}$\\
+  {\tt\color{red} pq\_ratio\_lb}      & Lower bound for sensitivity of reactive w.r.t active dispatch (Float) & Y & S & $\beta^{min}$\\
+  \hline 
+  \hline
+  Storage attributes & Exist if {\tt is\_storage} is true &  &  & \\
+  \hline
+  {\tt energy\_ub} & Upper bound for energy storage (Float, pu-h)& Y & T & $e^{max}$\\
+  {\tt energy\_lb} & Lower bound for energy storage (Float, pu-h)& Y & T & $e^{min}$\\ 
+  {\tt pg\_ext} & External power flow to storage facility (Float, p.u.)& Y & T & $p^{ext}$\\ 
+  {\tt storage\_efficiency} & Efficiency of storage device (Float) & Y & S & $\eta$\\
+  \hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+  Subdevice attributes & Attributes related to subdevices  &  &  & \\
+  \hline
+  {\tt\color{red} subdevices} & A JSON array of energy producing subdevices, where each& Y & B & \\
+                              & subdevice is defined as a multiple-mode energy producing device &  &  & \\
+                              \hline \hline
+  Inner subdevice attributes --- & for each multiple-mode energy producing (MMEP) subdevice &  &  & \\
+  \hline
+  * (all MMEP device attributes) & MMEP subdevice has the same list of attributes as MMEP device  & * & * & \\
+  \hline
+\end{tabular}
+\end{center}
+
+\begin{todo}[]{}
+Output solution --- a preliminary version with state/configuration is drafted. 
+\end{todo}
+
+\paragraph{Output Attributes} The attributes for multiple-mode generating units used by the output data format are listed below.
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+Output attributes & Description (Type) & Req & Sec & Sym\\
+\hline
+  {\tt uid} & Device unique identifier (String) & Y & B & \\
+  {\tt status}     & Connection status (bool: true/false) & Y & T & $u^{on}$ \\ 
+  {\tt select\_mode}  & Active configuration uids for each time step (uids) & Y & T & \\
+  {\tt pg} & Active dispatch (Float, p.u.)  & Y & T & $p$ \\
+  {\tt qg} & Reactive dispatch (Float, p.u.)& Y & T & $q$ \\
+  {\tt pg\_regulation\_up} & Regulation up reserve (Float, p.u.) & Y & T & $p^{rgu}$\\
+  {\tt pg\_regulation\_down} & Regulation down reserve (Float, p.u.) & Y & T & $p^{rgd}$\\ 
+  {\tt pg\_spin} & Spinning reserve (Float, p.u.) & Y & T & $p^{spr}$\\ 
+  {\tt pg\_nonspin} & Non-spinning reserve (Float, p.u.) & Y & T & $p^{nsp}$\\     
+  {\tt\color{red} pg\_flexi\_up\_online}    & Flexible ramp up reserve when online (Float, p.u.) & Y & T & $p^{fru, on}$\\   
+  {\tt\color{red} pg\_flexi\_down\_online}  & Flexible ramp down reserve when online (Float, p.u.) & Y & T & $p^{frd, on}$\\   
+  {\tt\color{red} pg\_flexi\_up\_offline}   & Flexible ramp up reserve when offline (Float, p.u.) & Y & T & $p^{fru, off}$\\   
+  {\tt\color{red} pg\_flexi\_down\_offline} & Flexible ramp down reserve when offline (Float, p.u.) & Y & T & $p^{frd, off}$\\
+  {\tt energy} & Energy storage (Float, p.u.) & Y & T & $e$\\    
+  \hline
+\end{tabular}
+\end{center}
+
+\subsection{Consuming Devices: Loads and Demand Response}
+\label{nom:load}
+\paragraph{Input Attributes} The attributes for energy consuming devices used by the input data format are listed below.
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+Input attributes & Description (Type) & Req & Sec & Sym\\
+\hline
+  {\tt uid} & Consuming device unique identifier (String) & Y & B &  \\
+  {\tt bus} & Unique identifier for connecting bus (String)& Y & S & \\
+  {\tt connection\_cost} & Consumption device connection cost (Float) & Y & S & $c^{su}$\\
+  {\tt disconnection\_cost} & Consumption device disconnection cost (Float) & Y & S & $c^{sd}$\\  
+  {\tt on\_status\_ub} & On status indicator upper bound (Binary: 0/1) & Y & T & $u^{on,max}$\\
+  {\tt on\_status\_lb} & On status indicator lower bound (Binary: 0/1) & Y & T & $u^{on,min}$\\
+  {\tt\color{red} connection\_status\_ub} & Connection capability  upper bound (Binary: 0/1) & Y & T & $u^{su,max}$\\
+  {\tt\color{red} connection\_status\_lb} & Connection capability lower bound (Binary: 0/1) & Y & T & $u^{su,min}$\\
+  {\tt\color{red} connection\_num\_ub} & Maximum connection limits per time horizon (Integer) & Y & S & $u^{su,max}$\\  
+  {\tt pd\_ub} & Upper bound of active demand (Float, p.u.) & Y & T & $p^{max}$ \\
+  {\tt pd\_lb} & Lower bound of active demand (Float, p.u.) & Y & T & $p^{min}$ \\
+  {\tt qd\_ub} & Upper bound of reactive demand (Float, p.u.)& Y & T & $q^{max}$\\
+  {\tt qd\_lb} & Lower bound of reactive demand (Float, p.u.)& Y & T & $q^{min}$\\ 
+
+  {\tt cost} &  Array of demand bids/cost blocks (Array of cost blocks), where & Y & T &  \\
+    &  each block is an array with exactly two elements:   &  &   &  \\
+    &  a) consumption cost (\$/p.u.-hr), and b) demand block size (p.u.) &  &   &$c^{en}, p^{max}$ \\
+  {\tt\color{red} on\_cost} & Consumption device fixed cost (Float) & Y & S & $c^{on}$\\
+  {\tt in\_service\_time\_lb} & Minimum uptime (hr) in service (Float) & Y & S & $d^{up,min}$\\
+  {\tt down\_time\_lb} & Minimum (hr) disconnection time (Float) & Y & S & $d^{dn,min}$\\
+  {\tt pg\_ramp\_ub}          & Maximum ramp up in nominal  cond.(Float, p.u./hr) & Y & S & $p^{ru,max}$ \\
+  {\tt pg\_ramp\_lb}          & Maximum ramp down in nominal cond.(Float, pu/hr) & Y & S & $p^{rd,max}$ \\
+  {\tt pg\_startup\_ramp\_ub} & Maximum ramp up on startup (Float, p.u./hr) & Y & S & $p^{ru,max,su}$\\
+  {\tt pg\_shutdown\_ramp\_lb}& Maximum ramp down on shutdown (Float, pu/hr) & Y & S & $p^{rd,max,sd}$\\
+  {\tt pg\_regulation\_up\_ub} & Maximum regulation up reserve (Float, p.u.) & Y & S & $p^{rgu,max}$\\ 
+  {\tt pg\_regulation\_down\_ub} & Maximum regulation down reserve (Float, p.u.) & Y & S & $p^{rgd,max}$\\ 
+  {\tt pg\_spin\_ub}             & Maximum spinning reserve (Float, p.u.) & Y & S & $p^{spr,max}$\\ 
+  {\tt\color{red} pg\_nonspin\_ub}          & Maximum non-spinning reserve (Float, p.u.) & Y & S & $p^{nsp,max}$\\   
+  {\tt\color{red} pg\_flexi\_up\_online\_ub}    & Maximum flexible ramp up reserve when online (Float, p.u.) & Y & S & $p^{fru, on, max}$\\   
+  {\tt\color{red} pg\_flexi\_down\_online\_ub}  & Maximum flexible ramp down reserve when online (Float, p.u.) & Y & S & $p^{frd, on, max}$\\   
+  {\tt\color{red} pg\_flexi\_up\_offline\_ub}    & Maximum flexible ramp up reserve when offline (Float, p.u.) & Y & S & $p^{fru, off, max}$\\   
+  {\tt\color{red} pg\_flexi\_down\_offline\_ub}  & Maximum flexible ramp down reserve when offline (Float, p.u.) & Y & S & $p^{frd, off, max}$\\     
+  {\tt initial\_status} & A JSON inner object storing data for initial time step & Y & S &  \\
+   \hline
+   Flags for extra parameters & --- indicating if there are extra parameters & Req & Sec & Sym\\
+   \hline
+     {\tt\color{red} q\_linear\_cap}      & Device has additional reactive constraint (bool: true/false) & Y & S & \\
+  {\tt\color{red} q\_bound\_cap}       & Device has additional reactive bounds (bool: true/false) & Y & S & \\
+  \sout{\tt\color{red} storage\_cap}       & Device has storage capability (bool: true/false) & Y & S & \\
+  \hline   
+\end{tabular}
+\end{center}
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+\hline
+  Initial status attributes &  Attributes inside the inner {\tt initial\_status} JSON object &  &  & \\
+  \hline    
+  {\tt\color{red} on\_status} & On status indicator for initial time step (Binary: 0/1) & Y & S & $u^{on,0}$\\
+  {\tt\color{red} pd} & Active demand for initial time step (Float, p.u.) & Y & S & $p^0$ \\
+  {\tt\color{red} qd} & Reactive demand for initial time step (Float, p.u.)& Y & S & $q^0$ \\
+  {\tt\color{red} energy} & Energy storage for initial time step (Float, p.u.)& Y & S & $e$\\  
+                          & $\hookrightarrow$ only exists if \texttt{storage\_cap} is \texttt{true} & & & \\  
+  {\tt\color{red} accu\_down\_time} & Accumulated down time (Float, hr) & Y & S & \\  
+  {\tt\color{red} accu\_up\_time} & Accumulated up time (Float, hr) & Y & S & \\  
+ \hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+ \hline
+  Additional attributes & Exist if {\tt q\_linear\_cap} is true &  &  & \\
+  \hline
+  {\tt\color{red} q\_0}               & Reactive dispatch at zero active dispatch (Float, p.u.) & Y & S & $q^{p0}$\\
+  {\tt\color{red} pq\_ratio}          & Sensitivity of reactive w.r.t active dispatch (Float) & Y & S & $\beta$\\
+  \hline \hline
+  Additional attributes & Exist if {\tt q\_bound\_cap} is true &  &  & \\
+  \hline
+  {\tt\color{red} q\_0\_ub}           & Maximum reactive dispatch at zero active dispatch (Float, p.u.) & Y & S & $q^{max,p0}$\\
+  {\tt\color{red} q\_0\_lb}           & Minimum reactive dispatch at zero active dispatch (Float, p.u.) & Y & S & $q^{min,p0}$\\
+  {\tt\color{red} pq\_ratio\_ub}      & Upper bound for sensitivity of reactive w.r.t active dispatch (Float) & Y & S & $\beta^{max}$\\
+  {\tt\color{red} pq\_ratio\_lb}      & Lower bound for sensitivity of reactive w.r.t active dispatch (Float) & Y & S & $\beta^{min}$\\
+  \hline 
+  
+  Additional attributes & Exist if {\tt is\_storage} is true &  &  & \\
+  \hline
+  \sout{\tt energy\_ub} & Upper bound for energy storage (Float, pu-h)& Y & T & $e^{max}$\\
+  \sout{\tt energy\_lb} & Lower bound for energy storage (Float, pu-h)& Y & T & $e^{min}$\\ 
+  \sout{\tt pg\_ext} & External power flow to storage facility (Float, p.u.)& Y & T & $p^{ext}$\\ 
+  \sout{\tt storage\_efficiency} & Efficiency of storage device (Float) & Y & S & $\eta$\\
+  \hline
+\end{tabular}
+\end{center}
+
+
+
+\subsection{AC Transmission Line}
+\label{nom:line}
+\paragraph{Input Attributes}
+The attributes for AC transmission lines used by the input data format are listed below.
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c | }
+Input attributes & Description (Type)& Req & Sec & Sym\\
+\hline
+  {\tt uid} & AC line unique identifier (String)& Y & B &  \\
+  {\tt fr\_bus} & Unique identifier for connecting from bus (String)& Y & S & \\
+  {\tt to\_bus} & Unique identifier for connecting to bus (String)& Y & S & \\
+  {\tt r} & Series resistance (Float, p.u.)& Y & S & $r^{sr}$\\
+  {\tt x} & Series reactance  (Float, p.u.)& Y & S & $x^{sr}$\\
+%  \sout{\tt\color{red} b\_ctg} & \sout{Series susceptance for contingency (Float, p.u.)}& Y & S & $b^{ctg}$\\
+  {\tt b\_ch} & AC line charging susceptance (Float, p.u.)& Y & S & $b^{ch}$\\    
+  {\tt mva\_ub\_nom} & MVA limit, nominal rating (Float, p.u.)& Y & S & $s^{max}$\\
+  {\tt mva\_ub\_sht} & MVA limit, short term rating (Float, p.u.)& N & S & \\
+  {\tt mva\_ub\_em} & MVA limit, emergency rating (Float, p.u.)& Y & S & $s^{max,ctg}$\\  
+  {\tt standby\_cost} & Line fixed standby cost (Float) & Y & S & $c^{on}$\\
+  {\tt connection\_cost} &  AC Line connection cost (Float) & Y & S & $c^{su}$\\ 
+  {\tt disconnection\_cost} & AC line disconnection cost (Float) & Y & S & $c^{sd}$\\
+  {\tt additional\_shunt} & Branch has additional shunt components (bool: true/false)& Y & S & \\
+  \hline
+  Additional shunt attributes & Exist if {\tt additional\_shunt} is true &  & & \\
+  \hline
+ % \sout{\tt\color{red} b\_sr} & AC line series   susceptance (Float, p.u.)& Y & S & $b^{sr}$\\   
+ % \sout{\tt\color{red} g\_sr} & AC line series   condutance  (Float, p.u.)& Y & S & $g^{sr}$\\   
+  {\tt g\_fr} & Conductance for shunt component at from bus (Float, p.u.)& Y & S & $g^{fr}$\\
+  {\tt b\_fr} & Susceptance for shunt component at from bus (Float, p.u.)& Y & S & $b^{fr}$\\
+  {\tt g\_to} & Conductance for shunt component at to bus (Float, p.u.)& Y & S & $g^{to}$\\
+  {\tt b\_to} & Susceptance for shunt component at to bus (Float, p.u.)& Y & S & $b^{to}$\\
+  \hline
+\end{tabular}
+\end{center}
+
+\paragraph{Derived Attributes}
+Below lists attributes for AC transmission lines that 
+will \textit{\textbf{not}} be explicitly 
+specified by the input data, but 
+implicitly derived by other data sources.
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c | }
+Derived attributes & Description (Type)& Req & Sec & Sym\\
+\hline
+  {\tt b\_sr} & AC line series susceptance (Float, p.u.)& N & -- & $b^{sr} = -x^{sr} / [(r^{sr})^2 + (x^{sr})^2]$\\   
+  {\tt g\_sr} & AC line series condutance  (Float, p.u.)& N & -- & $g^{sr} = r^{sr} / [(r^{sr})^2 + (x^{sr})^2]$\\   
+  {\tt b\_ctg} & {AC line series susceptance for contingency (Float, p.u.)}& N & -- & $b^{ctg}= -x^{sr} / [(r^{sr})^2 + (x^{sr})^2]$\\
+  \hline
+\end{tabular}
+\end{center}
+
+\paragraph{Output Attributes}
+The attributes for AC transmission lines used by the output data format are listed below.
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+Output attributes & Description (Type)& Req & Sec & Sym\\
+\hline
+ {\tt uid} & AC line unique identifier (String)& Y & B & \\
+ {\tt status} & Connection status (bool: true/false) & Y & T & $u^{on}$ \\  
+\hline
+  Optional output attributes &   &  & & \\
+\hline
+ {\tt pl\_fr} & Active power flow, from side (Float, p.u.)  & N & T & $p^{fr}$ \\
+ {\tt ql\_fr} & Reactive power flow, from side (Float, p.u.)& N & T & $q^{fr}$ \\
+ {\tt pl\_to} & Active power flow, to side (Float, p.u.).   & N & T & $p^{to}$ \\
+ {\tt ql\_to} & Reactive power flow, to side (Float, p.u.). & N & T & $q^{to}$ \\
+\hline 
+\end{tabular}
+\end{center}
+\subsection{Two Winding Transformer}
+\label{nom:transformer}
+
+\paragraph{Input Attributes}
+The attributes for two winding transformers used by the
+input data format are listed below.
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+Input attributes & Description (Type) & Req & Sec & Sym\\
+\hline
+  {\tt uid} & Transformer unique identifier (String)& Y & B & \\
+  {\tt fr\_bus} & Unique identifier for connecting from/tap bus (String)& Y & S & \\
+  {\tt to\_bus} & Unique identifier for connecting to bus (String)& Y & S & \\
+%  {\tt the\_first\_bus} & Unique identifier for connecting the tap bus (String)& Y & S & \\
+%  {\tt the\_second\_bus} & Unique identifier for not connecting the tap bus (String)& Y & S & \\
+  {\tt r} & Series resistance (Float, p.u.)& Y & S & $r^{sr}$\\
+  {\tt x} & Series reactance  (Float, p.u.)& Y & S & $x^{sr}$\\
+  %\sout{\tt\color{red} b\_ctg} & \sout{Series susceptance for contingency (Float, p.u.)}& Y & S & $b^{ctg}$\\
+  %{\tt g\_sh} & Conductance for transformer shunt component (Float, p.u.)& Y & S & \\
+%  \sout{\tt\color{red} b\_ctg} & \sout{Series susceptance for contingency (Float, p.u.)}& Y & S & $b^{ctg}$\\
+  {\tt\color{red} b\_lk} & Susceptance for transformer leakage (Float, p.u.)& Y & S & $b^{ch}$ \\
+  %{\tt tm} & off-nominal taps ratio (Float, p.u.)& N & T & $\tau^0$\\
+  {\tt tm\_ub} & Upper bound for off-nominal taps ratio (Float, p.u.)& Y & S & $\tau^{max}$\\
+  {\tt tm\_lb} & Lower bound for off-nominal taps ratio (Float, p.u.)& Y & S & $\tau^{min}$\\
+  %{\tt tm\_steps} & Number of steps for off-nominal taps ratio (Int)& Y & S & \\
+  %{\tt ta} & Phase shifting angle (Float, radian)& N & T & $\phi^{0}$\\
+  {\tt ta\_ub} & Upper bound for phase shifting angle (Float, radian)& Y & S & $\phi^{max}$\\
+  {\tt ta\_lb} & Lower bound for phase shifting angle (Float, radian)& Y & S & $\phi^{min}$\\
+  %{\tt ta\_steps} & Number of steps for phase shifting angle (Int)& Y & S & \\
+  {\tt mva\_ub\_nom} & MVA limit, nominal rating (Float, p.u.) & Y & S & $s^{max}$ \\
+  {\tt mva\_ub\_sht} & MVA limit, short term rating (Float, p.u.) & N & S &  \\
+  {\tt mva\_ub\_em} & MVA limit, emergency rating (Float, p.u.) & Y & S & $s^{max,ctg}$ \\
+%  {\tt pt\_fr} & Active power flow, from side (Float, p.u.)& Y & T & \\
+%  {\tt qt\_fr} & Reactive power flow, from side (Float, p.u.)& Y & T &  \\
+%  {\tt pt\_to} & Active power flow, to side (Float, p.u.)& Y & T &  \\
+%  {\tt qt\_to} & Reactive power flow, to side (Float, p.u.)& Y & T &  \\  
+ 
+  {\tt standby\_cost} & Transformer fixed standby cost (Float) & Y & S & $c^{on}$\\
+  {\tt connection\_cost} &  Transformer connection cost (Float) & Y & S & $c^{su}$\\      
+  {\tt disconnection\_cost} & Transformer disconnection cost (Float) & Y & S & $c^{sd}$\\  
+  {\tt\color{red} additional\_shunt} & Transformer has additional shunt components (bool: true/false)& Y & S & \\
+  \hline    
+  Additional shunt attributes & Exist if {\tt additional\_shunt} is true &  & & \\
+  \hline
+%  {\tt\color{red} b\_sr} & Additional series susceptance (Float, p.u.)& Y & S & $b^{sr}$\\   
+%  {\tt\color{red} g\_sr} & Additional series condutance  (Float, p.u.)& Y & S & $g^{sr}$\\   
+  {\tt g\_fr} & Conductance for shunt component at from bus (Float, p.u.)& Y & S & $g^{fr}$\\
+  {\tt b\_fr} & Susceptance for shunt component at from bus (Float, p.u.)& Y & S & $b^{fr}$\\
+  {\tt g\_to} & Conductance for shunt component at to bus (Float, p.u.)& Y & S & $g^{to}$\\
+  {\tt b\_to} & Susceptance for shunt component at to bus (Float, p.u.)& Y & S & $b^{to}$\\
+  \hline
+\end{tabular}
+\end{center}
+
+\paragraph{Derived Attributes}
+Below lists attributes for transformers that 
+will \textit{\textbf{not}} be explicitly 
+specified by the input data, but 
+implicitly derived by other data sources.
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c | }
+Derived attributes & Description (Type)& Req & Sec & Sym\\
+\hline
+  {\tt b\_sr} & Transformer series susceptance (Float, p.u.)& N & -- & $b^{sr} = -x^{sr} / [(r^{sr})^2 + (x^{sr})^2]$\\   
+  {\tt g\_sr} & Transformer series condutance  (Float, p.u.)& N & -- & $g^{sr} = r^{sr} / [(r^{sr})^2 + (x^{sr})^2]$\\   
+  {\tt b\_ctg} & {Transformer contingency series susceptance  (Float, p.u.)}& N & -- & $b^{ctg}= -x^{sr} / [(r^{sr})^2 + (x^{sr})^2]$\\
+  \hline
+\end{tabular}
+\end{center}
+
+
+\paragraph{Output Attributes}
+The attributes for two winding transformers used by the output data format are listed below.
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+Output attributes & Description (Type)& Req & Sec & Sym\\
+\hline
+ {\tt uid} & Transformer line unique identifier (String)& Y & B & \\
+ {\tt tm} & Off-nominal taps ratio (Float, p.u.)& Y & T & $\tau$\\
+ {\tt ta} & Phase shifting angle (Float, radian)& Y & T & $\phi$\\
+ {\tt status}     & Connection status (bool: true/false) & Y & T & $u^{on}$ \\ 
+\hline
+  Optional output attributes &   &  & & \\
+\hline
+ {\tt pl\_fr} & Active power flow, from side (Float, p.u.)  & N & T & $p^{fr}$ \\
+ {\tt ql\_fr} & Reactive power flow, from side (Float, p.u.)& N & T & $q^{fr}$ \\
+ {\tt pl\_to} & Active power flow, to side (Float, p.u.).   & N & T & $p^{to}$ \\
+ {\tt ql\_to} & Reactive power flow, to side (Float, p.u.). & N & T & $q^{to}$ \\
+\hline 
+\end{tabular}
+\end{center}
+
+     
+
+
+  
+\subsection{DC Line}
+\label{nom:dcline}
+
+\paragraph{Input Attributes}
+The attributes for DC lines 
+used by the input data format are listed below.
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+Input attributes & Description (Type) & Req & Sec & Sym\\
+\hline
+  {\tt uid} & DC line unique identifier (String)& Y & B &  \\
+  {\tt fr\_bus} & Unique identifier for connecting from bus (String) & Y & S & \\
+  {\tt to\_bus} & Unique identifier for connecting to bus (String)& Y & S & \\
+  {\tt pdc\_fr\_ub} & Maximum active power, from bus (Float, p.u)& Y & S & $p^{dc,max}$\\
+  {\tt pdc\_fr\_lb} & Minimum active power, from bus (Float, p.u)& Y & S & $p^{dc,min}$\\
+  {\tt qdc\_fr\_ub} & Maximum reactive power, from bus (Float, p.u)& Y & S & $q^{dc,fr,max}$\\
+  {\tt qdc\_fr\_lb} & Minimum reactive power, from bus (Float, p.u)& Y & S & $q^{dc,fr,min}$\\
+  {\tt qdc\_to\_ub} & Maximum reactive power, to bus (Float, p.u)& Y & S & $q^{dc,to,max}$\\
+  {\tt qdc\_to\_lb} & Minimum reactive power, to bus (Float, p.u)& Y & S & $q^{dc,to,min}$\\
+%  {\tt loss}    & DC line loss coefficient (Float) & Y & S & $\zeta$\\
+%  {\tt pdc\_fr} & Active power flow, from side (Float, p.u.)& Y & T & \\
+%  {\tt qdc\_fr} & Reactive power flow, from side (Float, p.u.)& Y & T & \\
+%  {\tt pdc\_to} & Active power flow, to side (Float, p.u.)& Y & T & \\
+%  {\tt qdc\_to} & Reactive power flow, to side (Float, p.u.)& Y & T &  \\  
+%  {\tt mva\_ub} & MVA limit (Float, p.u.)& Y & S & $s^{max}$ \\  
+%  {\tt mva\_ub\_em} & MVA limit, emergency rating (Float, p.u.) & Y & S & $s^{max,ctg}$ \\
+   {\tt standby\_cost} & {DC line fixed standby cost (Float)} & Y & S & $c^{on}$\\  
+  {\tt connection\_cost} & {DC line connection cost (Float)} & Y & S & $c^{su}$\\        
+  {\tt disconnection\_cost} & {DC line disconnection cost (Float)} & Y & S & $c^{sd}$\\     
+  \hline
+\end{tabular}
+\end{center}    
+
+\paragraph{Output Attributes}
+ The attributes for DC lines 
+ used by the output data format are listed below.
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c | }
+Output attributes & Description (Type) & Req & Sec & Sym\\
+\hline
+  {\tt uid}    & DC line unique identifier (String)& Y & B & \\
+  {\tt status} & Connection status (bool: true/false) & Y & T & $u^{on}$ \\ 
+  {\tt pdc\_fr} & Active power flow, from bus (Float, p.u.)& Y & T & $p^{dc}$ \\
+  {\tt qdc\_fr} & Reactive power flow, from bus (Float, p.u.)& Y & T & $q^{dc}$ \\
+  {\tt qdc\_to} & Reactive power flow, to bus (Float, p.u.)& Y & T & $q^{dc}$ \\
+  \hline
+\end{tabular}
+\end{center}    
+
+\subsection{Regional Reserves}
+\label{nom:reserves}
+
+\paragraph{Input Attributes}
+The attributes for regional reserves  
+used by the data format are listed below.
+Names, descriptions, and types for each of the attributes are shown.
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+Active reserve attributes & Description (Type) & Req & Sec & Sym\\
+\hline
+  {\tt uid} & Region reserve unique identifier (String) & Y & B & \\
+  \hline
+% {\tt type} & Type of reserve  & Y & S & \\
+%  & (String: REG-UP, REG-DOWN, SPIN, NON-SPIN,    &  & & \\
+%  &  FLEXI-RAMP-UP, FLEXI-RAMP-DOWN ) &  & & \\
+  {\tt\color{red} REG\_UP} & Regulation reserve up requirement (Fraction, Float) & Y & T & $\sigma^{rgu}$ \\
+  {\tt\color{red} REG\_DOWN} & Regulation reserve down requirement (Fraction, Float) & Y & T & $\sigma^{rgd}$ \\
+  {\tt\color{red} SPIN} & Spinning reserve requirement (Fraction, Float) & Y & T & $\sigma^{spr}$ \\
+  {\tt\color{red} NON\_SPIN} & Non-spinning reserve requirement (Fraction, Float) & Y & T & $\sigma^{nsp}$ \\
+  {\tt\color{red} RAMPING\_RESERVE\_UP} & Ramping reserve up requirement (Float) & Y & T & $p^{rru,min}$ \\
+  {\tt\color{red} RAMPING\_RESERVE\_DOWN} & Ramping reserve down requirement (Float) & Y & T & $p^{rrd,min}$ \\
+  \hline
+  {\tt\color{red} REG\_UP\_vio\_cost} & Regulation reserve up violation cost (\$/pu-hr, Float) & Y & S & $c^{rgu}$ \\
+  {\tt\color{red} REG\_DOWN\_vio\_cost} & Regulation reserve down violation cost (\$/pu-hr, Float) & Y & S & $c^{rgd}$ \\
+  {\tt\color{red} SPIN\_vio\_cost} & Spinning reserve violation cost (\$/pu-hr, Float) & Y & S & $c^{spr}$ \\
+  {\tt\color{red} NON\_SPIN\_vio\_cost} & Non-spinning reserve violation cost (\$/pu-hr, Float) & Y & S & $c^{nsp}$ \\
+  {\tt\color{red} RAMPING\_RESERVE\_UP\_vio\_cost} & Flexible-ramp up violation cost & Y & S & $c^{rru}$ \\
+  &(\$/pu-hr, Float) & && \\
+  {\tt\color{red} RAMPING\_RESERVE\_DOWN\_vio\_cost} & Flexible-ramp down violation cost & Y & S & $c^{rrd}$ \\
+    &(\$/pu-hr, Float) & && \\
+   \hline
+\end{tabular}
+\end{center}    
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+Reactive reserve attributes & Description (Type) & Req & Sec & Sym\\
+\hline
+  {\tt uid} & Region reserve unique identifier (String) & Y & B & \\
+  \hline
+% {\tt type} & Type of reserve  & Y & S & \\
+%  & (String: REG-UP, REG-DOWN, SPIN, NON-SPIN,    &  & & \\
+%  &  FLEXI-RAMP-UP, FLEXI-RAMP-DOWN ) &  & & \\
+  {\tt\color{red} REACT\_UP} & Reactive reserve power up requirement (Float) & Y & T & $q^{qru,min}$ \\
+  {\tt\color{red} REACT\_DOWN} & Reactive reserve power down requirement (Float) & Y & T & $q^{qrd,min}$ \\
+  \hline
+  {\tt\color{red} REACT\_UP\_vio\_cost} & Reactive reserve power violation cost (\$/pu-hr, Float) & Y & S & $c^{qru}$ \\
+  {\tt\color{red} REACT\_DOWN\_vio\_cost} & Reactive reserve power violation cost (\$/pu-hr, Float) & Y & S & $c^{qrd}$ \\
+  \hline
+\end{tabular}
+\end{center}    
+
+% \paragraph{Output Attributes}
+% The attributes for regional reserves  
+% used by the output data format are listed below.
+% \begin{todo}[]{}
+% Solution question: Will competitors need to declare the total amount of reserve per region/per time period? 
+% Can this information be inferred from dispatchable devices?
+% \end{todo}
+
+% \begin{center}
+% \small
+% \begin{tabular}{ l | l | c | c | c |}
+% Output attributes & Description (Type) & Req & Sec & Sym\\
+% \hline
+%   {\tt uid} & Region reserve unique identifier (String) & Y & B & \\
+%   {\tt reserve} & Active/Reactive power reserve (Float, p.u.) & Y & T & \\ 
+%       &$\hookrightarrow$ Case {\tt type}: SPIN &  & &$p^{spru}$ \\ 
+%       &$\hookrightarrow$ Case {\tt type}: RAMP-UP &  & &$p^{rru}$ \\ 
+%       &$\hookrightarrow$ Case {\tt type}: RAMP-DOWN &  & &$p^{rrd}$ \\ 
+%       &$\hookrightarrow$ Case {\tt type}: REG-UP &  & &$p^{rgru}$ \\ 
+%       &$\hookrightarrow$ Case {\tt type}: REG-DOWN &  & &$p^{rgrd}$ \\ 
+%       &$\hookrightarrow$ Case {\tt type}: CONT &  & &$p^{cgru}$ \\ 
+%       &$\hookrightarrow$ Case {\tt type}: REACT-UP &  & &$p^{qru}$ \\ 
+%       &$\hookrightarrow$ Case {\tt type}: REACT-DOWN &  & &$p^{qrd}$ \\      
+%       \hline
+% \end{tabular}
+% \end{center}    
+
+\section{Static Electrical Parameter}
+\label{sec:format_spec}
+
+\input{static_json}
+
+\section{Time series input data}
+\input{time_series}
+
+\section{Contingencies}
+\label{sec:contingency}
+\begin{verbatim}
+"contingency”: [
+    {"uid" : "CONT1", "components" : [ "IDAC0001", "IDAC0002" ]},
+    {"uid" : "CONT2", "components" : [ "IDAC0003" ]},
+    {"uid" : "CONT3", "components" : [ "IDAC0001", "ID2T0001" ]}    
+]    
+\end{verbatim}
+
+\section{Solution Output Data}
+\input{solution}
+
+\section{Data Format Parsing \& Details}
+\input{parsing_mapping}
+
+
+\end{document}

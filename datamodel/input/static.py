@@ -36,13 +36,8 @@ class ViolationCostsParameters(BidDSJsonBaseModel):
         description = "Bus marginal costs for reactive power violation  "
     )
 
-    v_bus_vio_cost: float = Field(
-        title = "v_bus_vio_cost",
-        description = "Bus marginal costs for voltage violation "
-    )
-
-    mva_branch_vio_cost: float = Field(
-        title = "mva_branch_vio_cost",
+    s_vio_cost: float = Field(
+        title = "s_vio_cost",
         description = "Branch marginal costs for thermal violation "
     )
 
@@ -291,6 +286,12 @@ class ProducingDevices_SingleModeGeneratingUnits(BidDSJsonBaseModel):
         description = "Maximum flexible ramp down reserve when offline "
     )
 
+    # 
+
+    # 
+
+    # 
+
     # Flags for extra parameters
 
     q_linear_cap: bool = Field(
@@ -363,45 +364,7 @@ class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
         description = "Maximum ramp down on shutdown "
     )
 
-    pg_regulation_up_ub: float = Field(
-        title = "pg_regulation_up_ub",
-        description = "Maximum regulation up reserve "
-    )
-
-    pg_regulation_down_ub: float = Field(
-        title = "pg_regulation_down_ub",
-        description = "Maximum regulation down reserve "
-    )
-
-    pg_spin_ub: float = Field(
-        title = "pg_spin_ub",
-        description = "Maximum spinning reserve "
-    )
-
-    pg_nonspin_ub: float = Field(
-        title = "pg_nonspin_ub",
-        description = "Maximum non-spinning reserve "
-    )
-
-    pg_flexi_up_online_ub: float = Field(
-        title = "pg_flexi_up_online_ub",
-        description = "Maximum flexible ramp up reserve when online "
-    )
-
-    pg_flexi_down_online_ub: float = Field(
-        title = "pg_flexi_down_online_ub",
-        description = "Maximum flexible ramp down reserve when online "
-    )
-
-    pg_flexi_up_offline_ub: float = Field(
-        title = "pg_flexi_up_offline_ub",
-        description = "Maximum flexible ramp up reserve when offline "
-    )
-
-    pg_flexi_down_offline_ub: float = Field(
-        title = "pg_flexi_down_offline_ub",
-        description = "Maximum flexible ramp down reserve when offline "
-    )
+    # 
 
     # \hline \hline
 
@@ -483,6 +446,8 @@ class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
         description = "Number of operating modes "
     )
 
+    # \hline \hline
+
     # Inner mode attributes ---
 
     uid: str = Field(
@@ -517,6 +482,171 @@ class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
         title = "pg_ramp_lb",
         description = "Maximum ramp down on operating cond."
     )
+
+    pg_regulation_up_ub: float = Field(
+        title = "pg_regulation_up_ub",
+        description = "Maximum regulation up reserve "
+    )
+
+    pg_regulation_down_ub: float = Field(
+        title = "pg_regulation_down_ub",
+        description = "Maximum regulation down reserve "
+    )
+
+    pg_spin_ub: float = Field(
+        title = "pg_spin_ub",
+        description = "Maximum spinning reserve "
+    )
+
+    pg_nonspin_ub: float = Field(
+        title = "pg_nonspin_ub",
+        description = "Maximum non-spinning reserve "
+    )
+
+    pg_flexi_up_online_ub: float = Field(
+        title = "pg_flexi_up_online_ub",
+        description = "Maximum flexible ramp up reserve when online "
+    )
+
+    pg_flexi_down_online_ub: float = Field(
+        title = "pg_flexi_down_online_ub",
+        description = "Maximum flexible ramp down reserve when online "
+    )
+
+    pg_flexi_up_offline_ub: float = Field(
+        title = "pg_flexi_up_offline_ub",
+        description = "Maximum flexible ramp up reserve when offline "
+    )
+
+    pg_flexi_down_offline_ub: float = Field(
+        title = "pg_flexi_down_offline_ub",
+        description = "Maximum flexible ramp down reserve when offline "
+    )
+
+
+class ConsumingDevices_LoadsandDemandResponse(BidDSJsonBaseModel):
+
+    # Input attributes
+
+    uid: str = Field(
+        title = "uid",
+        description = "Consuming device unique identifier "
+    )
+
+    bus: str = Field(
+        title = "bus",
+        description = "Unique identifier for connecting bus "
+    )
+
+    connection_cost: float = Field(
+        title = "connection_cost",
+        description = "Consumption device connection cost "
+    )
+
+    disconnection_cost: float = Field(
+        title = "disconnection_cost",
+        description = "Consumption device disconnection cost "
+    )
+
+    connection_num_ub: int = Field(
+        title = "connection_num_ub",
+        description = "Maximum connection limits per time horizon "
+    )
+
+    # 
+
+    # 
+
+    # 
+
+    on_cost: float = Field(
+        title = "on_cost",
+        description = "Consumption device fixed cost "
+    )
+
+    in_service_time_lb: float = Field(
+        title = "in_service_time_lb",
+        description = "Minimum uptime (hr) in service "
+    )
+
+    down_time_lb: float = Field(
+        title = "down_time_lb",
+        description = "Minimum (hr) disconnection time "
+    )
+
+    pg_ramp_ub: float = Field(
+        title = "pg_ramp_ub",
+        description = "Maximum ramp up in nominal  cond."
+    )
+
+    pg_ramp_lb: float = Field(
+        title = "pg_ramp_lb",
+        description = "Maximum ramp down in nominal cond."
+    )
+
+    pg_startup_ramp_ub: float = Field(
+        title = "pg_startup_ramp_ub",
+        description = "Maximum ramp up on startup "
+    )
+
+    pg_shutdown_ramp_lb: float = Field(
+        title = "pg_shutdown_ramp_lb",
+        description = "Maximum ramp down on shutdown "
+    )
+
+    pg_regulation_up_ub: float = Field(
+        title = "pg_regulation_up_ub",
+        description = "Maximum regulation up reserve "
+    )
+
+    pg_regulation_down_ub: float = Field(
+        title = "pg_regulation_down_ub",
+        description = "Maximum regulation down reserve "
+    )
+
+    pg_spin_ub: float = Field(
+        title = "pg_spin_ub",
+        description = "Maximum spinning reserve "
+    )
+
+    pg_nonspin_ub: float = Field(
+        title = "pg_nonspin_ub",
+        description = "Maximum non-spinning reserve "
+    )
+
+    pg_flexi_up_online_ub: float = Field(
+        title = "pg_flexi_up_online_ub",
+        description = "Maximum flexible ramp up reserve when online "
+    )
+
+    pg_flexi_down_online_ub: float = Field(
+        title = "pg_flexi_down_online_ub",
+        description = "Maximum flexible ramp down reserve when online "
+    )
+
+    pg_flexi_up_offline_ub: float = Field(
+        title = "pg_flexi_up_offline_ub",
+        description = "Maximum flexible ramp up reserve when offline "
+    )
+
+    pg_flexi_down_offline_ub: float = Field(
+        title = "pg_flexi_down_offline_ub",
+        description = "Maximum flexible ramp down reserve when offline "
+    )
+
+    # Flags for extra parameters
+
+    q_linear_cap: bool = Field(
+        title = "q_linear_cap",
+        description = "Device has additional reactive constraint "
+    )
+
+    q_bound_cap: bool = Field(
+        title = "q_bound_cap",
+        description = "Device has additional reactive bounds "
+    )
+
+    # \sout{\tt\color{red} storage\_cap}
 
 
 class ACTransmissionLine(BidDSJsonBaseModel):
@@ -799,59 +929,25 @@ class RegionalReserves(BidDSJsonBaseModel):
         description = "Region reserve unique identifier "
     )
 
-    REG_UP: float = Field(
-        title = "REG_UP",
-        description = "Regulation reserve up requirement "
+    REG_UP_vio_cost: float = Field(
+        title = "REG_UP_vio_cost",
+        description = "Regulation reserve up violation cost "
     )
 
-    REG_DOWN: float = Field(
-        title = "REG_DOWN",
-        description = "Regulation reserve down requirement "
+    REG_DOWN_vio_cost: float = Field(
+        title = "REG_DOWN_vio_cost",
+        description = "Regulation reserve down violation cost "
     )
 
-    SPIN: float = Field(
-        title = "SPIN",
-        description = "Spinning reserve requirement "
+    SPIN_vio_cost: float = Field(
+        title = "SPIN_vio_cost",
+        description = "Spinning reserve violation cost "
     )
 
-    NON_SPIN: float = Field(
-        title = "NON_SPIN",
-        description = "Non-spinning reserve requirement "
+    NON_SPIN_vio_cost: float = Field(
+        title = "NON_SPIN_vio_cost",
+        description = "Non-spinning reserve violation cost "
     )
-
-    FLEXI_RAMP_UP: float = Field(
-        title = "FLEXI_RAMP_UP",
-        description = "Flexible-ramp up requirement "
-    )
-
-    FLEXI_RAMP_DOWN: float = Field(
-        title = "FLEXI_RAMP_DOWN",
-        description = "Flexible-ramp down requirement "
-    )
-
-    REG_UP_cost: float = Field(
-        title = "REG_UP_cost",
-        description = "Regulation reserve up marginal cost "
-    )
-
-    REG_DOWN_cost: float = Field(
-        title = "REG_DOWN_cost",
-        description = "Regulation reserve down marginal cost "
-    )
-
-    SPIN_cost: float = Field(
-        title = "SPIN_cost",
-        description = "Spinning reserve marginal cost "
-    )
-
-    NON_SPIN_cost: float = Field(
-        title = "NON_SPIN_cost",
-        description = "Non-spinning reserve marginal cost "
-    )
-
-    # 
-
-    # 
 
     # 
 

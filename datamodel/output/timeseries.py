@@ -45,13 +45,13 @@ class Shunt(BidDSJsonBaseModel):
     )
 
 
-class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
+class ProducingDevices_SingleModeGeneratingUnits(BidDSJsonBaseModel):
 
     # Output attributes
 
     uid: str = Field(
         title = "uid",
-        description = "Dispatchable device unique identifier "
+        description = "Device unique identifier "
     )
 
     status: bool = Field(
@@ -59,8 +59,58 @@ class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
         description = "Connection status "
     )
 
-    select_config: List[str] = Field(
-        title = "select_config",
+    pg: float = Field(
+        title = "pg",
+        description = "Active dispatch "
+    )
+
+    qg: float = Field(
+        title = "qg",
+        description = "Reactive dispatch "
+    )
+
+    pg_regulation_up: float = Field(
+        title = "pg_regulation_up",
+        description = "Regulation up reserve "
+    )
+
+    pg_regulation_down: float = Field(
+        title = "pg_regulation_down",
+        description = "Regulation down reserve "
+    )
+
+    pg_spin: float = Field(
+        title = "pg_spin",
+        description = "Spinning reserve "
+    )
+
+    pg_nonspin: float = Field(
+        title = "pg_nonspin",
+        description = "Non-spinning reserve "
+    )
+
+    energy: float = Field(
+        title = "energy",
+        description = "Energy storage "
+    )
+
+
+class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
+
+    # Output attributes
+
+    uid: str = Field(
+        title = "uid",
+        description = "Device unique identifier "
+    )
+
+    status: bool = Field(
+        title = "status",
+        description = "Connection status "
+    )
+
+    select_mode: List[str] = Field(
+        title = "select_mode",
         description = "Active configuration uids for each time step "
     )
 
@@ -74,14 +124,14 @@ class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
         description = "Reactive dispatch "
     )
 
-    pg_regulation_down: float = Field(
-        title = "pg_regulation_down",
-        description = "Regulation down reserve "
-    )
-
     pg_regulation_up: float = Field(
         title = "pg_regulation_up",
         description = "Regulation up reserve "
+    )
+
+    pg_regulation_down: float = Field(
+        title = "pg_regulation_down",
+        description = "Regulation down reserve "
     )
 
     pg_spin: float = Field(
@@ -89,9 +139,29 @@ class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
         description = "Spinning reserve "
     )
 
-    pg_cont: float = Field(
-        title = "pg_cont",
-        description = "Contingency reserve "
+    pg_nonspin: float = Field(
+        title = "pg_nonspin",
+        description = "Non-spinning reserve "
+    )
+
+    pg_flexi_up_online: float = Field(
+        title = "pg_flexi_up_online",
+        description = "Flexible ramp up reserve when online "
+    )
+
+    pg_flexi_down_online: float = Field(
+        title = "pg_flexi_down_online",
+        description = "Flexible ramp down reserve when online "
+    )
+
+    pg_flexi_up_offline: float = Field(
+        title = "pg_flexi_up_offline",
+        description = "Flexible ramp up reserve when offline "
+    )
+
+    pg_flexi_down_offline: float = Field(
+        title = "pg_flexi_down_offline",
+        description = "Flexible ramp down reserve when offline "
     )
 
     energy: float = Field(
