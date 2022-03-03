@@ -92,8 +92,8 @@ def get_objects_from_table(object_name, astr):
             if ln.startswith("\\begin{tabular}"):
                 table_started = True
             continue
-        if ln.startswith("\\end{tabular}"):
-            break
+        # if ln.startswith("\\end{tabular}"):
+        #     break
         if ln.strip().startswith("%"): # comment character
             continue
         if ln.strip() == "\\hline":
@@ -293,6 +293,17 @@ def get_object_from_subsection(object_name, astr, object_ref, object_preamble, i
         """
 
     obj_ref_map = {key.lower(): key for key in object_ref.keys()}
+    for key in obj_ref_map.keys():
+        if key == "violationcostsparameters":
+            obj_ref_map["violationcost"] = obj_ref_map.pop("violationcostsparameters")
+        elif key == "dispatchabledevices_simpleproducingconsumingdevices":
+            obj_ref_map["simpledispatchabledevice"] = obj_ref_map.pop("dispatchabledevices_simpleproducingconsumingdevices")
+        elif key == "dispatchabledevices_multimodeproducingconsumingdevices":
+            obj_ref_map["multimodedispatchabledevice"] = obj_ref_map.pop("dispatchabledevices_multimodeproducingconsumingdevices")
+        elif key == "actransmissionline":
+            obj_ref_map["acline"] = obj_ref_map.pop("actransmissionline")
+        elif key == "regionalreserves":
+            obj_ref_map["activeregionalreserve"] = obj_ref_map.pop("regionalreserves")        
 
     def get_dict_str(adict):
         items = [f"{k}: {v}" for k, v in adict.items()]
@@ -317,8 +328,8 @@ def get_object_from_subsection(object_name, astr, object_ref, object_preamble, i
             m = re.match(r".+\\texttt\{(.+)\}.+", ln.strip())
             if m:
                 contains_objects = True
-                name = m.group(1).replace("\"","").replace("\\_","_").replace(":","_")
-                key = name.replace("_","")
+                name = m.group(1).replace("\"","").replace("\\_","_").replace(":","_").replace("-","_")
+                key = name.replace("_","").replace("-","")
                 if key in obj_ref_map:
                     found_object = (name, obj_ref_map[key])
                     continue
