@@ -19,78 +19,20 @@ class General(BidDSJsonBaseModel):
         description = "The number of time periods "
     )
 
-    interval_duration: List[float] = Field(
-        title = "interval_duration",
-        description = "Time duration of the intervals in hours "
-    )
+    # 
 
     # Normalization attributes
 
+    # \end{tabular}
 
-class ProducingDevices_SingleModeGeneratingUnits(BidDSJsonBaseModel):
-
-    # Input attributes
-
-    uid: str = Field(
-        title = "uid",
-        description = "Producing device unique identifier "
-    )
-
-    on_status_ub: int = Field(
-        title = "on_status_ub",
-        description = "On status indicator upper bound ",
-        options = [0, 1]
-    )
-
-    on_status_lb: int = Field(
-        title = "on_status_lb",
-        description = "On status indicator lower bound ",
-        options = [0, 1]
-    )
-
-    pg_ub: float = Field(
-        title = "pg_ub",
-        description = "Upper bound of active dispatch "
-    )
-
-    pg_lb: float = Field(
-        title = "pg_lb",
-        description = "Lower bound of active dispatch "
-    )
-
-    qg_ub: float = Field(
-        title = "qg_ub",
-        description = "Upper bound of reactive dispatch "
-    )
-
-    qg_lb: float = Field(
-        title = "qg_lb",
-        description = "Lower bound of reactive dispatch "
-    )
+    # \end{center}
 
     # 
 
-    cost: List[float] = Field(
-        title = "cost",
-        description = "Array of generation cost blocks "
-    )
 
-    # 
+class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
 
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # Flags for extra parameters
-
-
-class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
-
-    # Input attributes
+    # Device attributes
 
     uid: str = Field(
         title = "uid",
@@ -111,17 +53,51 @@ class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
 
     # 
 
-    # \hline \hline
-
-    # Initial status attributes within:
+    p_ub: float = Field(
+        title = "p_ub",
+        description = "{\color{red} (Case: producer) Upper bound of active dispatch "
+    )
 
     # 
 
-    # \hline \hline
+    p_lb: float = Field(
+        title = "p_lb",
+        description = "{\color{red} (Case: producer) Lower bound of active dispatch "
+    )
+
+    # 
+
+    q_ub: float = Field(
+        title = "q_ub",
+        description = "{\color{red} (Case: producer) Upper bound of reactive dispatch "
+    )
+
+    # 
+
+    q_lb: float = Field(
+        title = "q_lb",
+        description = "{\color{red} (Case: producer) Lower bound of reactive dispatch "
+    )
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
 
     # Flags for extra parameters
-
-    # \hline \hline
 
     # \end{tabular}
 
@@ -133,11 +109,138 @@ class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
 
     # \begin{tabular}{ l | l | c | c | c |}
 
+    # Reserve attributes
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # \begin{center}
+
+    # \small
+
+    # \begin{tabular}{ l | l | c | c | c |}
+
+    # Initial condition attributes
+
+    # 
+
+    # 
+
+    # 
+
+    # Reactive cap. attributes
+
+    # 
+
+    # Reactive cap. attributes
+
+    # 
+
+    # 
+
+    # 
+
+    # Storage attributes
+
+    energy_ub: float = Field(
+        title = "energy_ub",
+        description = "Upper bound for energy storage "
+    )
+
+    energy_lb: float = Field(
+        title = "energy_lb",
+        description = "Lower bound for energy storage "
+    )
+
+    pg_ext: float = Field(
+        title = "pg_ext",
+        description = "External power flow to storage facility "
+    )
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # 
+
+    # \begin{todo}[]{}
+
+    # Output solution --- a preliminary version with state/configuration is drafted.
+
+    # \end{todo}
+
+    # 
+
+
+class DispatchableDevices_MultimodeProducingConsumingDevices(BidDSJsonBaseModel):
+
+    # Operations attributes
+
+    uid: str = Field(
+        title = "uid",
+        description = "Producing device unique identifier "
+    )
+
+    on_status_ub: int = Field(
+        title = "on_status_ub",
+        description = "On status indicator upper bound ",
+        options = [0, 1]
+    )
+
+    on_status_lb: int = Field(
+        title = "on_status_lb",
+        description = "On status indicator lower bound ",
+        options = [0, 1]
+    )
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # Flags for extra parameters
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # \begin{center}
+
+    # \small
+
+    # \begin{tabular}{ l | l | c | c | c |}
+
+    # Initial condition attributes
+
+    # 
+
+    # 
+
+    # 
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # \begin{center}
+
+    # \small
+
+    # \begin{tabular}{ l | l | c | c | c |}
+
     # Mode attributes
-
-    # \hline \hline
-
-    # Inner mode attributes ---
 
     uid: str = Field(
         title = "uid",
@@ -156,107 +259,112 @@ class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
         options = [0, 1]
     )
 
-    pg_ub: float = Field(
-        title = "pg_ub",
-        description = "Upper bound of active dispatch "
-    )
+    # 
 
-    pg_lb: float = Field(
-        title = "pg_lb",
-        description = "Lower bound of active dispatch "
-    )
-
-    qg_ub: float = Field(
-        title = "qg_ub",
-        description = "Upper bound of reactive dispatch "
-    )
-
-    qg_lb: float = Field(
-        title = "qg_lb",
-        description = "Lower bound of reactive dispatch "
+    p_ub: float = Field(
+        title = "p_ub",
+        description = "{\color{red} (Case: producer) Upper bound of active dispatch "
     )
 
     # 
 
-    cost: List[float] = Field(
-        title = "cost",
-        description = "Array of generation cost blocks "
+    p_lb: float = Field(
+        title = "p_lb",
+        description = "{\color{red} (Case: producer) Lower bound of active dispatch "
     )
 
     # 
 
-    # 
-
-    # 
-
-
-class ConsumingDevices_LoadsandDemandResponse(BidDSJsonBaseModel):
-
-    # Input attributes
-
-    uid: str = Field(
-        title = "uid",
-        description = "Consuming device unique identifier "
-    )
-
-    on_status_ub: int = Field(
-        title = "on_status_ub",
-        description = "On status indicator upper bound ",
-        options = [0, 1]
-    )
-
-    on_status_lb: int = Field(
-        title = "on_status_lb",
-        description = "On status indicator lower bound ",
-        options = [0, 1]
-    )
-
-    connection_status_ub: int = Field(
-        title = "connection_status_ub",
-        description = "Connection capability  upper bound ",
-        options = [0, 1]
-    )
-
-    connection_status_lb: int = Field(
-        title = "connection_status_lb",
-        description = "Connection capability lower bound ",
-        options = [0, 1]
-    )
-
-    pd_ub: float = Field(
-        title = "pd_ub",
-        description = "Upper bound of active demand "
-    )
-
-    pd_lb: float = Field(
-        title = "pd_lb",
-        description = "Lower bound of active demand "
-    )
-
-    qd_ub: float = Field(
-        title = "qd_ub",
-        description = "Upper bound of reactive demand "
-    )
-
-    qd_lb: float = Field(
-        title = "qd_lb",
-        description = "Lower bound of reactive demand "
+    q_ub: float = Field(
+        title = "q_ub",
+        description = "{\color{red} (Case: producer) Upper bound of reactive dispatch "
     )
 
     # 
 
-    cost: List[float] = Field(
-        title = "cost",
-        description = "Array of demand bids/cost blocks "
+    q_lb: float = Field(
+        title = "q_lb",
+        description = "{\color{red} (Case: producer) Lower bound of reactive dispatch "
     )
 
     # 
 
     # 
 
-    # Flags for extra parameters
+    # 
 
-    # \sout{\tt\color{red} storage\_cap}
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # \begin{center}
+
+    # \small
+
+    # \begin{tabular}{ l | l | c | c | c |}
+
+    # Reserve attributes
+
+    # Initial condition attributes
+
+    # 
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # \begin{center}
+
+    # \small
+
+    # \begin{tabular}{ l | l | c | c | c |}
+
+    # Reactive cap. attributes
+
+    # 
+
+    # \hline \hline
+
+    # Reactive cap.
+
+    # 
+
+    # 
+
+    # Storage attributes
+
+    energy_ub: float = Field(
+        title = "energy_ub",
+        description = "Upper bound for energy storage "
+    )
+
+    energy_lb: float = Field(
+        title = "energy_lb",
+        description = "Lower bound for energy storage "
+    )
+
+    pg_ext: float = Field(
+        title = "pg_ext",
+        description = "External power flow to storage facility "
+    )
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # 
 
 
 class RegionalReserves(BidDSJsonBaseModel):
@@ -278,14 +386,14 @@ class RegionalReserves(BidDSJsonBaseModel):
         description = "Regulation reserve down requirement "
     )
 
-    SPIN: float = Field(
-        title = "SPIN",
-        description = "Spinning reserve requirement "
+    SYN: float = Field(
+        title = "SYN",
+        description = "Synchronized reserve requirement "
     )
 
-    NON_SPIN: float = Field(
-        title = "NON_SPIN",
-        description = "Non-spinning reserve requirement "
+    NSYN: float = Field(
+        title = "NSYN",
+        description = "Non-synchronized reserve requirement "
     )
 
     RAMPING_RESERVE_UP: float = Field(
@@ -297,6 +405,45 @@ class RegionalReserves(BidDSJsonBaseModel):
         title = "RAMPING_RESERVE_DOWN",
         description = "Ramping reserve down requirement "
     )
+
+    # 
+
+    # 
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # \begin{center}
+
+    # \small
+
+    # \begin{tabular}{ l | l | c | c | c |}
+
+    # Reactive reserve attributes
+
+    uid: str = Field(
+        title = "uid",
+        description = "Region reserve unique identifier "
+    )
+
+    REACT_UP: float = Field(
+        title = "REACT_UP",
+        description = "Reactive reserve power up requirement "
+    )
+
+    REACT_DOWN: float = Field(
+        title = "REACT_DOWN",
+        description = "Reactive reserve power down requirement "
+    )
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
 
     # 
 

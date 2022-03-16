@@ -39,6 +39,34 @@
             },
             "additionalProperties": false
         },
+        "ViolationCostsParameters": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "p_bus_vio_cost": {
+                    "title": "p_bus_vio_cost",
+                    "description": "Bus violation costs for active power violation ",
+                    "type": "number"
+                },
+                "q_bus_vio_cost": {
+                    "title": "q_bus_vio_cost",
+                    "description": "Bus violation costs for reactive power violation  ",
+                    "type": "number"
+                },
+                "s_vio_cost": {
+                    "title": "s_vio_cost",
+                    "description": "Branch violation costs for thermal violation ",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "p_bus_vio_cost",
+                "q_bus_vio_cost",
+                "s_vio_cost"
+            ],
+            "additionalProperties": false
+        },
         "Bus": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
@@ -190,6 +218,765 @@
             ],
             "additionalProperties": false
         },
+        "datamodel__input__static__DispatchableDevices_SimpleProducingConsumingDevices": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "Producing device unique identifier ",
+                    "type": "string"
+                },
+                "bus": {
+                    "title": "bus",
+                    "description": "Unique identifier for connecting bus ",
+                    "type": "string"
+                },
+                "device_type": {
+                    "title": "device_type",
+                    "description": "Type of device ",
+                    "options": [
+                        "producer / consumer"
+                    ],
+                    "type": "string"
+                },
+                "vm_setpoint": {
+                    "title": "vm_setpoint",
+                    "description": "Voltage magnitude setpoint ",
+                    "type": "number"
+                },
+                "startup_cost": {
+                    "title": "startup_cost",
+                    "description": "Device start up cost ",
+                    "type": "number"
+                },
+                "shutdown_cost": {
+                    "title": "shutdown_cost",
+                    "description": "Device shut down cost ",
+                    "type": "number"
+                },
+                "startup_num_ub": {
+                    "title": "startup_num_ub",
+                    "description": "Maximum startups ",
+                    "type": "integer"
+                },
+                "on_cost": {
+                    "title": "on_cost",
+                    "description": "Device fixed operating cost ",
+                    "type": "number"
+                },
+                "in_service_time_lb": {
+                    "title": "in_service_time_lb",
+                    "description": "Minimum uptime in service ",
+                    "type": "number"
+                },
+                "down_time_lb": {
+                    "title": "down_time_lb",
+                    "description": "Minimum downtime ",
+                    "type": "number"
+                },
+                "p_ramp_up_ub": {
+                    "title": "p_ramp_up_ub",
+                    "description": "{\\color{red}(Case: producer) Max production ramp up when operating ",
+                    "type": "number"
+                },
+                "p_ramp_down_ub": {
+                    "title": "p_ramp_down_ub",
+                    "description": "{\\color{red}(Case: producer) Max production ramp down when operating ",
+                    "type": "number"
+                },
+                "p_startup_ramp_ub": {
+                    "title": "p_startup_ramp_ub",
+                    "description": "{\\color{red}(Case: producer) Max production ramp up when start up ",
+                    "type": "number"
+                },
+                "p_shutdown_ramp_ub": {
+                    "title": "p_shutdown_ramp_ub",
+                    "description": "{\\color{red}(Case: producer) Max production ramp down when shut down ",
+                    "type": "number"
+                },
+                "q_linear_cap": {
+                    "title": "q_linear_cap",
+                    "description": "Device has additional reactive constraint ",
+                    "type": "boolean"
+                },
+                "q_bound_cap": {
+                    "title": "q_bound_cap",
+                    "description": "Device has additional reactive bounds ",
+                    "type": "boolean"
+                },
+                "storage_cap": {
+                    "title": "storage_cap",
+                    "description": "Device has storage capability ",
+                    "type": "boolean"
+                },
+                "p_reg_res_up_ub": {
+                    "title": "p_reg_res_up_ub",
+                    "description": "Maximum regulation reserve up ",
+                    "type": "number"
+                },
+                "p_reg_res_down_ub": {
+                    "title": "p_reg_res_down_ub",
+                    "description": "Maximum regulation reserve down ",
+                    "type": "number"
+                },
+                "p_syn_res_ub": {
+                    "title": "p_syn_res_ub",
+                    "description": "Maximum synchronized reserve ",
+                    "type": "number"
+                },
+                "p_nsyn_res_ub": {
+                    "title": "p_nsyn_res_ub",
+                    "description": "Maximum non-synchronized reserve ",
+                    "type": "number"
+                },
+                "p_ramp_res_up_online_ub": {
+                    "title": "p_ramp_res_up_online_ub",
+                    "description": "Maximum ramp up reserve when online ",
+                    "type": "number"
+                },
+                "p_ramp_res_down_online_ub": {
+                    "title": "p_ramp_res_down_online_ub",
+                    "description": "Maximum ramp down reserve when online ",
+                    "type": "number"
+                },
+                "p_ramp_res_up_offline_ub": {
+                    "title": "p_ramp_res_up_offline_ub",
+                    "description": "Maximum ramp up reserve when offline ",
+                    "type": "number"
+                },
+                "p_ramp_res_down_offline_ub": {
+                    "title": "p_ramp_res_down_offline_ub",
+                    "description": "Maximum ramp down reserve when offline ",
+                    "type": "number"
+                },
+                "q_res_up_ub": {
+                    "title": "q_res_up_ub",
+                    "description": "Maximum reactive reserve up ",
+                    "type": "number"
+                },
+                "q_res_down_ub": {
+                    "title": "q_res_down_ub",
+                    "description": "Maximum reactive reserve down ",
+                    "type": "number"
+                },
+                "p_reg_res_up_cost": {
+                    "title": "p_reg_res_up_cost",
+                    "description": "Costs for regulation reserve up ",
+                    "type": "number"
+                },
+                "p_reg_res_down_cost": {
+                    "title": "p_reg_res_down_cost",
+                    "description": "Costs for regulation reserve down ",
+                    "type": "number"
+                },
+                "p_syn_res_cost": {
+                    "title": "p_syn_res_cost",
+                    "description": "Costs for synchronized reserve ",
+                    "type": "number"
+                },
+                "p_nsyn_res_cost": {
+                    "title": "p_nsyn_res_cost",
+                    "description": "Costs for non-synchronized reserve ",
+                    "type": "number"
+                },
+                "p_ramp_res_up_online_cost": {
+                    "title": "p_ramp_res_up_online_cost",
+                    "description": "Costs for ramp up reserve when online ",
+                    "type": "number"
+                },
+                "p_ramp_res_down_online_cost": {
+                    "title": "p_ramp_res_down_online_cost",
+                    "description": "Costs for ramp down reserve when online ",
+                    "type": "number"
+                },
+                "p_ramp_res_up_offline_cost": {
+                    "title": "p_ramp_res_up_offline_cost",
+                    "description": "Costs for ramp up reserve when offline ",
+                    "type": "number"
+                },
+                "p_ramp_res_down_offline_cost": {
+                    "title": "p_ramp_res_down_offline_cost",
+                    "description": "Costs for ramp down reserve when offline ",
+                    "type": "number"
+                },
+                "q_res_up_cost": {
+                    "title": "q_res_up_cost",
+                    "description": "Costs for reactive reserve up ",
+                    "type": "number"
+                },
+                "q_res_down_cost": {
+                    "title": "q_res_down_cost",
+                    "description": "Costs for reactive reserve down ",
+                    "type": "number"
+                },
+                "on_status": {
+                    "title": "on_status",
+                    "description": "On status indicator for initial time step ",
+                    "options": [
+                        0,
+                        1
+                    ],
+                    "type": "integer"
+                },
+                "p": {
+                    "title": "p",
+                    "description": "{\\color{red} (Case: producer) Active production for initial time step ",
+                    "type": "number"
+                },
+                "q": {
+                    "title": "q",
+                    "description": "{\\color{red} (Case: producer) Reactive production for initial time step ",
+                    "type": "number"
+                },
+                "energy": {
+                    "title": "energy",
+                    "description": "Energy storage for initial time step ",
+                    "type": "number"
+                },
+                "accu_down_time": {
+                    "title": "accu_down_time",
+                    "description": "Accumulated down time ",
+                    "type": "number"
+                },
+                "accu_up_time": {
+                    "title": "accu_up_time",
+                    "description": "Accumulated up time ",
+                    "type": "number"
+                },
+                "q_0": {
+                    "title": "q_0",
+                    "description": "{\\color{red} (Case: producer) Reactive production at zero active production ",
+                    "type": "number"
+                },
+                "pq_ratio": {
+                    "title": "pq_ratio",
+                    "description": "Sensitivity of reactive w.r.t active dispatch ",
+                    "type": "number"
+                },
+                "q_0_ub": {
+                    "title": "q_0_ub",
+                    "description": "{\\color{red} (Case: producer) Max reactive production at zero active production ",
+                    "type": "number"
+                },
+                "q_0_lb": {
+                    "title": "q_0_lb",
+                    "description": "{\\color{red} (Case: producer) Min reactive production at zero active production ",
+                    "type": "number"
+                },
+                "pq_ratio_ub": {
+                    "title": "pq_ratio_ub",
+                    "description": "Upper bound for sensitivity of reactive w.r.t active dispatch ",
+                    "type": "number"
+                },
+                "pq_ratio_lb": {
+                    "title": "pq_ratio_lb",
+                    "description": "Lower bound for sensitivity of reactive w.r.t active dispatch ",
+                    "type": "number"
+                },
+                "storage_efficiency": {
+                    "title": "storage_efficiency",
+                    "description": "Efficiency of storage device ",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "uid",
+                "bus",
+                "device_type",
+                "startup_cost",
+                "shutdown_cost",
+                "startup_num_ub",
+                "on_cost",
+                "in_service_time_lb",
+                "down_time_lb",
+                "p_ramp_up_ub",
+                "p_ramp_down_ub",
+                "p_startup_ramp_ub",
+                "p_shutdown_ramp_ub",
+                "q_linear_cap",
+                "q_bound_cap",
+                "storage_cap",
+                "p_reg_res_up_ub",
+                "p_reg_res_down_ub",
+                "p_syn_res_ub",
+                "p_nsyn_res_ub",
+                "p_ramp_res_up_online_ub",
+                "p_ramp_res_down_online_ub",
+                "p_ramp_res_up_offline_ub",
+                "p_ramp_res_down_offline_ub",
+                "q_res_up_ub",
+                "q_res_down_ub",
+                "p_reg_res_up_cost",
+                "p_reg_res_down_cost",
+                "p_syn_res_cost",
+                "p_nsyn_res_cost",
+                "p_ramp_res_up_online_cost",
+                "p_ramp_res_down_online_cost",
+                "p_ramp_res_up_offline_cost",
+                "p_ramp_res_down_offline_cost",
+                "q_res_up_cost",
+                "q_res_down_cost",
+                "on_status",
+                "p",
+                "q",
+                "energy",
+                "accu_down_time",
+                "accu_up_time",
+                "q_0",
+                "pq_ratio",
+                "q_0_ub",
+                "q_0_lb",
+                "pq_ratio_ub",
+                "pq_ratio_lb",
+                "storage_efficiency"
+            ],
+            "additionalProperties": false
+        },
+        "datamodel__input__static__DispatchableDevices_MultimodeProducingConsumingDevices": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "Mode unique identifier ",
+                    "type": "string"
+                },
+                "bus": {
+                    "title": "bus",
+                    "description": "Unique identifier for connecting bus ",
+                    "type": "string"
+                },
+                "device_type": {
+                    "title": "device_type",
+                    "description": "Type of device ",
+                    "options": [
+                        "producer / consumer"
+                    ],
+                    "type": "string"
+                },
+                "vm_setpoint": {
+                    "title": "vm_setpoint",
+                    "description": "Voltage magnitude setpoint ",
+                    "type": "number"
+                },
+                "startup_cost": {
+                    "title": "startup_cost",
+                    "description": "Device start up cost ",
+                    "type": "number"
+                },
+                "shutdown_cost": {
+                    "title": "shutdown_cost",
+                    "description": "Device shut down cost ",
+                    "type": "number"
+                },
+                "startup_num_ub": {
+                    "title": "startup_num_ub",
+                    "description": "Maximum startups ",
+                    "type": "integer"
+                },
+                "in_service_time_lb": {
+                    "title": "in_service_time_lb",
+                    "description": "Minimum uptime in service ",
+                    "type": "number"
+                },
+                "down_time_lb": {
+                    "title": "down_time_lb",
+                    "description": "Minimum downtime ",
+                    "type": "number"
+                },
+                "p_startup_ramp_ub": {
+                    "title": "p_startup_ramp_ub",
+                    "description": "{\\color{red}(Case: producer) Max production ramp up when start up ",
+                    "type": "number"
+                },
+                "p_shutdown_ramp_ub": {
+                    "title": "p_shutdown_ramp_ub",
+                    "description": "{\\color{red}(Case: producer) Max production ramp down when shut down ",
+                    "type": "number"
+                },
+                "mode_num": {
+                    "title": "mode_num",
+                    "description": "Number of operating modes ",
+                    "type": "integer"
+                },
+                "q_linear_cap": {
+                    "title": "q_linear_cap",
+                    "description": "Device has additional reactive constraint ",
+                    "type": "boolean"
+                },
+                "q_bound_cap": {
+                    "title": "q_bound_cap",
+                    "description": "Device has additional reactive bounds ",
+                    "type": "boolean"
+                },
+                "storage_cap": {
+                    "title": "storage_cap",
+                    "description": "Device has storage capability ",
+                    "type": "boolean"
+                },
+                "on_status": {
+                    "title": "on_status",
+                    "description": "On status indicator for initial time step ",
+                    "options": [
+                        0,
+                        1
+                    ],
+                    "type": "integer"
+                },
+                "select_mode": {
+                    "title": "select_mode",
+                    "description": "Active mode uid for initial time step ",
+                    "type": "string"
+                },
+                "p": {
+                    "title": "p",
+                    "description": "{\\color{red} (Case: producer) Active production for initial time step ",
+                    "type": "number"
+                },
+                "q": {
+                    "title": "q",
+                    "description": "{\\color{red} (Case: producer) Reactive production for initial time step ",
+                    "type": "number"
+                },
+                "energy": {
+                    "title": "energy",
+                    "description": "Energy storage for initial time step ",
+                    "type": "number"
+                },
+                "description": {
+                    "title": "description",
+                    "description": "Mode description ",
+                    "type": "string"
+                },
+                "on_cost": {
+                    "title": "on_cost",
+                    "description": "Mode fixed operating cost ",
+                    "type": "number"
+                },
+                "p_ramp_up_ub": {
+                    "title": "p_ramp_up_ub",
+                    "description": "{\\color{red}(Case: producer) Max production ramp up when operating ",
+                    "type": "number"
+                },
+                "p_ramp_down_ub": {
+                    "title": "p_ramp_down_ub",
+                    "description": "{\\color{red}(Case: producer) Max production ramp down when operating ",
+                    "type": "number"
+                },
+                "p_reg_res_up_ub": {
+                    "title": "p_reg_res_up_ub",
+                    "description": "Maximum regulation reserve up ",
+                    "type": "number"
+                },
+                "p_reg_res_down_ub": {
+                    "title": "p_reg_res_down_ub",
+                    "description": "Maximum regulation reserve down ",
+                    "type": "number"
+                },
+                "p_syn_res_ub": {
+                    "title": "p_syn_res_ub",
+                    "description": "Maximum synchronized reserve ",
+                    "type": "number"
+                },
+                "p_nsyn_res_ub": {
+                    "title": "p_nsyn_res_ub",
+                    "description": "Maximum non-synchronized reserve ",
+                    "type": "number"
+                },
+                "p_ramp_res_up_online_ub": {
+                    "title": "p_ramp_res_up_online_ub",
+                    "description": "Maximum ramp up reserve when online ",
+                    "type": "number"
+                },
+                "p_ramp_res_down_online_ub": {
+                    "title": "p_ramp_res_down_online_ub",
+                    "description": "Maximum ramp down reserve when online ",
+                    "type": "number"
+                },
+                "p_ramp_res_up_offline_ub": {
+                    "title": "p_ramp_res_up_offline_ub",
+                    "description": "Maximum ramp up reserve when offline ",
+                    "type": "number"
+                },
+                "p_ramp_res_down_offline_ub": {
+                    "title": "p_ramp_res_down_offline_ub",
+                    "description": "Maximum ramp down reserve when offline ",
+                    "type": "number"
+                },
+                "q_res_up_ub": {
+                    "title": "q_res_up_ub",
+                    "description": "Maximum reactive reserve up ",
+                    "type": "number"
+                },
+                "q_res_down_ub": {
+                    "title": "q_res_down_ub",
+                    "description": "Maximum reactive reserve down ",
+                    "type": "number"
+                },
+                "p_reg_res_up_cost": {
+                    "title": "p_reg_res_up_cost",
+                    "description": "Costs for regulation reserve up ",
+                    "type": "number"
+                },
+                "p_reg_res_down_cost": {
+                    "title": "p_reg_res_down_cost",
+                    "description": "Costs for regulation reserve down ",
+                    "type": "number"
+                },
+                "p_syn_res_cost": {
+                    "title": "p_syn_res_cost",
+                    "description": "Costs for synchronized reserve ",
+                    "type": "number"
+                },
+                "p_nsyn_res_cost": {
+                    "title": "p_nsyn_res_cost",
+                    "description": "Costs for non-synchronized reserve ",
+                    "type": "number"
+                },
+                "p_ramp_res_up_online_cost": {
+                    "title": "p_ramp_res_up_online_cost",
+                    "description": "Costs for ramp up reserve when online ",
+                    "type": "number"
+                },
+                "p_ramp_res_down_online_cost": {
+                    "title": "p_ramp_res_down_online_cost",
+                    "description": "Costs for ramp down reserve when online ",
+                    "type": "number"
+                },
+                "p_ramp_res_up_offline_cost": {
+                    "title": "p_ramp_res_up_offline_cost",
+                    "description": "Costs for ramp up reserve when offline ",
+                    "type": "number"
+                },
+                "p_ramp_res_down_offline_cost": {
+                    "title": "p_ramp_res_down_offline_cost",
+                    "description": "Costs for ramp down reserve when offline ",
+                    "type": "number"
+                },
+                "q_res_up_cost": {
+                    "title": "q_res_up_cost",
+                    "description": "Costs for reactive reserve up ",
+                    "type": "number"
+                },
+                "q_res_down_cost": {
+                    "title": "q_res_down_cost",
+                    "description": "Costs for reactive reserve down ",
+                    "type": "number"
+                },
+                "accu_down_time": {
+                    "title": "accu_down_time",
+                    "description": "Accumulated down time for current mode ",
+                    "type": "number"
+                },
+                "accu_up_time": {
+                    "title": "accu_up_time",
+                    "description": "Accumulated up time for current mode ",
+                    "type": "number"
+                },
+                "q_0": {
+                    "title": "q_0",
+                    "description": "{\\color{red} (Case: producer) Reactive production at zero active production ",
+                    "type": "number"
+                },
+                "pq_ratio": {
+                    "title": "pq_ratio",
+                    "description": "Sensitivity of reactive w.r.t active dispatch ",
+                    "type": "number"
+                },
+                "q_0_ub": {
+                    "title": "q_0_ub",
+                    "description": "{\\color{red} (Case: producer) Max reactive production at zero active production ",
+                    "type": "number"
+                },
+                "q_0_lb": {
+                    "title": "q_0_lb",
+                    "description": "{\\color{red} (Case: producer) Min reactive production at zero active production ",
+                    "type": "number"
+                },
+                "pq_ratio_ub": {
+                    "title": "pq_ratio_ub",
+                    "description": "Upper bound for sensitivity of reactive w.r.t active dispatch ",
+                    "type": "number"
+                },
+                "pq_ratio_lb": {
+                    "title": "pq_ratio_lb",
+                    "description": "Lower bound for sensitivity of reactive w.r.t active dispatch ",
+                    "type": "number"
+                },
+                "storage_efficiency": {
+                    "title": "storage_efficiency",
+                    "description": "Efficiency of storage device ",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "uid",
+                "bus",
+                "device_type",
+                "startup_cost",
+                "shutdown_cost",
+                "startup_num_ub",
+                "in_service_time_lb",
+                "down_time_lb",
+                "p_startup_ramp_ub",
+                "p_shutdown_ramp_ub",
+                "q_linear_cap",
+                "q_bound_cap",
+                "storage_cap",
+                "on_status",
+                "select_mode",
+                "p",
+                "q",
+                "energy",
+                "on_cost",
+                "p_ramp_up_ub",
+                "p_ramp_down_ub",
+                "p_reg_res_up_ub",
+                "p_reg_res_down_ub",
+                "p_syn_res_ub",
+                "p_nsyn_res_ub",
+                "p_ramp_res_up_online_ub",
+                "p_ramp_res_down_online_ub",
+                "p_ramp_res_up_offline_ub",
+                "p_ramp_res_down_offline_ub",
+                "q_res_up_ub",
+                "q_res_down_ub",
+                "p_reg_res_up_cost",
+                "p_reg_res_down_cost",
+                "p_syn_res_cost",
+                "p_nsyn_res_cost",
+                "p_ramp_res_up_online_cost",
+                "p_ramp_res_down_online_cost",
+                "p_ramp_res_up_offline_cost",
+                "p_ramp_res_down_offline_cost",
+                "q_res_up_cost",
+                "q_res_down_cost",
+                "accu_down_time",
+                "accu_up_time",
+                "q_0",
+                "pq_ratio",
+                "q_0_ub",
+                "q_0_lb",
+                "pq_ratio_ub",
+                "pq_ratio_lb",
+                "storage_efficiency"
+            ],
+            "additionalProperties": false
+        },
+        "ACTransmissionLine": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "AC line unique identifier ",
+                    "type": "string"
+                },
+                "fr_bus": {
+                    "title": "fr_bus",
+                    "description": "Unique identifier for connecting from bus ",
+                    "type": "string"
+                },
+                "to_bus": {
+                    "title": "to_bus",
+                    "description": "Unique identifier for connecting to bus ",
+                    "type": "string"
+                },
+                "r": {
+                    "title": "r",
+                    "description": "Series resistance ",
+                    "type": "number"
+                },
+                "x": {
+                    "title": "x",
+                    "description": "Series reactance  ",
+                    "type": "number"
+                },
+                "b": {
+                    "title": "b",
+                    "description": "Shunt susceptance ",
+                    "type": "number"
+                },
+                "mva_ub_nom": {
+                    "title": "mva_ub_nom",
+                    "description": "MVA limit, nominal rating ",
+                    "type": "number"
+                },
+                "mva_ub_sht": {
+                    "title": "mva_ub_sht",
+                    "description": "MVA limit, short term rating ",
+                    "type": "number"
+                },
+                "mva_ub_em": {
+                    "title": "mva_ub_em",
+                    "description": "MVA limit, emergency rating ",
+                    "type": "number"
+                },
+                "standby_cost": {
+                    "title": "standby_cost",
+                    "description": "Line fixed standby cost ",
+                    "type": "number"
+                },
+                "connection_cost": {
+                    "title": "connection_cost",
+                    "description": "AC Line connection cost ",
+                    "type": "number"
+                },
+                "disconnection_cost": {
+                    "title": "disconnection_cost",
+                    "description": "AC line disconnection cost ",
+                    "type": "number"
+                },
+                "additional_shunt": {
+                    "title": "additional_shunt",
+                    "description": "Branch has additional shunt components ",
+                    "type": "boolean"
+                },
+                "g_fr": {
+                    "title": "g_fr",
+                    "description": "Conductance for shunt component at from bus ",
+                    "type": "number"
+                },
+                "b_fr": {
+                    "title": "b_fr",
+                    "description": "Susceptance for shunt component at from bus ",
+                    "type": "number"
+                },
+                "g_to": {
+                    "title": "g_to",
+                    "description": "Conductance for shunt component at to bus ",
+                    "type": "number"
+                },
+                "b_to": {
+                    "title": "b_to",
+                    "description": "Susceptance for shunt component at to bus ",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "uid",
+                "fr_bus",
+                "to_bus",
+                "r",
+                "x",
+                "b",
+                "mva_ub_nom",
+                "mva_ub_em",
+                "standby_cost",
+                "connection_cost",
+                "disconnection_cost",
+                "additional_shunt",
+                "g_fr",
+                "b_fr",
+                "g_to",
+                "b_to"
+            ],
+            "additionalProperties": false
+        },
         "TwoWindingTransformer": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
@@ -220,9 +1007,9 @@
                     "description": "Series reactance  ",
                     "type": "number"
                 },
-                "b_lk": {
-                    "title": "b_lk",
-                    "description": "Susceptance for transformer leakage ",
+                "b": {
+                    "title": "b",
+                    "description": "Shunt susceptance ",
                     "type": "number"
                 },
                 "tm_ub": {
@@ -307,7 +1094,7 @@
                 "to_bus",
                 "r",
                 "x",
-                "b_lk",
+                "b",
                 "tm_ub",
                 "tm_lb",
                 "ta_ub",
@@ -407,6 +1194,58 @@
             ],
             "additionalProperties": false
         },
+        "RegionalReserves": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "Region reserve unique identifier ",
+                    "type": "string"
+                },
+                "REG_UP_vio_cost": {
+                    "title": "REG_UP_vio_cost",
+                    "description": "Regulation reserve up violation cost ",
+                    "type": "number"
+                },
+                "REG_DOWN_vio_cost": {
+                    "title": "REG_DOWN_vio_cost",
+                    "description": "Regulation reserve down violation cost ",
+                    "type": "number"
+                },
+                "SYN_vio_cost": {
+                    "title": "SYN_vio_cost",
+                    "description": "Synchronized reserve violation cost ",
+                    "type": "number"
+                },
+                "NSYN_vio_cost": {
+                    "title": "NSYN_vio_cost",
+                    "description": "Non-synchronized reserve violation cost ",
+                    "type": "number"
+                },
+                "REACT_UP_vio_cost": {
+                    "title": "REACT_UP_vio_cost",
+                    "description": "Reactive reserve power violation cost ",
+                    "type": "number"
+                },
+                "REACT_DOWN_vio_cost": {
+                    "title": "REACT_DOWN_vio_cost",
+                    "description": "Reactive reserve power violation cost ",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "uid",
+                "REG_UP_vio_cost",
+                "REG_DOWN_vio_cost",
+                "SYN_vio_cost",
+                "NSYN_vio_cost",
+                "REACT_UP_vio_cost",
+                "REACT_DOWN_vio_cost"
+            ],
+            "additionalProperties": false
+        },
         "Network": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
@@ -420,41 +1259,90 @@
                         }
                     ]
                 },
-                "buses": {
-                    "title": "buses",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Bus"
-                    }
+                "violation_cost": {
+                    "title": "violation_cost",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/ViolationCostsParameters"
+                        }
+                    ]
                 },
-                "shunts": {
-                    "title": "shunts",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Shunt"
-                    }
+                "bus": {
+                    "title": "bus",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/Bus"
+                        }
+                    ]
                 },
-                "two_winding_transformers": {
-                    "title": "two_winding_transformers",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/TwoWindingTransformer"
-                    }
+                "shunt": {
+                    "title": "shunt",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/Shunt"
+                        }
+                    ]
                 },
-                "dc_lines": {
-                    "title": "dc_lines",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/DCLine"
-                    }
+                "simple_dispatchable_device": {
+                    "title": "simple_dispatchable_device",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/datamodel__input__static__DispatchableDevices_SimpleProducingConsumingDevices"
+                        }
+                    ]
+                },
+                "multi_mode_dispatchable_device": {
+                    "title": "multi_mode_dispatchable_device",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/datamodel__input__static__DispatchableDevices_MultimodeProducingConsumingDevices"
+                        }
+                    ]
+                },
+                "ac_line": {
+                    "title": "ac_line",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/ACTransmissionLine"
+                        }
+                    ]
+                },
+                "two_winding_transformer": {
+                    "title": "two_winding_transformer",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/TwoWindingTransformer"
+                        }
+                    ]
+                },
+                "dc_line": {
+                    "title": "dc_line",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/DCLine"
+                        }
+                    ]
+                },
+                "active_regional_reserve": {
+                    "title": "active_regional_reserve",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/RegionalReserves"
+                        }
+                    ]
                 }
             },
             "required": [
                 "general",
-                "buses",
-                "shunts",
-                "two_winding_transformers",
-                "dc_lines"
+                "violation_cost",
+                "bus",
+                "shunt",
+                "simple_dispatchable_device",
+                "multi_mode_dispatchable_device",
+                "ac_line",
+                "two_winding_transformer",
+                "dc_line",
+                "active_regional_reserve"
             ],
             "additionalProperties": false
         },
@@ -467,19 +1355,186 @@
                     "title": "time_periods",
                     "description": "The number of time periods ",
                     "type": "integer"
-                },
-                "interval_duration": {
-                    "title": "interval_duration",
-                    "description": "Time duration of the intervals in hours ",
-                    "type": "array",
-                    "items": {
-                        "type": "number"
-                    }
                 }
             },
             "required": [
-                "time_periods",
-                "interval_duration"
+                "time_periods"
+            ],
+            "additionalProperties": false
+        },
+        "datamodel__input__timeseries__DispatchableDevices_SimpleProducingConsumingDevices": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "Producing device unique identifier ",
+                    "type": "string"
+                },
+                "on_status_ub": {
+                    "title": "on_status_ub",
+                    "description": "On status indicator upper bound ",
+                    "options": [
+                        0,
+                        1
+                    ],
+                    "type": "integer"
+                },
+                "on_status_lb": {
+                    "title": "on_status_lb",
+                    "description": "On status indicator lower bound ",
+                    "options": [
+                        0,
+                        1
+                    ],
+                    "type": "integer"
+                },
+                "p_ub": {
+                    "title": "p_ub",
+                    "description": "{\\color{red} (Case: producer) Upper bound of active dispatch ",
+                    "type": "number"
+                },
+                "p_lb": {
+                    "title": "p_lb",
+                    "description": "{\\color{red} (Case: producer) Lower bound of active dispatch ",
+                    "type": "number"
+                },
+                "q_ub": {
+                    "title": "q_ub",
+                    "description": "{\\color{red} (Case: producer) Upper bound of reactive dispatch ",
+                    "type": "number"
+                },
+                "q_lb": {
+                    "title": "q_lb",
+                    "description": "{\\color{red} (Case: producer) Lower bound of reactive dispatch ",
+                    "type": "number"
+                },
+                "energy_ub": {
+                    "title": "energy_ub",
+                    "description": "Upper bound for energy storage ",
+                    "type": "number"
+                },
+                "energy_lb": {
+                    "title": "energy_lb",
+                    "description": "Lower bound for energy storage ",
+                    "type": "number"
+                },
+                "pg_ext": {
+                    "title": "pg_ext",
+                    "description": "External power flow to storage facility ",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "uid",
+                "on_status_ub",
+                "on_status_lb",
+                "p_ub",
+                "p_lb",
+                "q_ub",
+                "q_lb",
+                "energy_ub",
+                "energy_lb",
+                "pg_ext"
+            ],
+            "additionalProperties": false
+        },
+        "datamodel__input__timeseries__DispatchableDevices_MultimodeProducingConsumingDevices": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "Mode unique identifier ",
+                    "type": "string"
+                },
+                "on_status_ub": {
+                    "title": "on_status_ub",
+                    "description": "On status indicator upper bound ",
+                    "options": [
+                        0,
+                        1
+                    ],
+                    "type": "integer"
+                },
+                "on_status_lb": {
+                    "title": "on_status_lb",
+                    "description": "On status indicator lower bound ",
+                    "options": [
+                        0,
+                        1
+                    ],
+                    "type": "integer"
+                },
+                "select_ub": {
+                    "title": "select_ub",
+                    "description": "Mode selection upper bound ",
+                    "options": [
+                        0,
+                        1
+                    ],
+                    "type": "integer"
+                },
+                "select_lb": {
+                    "title": "select_lb",
+                    "description": "Mode selection lower bound ",
+                    "options": [
+                        0,
+                        1
+                    ],
+                    "type": "integer"
+                },
+                "p_ub": {
+                    "title": "p_ub",
+                    "description": "{\\color{red} (Case: producer) Upper bound of active dispatch ",
+                    "type": "number"
+                },
+                "p_lb": {
+                    "title": "p_lb",
+                    "description": "{\\color{red} (Case: producer) Lower bound of active dispatch ",
+                    "type": "number"
+                },
+                "q_ub": {
+                    "title": "q_ub",
+                    "description": "{\\color{red} (Case: producer) Upper bound of reactive dispatch ",
+                    "type": "number"
+                },
+                "q_lb": {
+                    "title": "q_lb",
+                    "description": "{\\color{red} (Case: producer) Lower bound of reactive dispatch ",
+                    "type": "number"
+                },
+                "energy_ub": {
+                    "title": "energy_ub",
+                    "description": "Upper bound for energy storage ",
+                    "type": "number"
+                },
+                "energy_lb": {
+                    "title": "energy_lb",
+                    "description": "Lower bound for energy storage ",
+                    "type": "number"
+                },
+                "pg_ext": {
+                    "title": "pg_ext",
+                    "description": "External power flow to storage facility ",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "uid",
+                "on_status_ub",
+                "on_status_lb",
+                "select_ub",
+                "select_lb",
+                "p_ub",
+                "p_lb",
+                "q_ub",
+                "q_lb",
+                "energy_ub",
+                "energy_lb",
+                "pg_ext"
             ],
             "additionalProperties": false
         },
@@ -494,10 +1549,28 @@
                     "items": {
                         "$ref": "#/definitions/datamodel__input__timeseries__General"
                     }
+                },
+                "simple_dispatchable_device": {
+                    "title": "simple_dispatchable_device",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/datamodel__input__timeseries__DispatchableDevices_SimpleProducingConsumingDevices"
+                        }
+                    ]
+                },
+                "multi_mode_dispatchable_device": {
+                    "title": "multi_mode_dispatchable_device",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/datamodel__input__timeseries__DispatchableDevices_MultimodeProducingConsumingDevices"
+                        }
+                    ]
                 }
             },
             "required": [
-                "generals"
+                "generals",
+                "simple_dispatchable_device",
+                "multi_mode_dispatchable_device"
             ],
             "additionalProperties": false
         }

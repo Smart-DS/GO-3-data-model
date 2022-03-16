@@ -29,6 +29,26 @@ class Bus(BidDSJsonBaseModel):
         description = "Voltage angle "
     )
 
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
 
 class Shunt(BidDSJsonBaseModel):
 
@@ -44,58 +64,16 @@ class Shunt(BidDSJsonBaseModel):
         description = "Number of steps "
     )
 
+    # \end{tabular}
 
-class ProducingDevices_SingleModeGeneratingUnits(BidDSJsonBaseModel):
+    # \end{center}
 
-    # Output attributes
+    # 
 
-    uid: str = Field(
-        title = "uid",
-        description = "Device unique identifier "
-    )
-
-    status: bool = Field(
-        title = "status",
-        description = "Connection status "
-    )
-
-    pg: float = Field(
-        title = "pg",
-        description = "Active dispatch "
-    )
-
-    qg: float = Field(
-        title = "qg",
-        description = "Reactive dispatch "
-    )
-
-    pg_regulation_up: float = Field(
-        title = "pg_regulation_up",
-        description = "Regulation up reserve "
-    )
-
-    pg_regulation_down: float = Field(
-        title = "pg_regulation_down",
-        description = "Regulation down reserve "
-    )
-
-    pg_spin: float = Field(
-        title = "pg_spin",
-        description = "Spinning reserve "
-    )
-
-    pg_nonspin: float = Field(
-        title = "pg_nonspin",
-        description = "Non-spinning reserve "
-    )
-
-    energy: float = Field(
-        title = "energy",
-        description = "Energy storage "
-    )
+    # 
 
 
-class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
+class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
 
     # Output attributes
 
@@ -109,65 +87,80 @@ class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
         description = "Connection status "
     )
 
-    select_mode: List[str] = Field(
-        title = "select_mode",
-        description = "Active configuration uids for each time step "
+    p: float = Field(
+        title = "p",
+        description = "{\color{red} (Case: producer) Active production "
     )
 
-    pg: float = Field(
-        title = "pg",
-        description = "Active dispatch "
+    # 
+
+    q: float = Field(
+        title = "q",
+        description = "{\color{red} (Case: producer) Reactive production "
     )
 
-    qg: float = Field(
-        title = "qg",
-        description = "Reactive dispatch "
-    )
+    # 
 
-    pg_regulation_up: float = Field(
-        title = "pg_regulation_up",
+    p_reg_res_up: float = Field(
+        title = "p_reg_res_up",
         description = "Regulation up reserve "
     )
 
-    pg_regulation_down: float = Field(
-        title = "pg_regulation_down",
+    p_reg_res_down: float = Field(
+        title = "p_reg_res_down",
         description = "Regulation down reserve "
     )
 
-    pg_spin: float = Field(
-        title = "pg_spin",
-        description = "Spinning reserve "
+    p_syn_res: float = Field(
+        title = "p_syn_res",
+        description = "Synchronized reserve "
     )
 
-    pg_nonspin: float = Field(
-        title = "pg_nonspin",
-        description = "Non-spinning reserve "
+    p_nsyn_res: float = Field(
+        title = "p_nsyn_res",
+        description = "Non-synchronized reserve "
     )
 
-    pg_flexi_up_online: float = Field(
-        title = "pg_flexi_up_online",
-        description = "Flexible ramp up reserve when online "
+    p_ramp_res_up_online: float = Field(
+        title = "p_ramp_res_up_online",
+        description = "Ramp up reserve when online "
     )
 
-    pg_flexi_down_online: float = Field(
-        title = "pg_flexi_down_online",
-        description = "Flexible ramp down reserve when online "
+    p_ramp_res_down_online: float = Field(
+        title = "p_ramp_res_down_online",
+        description = "Ramp down reserve when online "
     )
 
-    pg_flexi_up_offline: float = Field(
-        title = "pg_flexi_up_offline",
-        description = "Flexible ramp up reserve when offline "
+    p_ramp_res_up_offline: float = Field(
+        title = "p_ramp_res_up_offline",
+        description = "Ramp up reserve when offline "
     )
 
-    pg_flexi_down_offline: float = Field(
-        title = "pg_flexi_down_offline",
-        description = "Flexible ramp down reserve when offline "
+    p_ramp_res_down_offline: float = Field(
+        title = "p_ramp_res_down_offline",
+        description = "Ramp down reserve when offline "
+    )
+
+    q_res_up: float = Field(
+        title = "q_res_up",
+        description = "Reactive reserve up "
+    )
+
+    q_res_down: float = Field(
+        title = "q_res_down",
+        description = "Reactive reserve down "
     )
 
     energy: float = Field(
         title = "energy",
         description = "Energy storage "
     )
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
 
 
 class ACTransmissionLine(BidDSJsonBaseModel):
@@ -205,6 +198,10 @@ class ACTransmissionLine(BidDSJsonBaseModel):
         title = "ql_to",
         description = "Reactive power flow, to side "
     )
+
+    # \end{tabular}
+
+    # \end{center}
 
 
 class TwoWindingTransformer(BidDSJsonBaseModel):
@@ -253,6 +250,20 @@ class TwoWindingTransformer(BidDSJsonBaseModel):
         description = "Reactive power flow, to side "
     )
 
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
 
 class DCLine(BidDSJsonBaseModel):
 
@@ -282,5 +293,11 @@ class DCLine(BidDSJsonBaseModel):
         title = "qdc_to",
         description = "Reactive power flow, to bus "
     )
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
 
 

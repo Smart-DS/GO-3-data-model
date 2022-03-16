@@ -14,12 +14,20 @@ class General(BidDSJsonBaseModel):
 
     # Global time attributes
 
+    # 
+
     # Normalization attributes
 
     base_norm_mva: Optional[float] = Field(
         title = "base_norm_mva",
         description = "Base MVA normalization constant "
     )
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
 
 
 class ViolationCostsParameters(BidDSJsonBaseModel):
@@ -28,18 +36,26 @@ class ViolationCostsParameters(BidDSJsonBaseModel):
 
     p_bus_vio_cost: float = Field(
         title = "p_bus_vio_cost",
-        description = "Bus marginal costs for active power violation "
+        description = "Bus violation costs for active power violation "
     )
 
     q_bus_vio_cost: float = Field(
         title = "q_bus_vio_cost",
-        description = "Bus marginal costs for reactive power violation  "
+        description = "Bus violation costs for reactive power violation  "
     )
 
     s_vio_cost: float = Field(
         title = "s_vio_cost",
-        description = "Branch marginal costs for thermal violation "
+        description = "Branch violation costs for thermal violation "
     )
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # 
 
 
 class Bus(BidDSJsonBaseModel):
@@ -135,6 +151,10 @@ class Bus(BidDSJsonBaseModel):
         description = "Bus country location "
     )
 
+    # \end{tabular}
+
+    # \end{center}
+
 
 class Shunt(BidDSJsonBaseModel):
 
@@ -170,10 +190,16 @@ class Shunt(BidDSJsonBaseModel):
         description = "Minimum number of steps "
     )
 
+    # \end{tabular}
 
-class ProducingDevices_SingleModeGeneratingUnits(BidDSJsonBaseModel):
+    # \end{center}
 
-    # Input attributes
+    # 
+
+
+class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
+
+    # Device attributes
 
     uid: str = Field(
         title = "uid",
@@ -185,6 +211,12 @@ class ProducingDevices_SingleModeGeneratingUnits(BidDSJsonBaseModel):
         description = "Unique identifier for connecting bus "
     )
 
+    device_type: str = Field(
+        title = "device_type",
+        description = "Type of device ",
+        options = ["producer / consumer"]
+    )
+
     vm_setpoint: Optional[float] = Field(
         title = "vm_setpoint",
         description = "Voltage magnitude setpoint "
@@ -192,13 +224,15 @@ class ProducingDevices_SingleModeGeneratingUnits(BidDSJsonBaseModel):
 
     startup_cost: float = Field(
         title = "startup_cost",
-        description = "Producing device startup cost "
+        description = "Device start up cost "
     )
 
     shutdown_cost: float = Field(
         title = "shutdown_cost",
-        description = "Producing device shutdown cost "
+        description = "Device shut down cost "
     )
+
+    # 
 
     startup_num_ub: int = Field(
         title = "startup_num_ub",
@@ -211,82 +245,54 @@ class ProducingDevices_SingleModeGeneratingUnits(BidDSJsonBaseModel):
 
     # 
 
+    # 
+
+    # 
+
+    # 
+
+    # 
+
     on_cost: float = Field(
         title = "on_cost",
-        description = "Producing device fixed operating cost "
+        description = "Device fixed operating cost "
     )
 
     in_service_time_lb: float = Field(
         title = "in_service_time_lb",
-        description = "Minimum uptime (hr) to operate/in service "
+        description = "Minimum uptime in service "
     )
 
     down_time_lb: float = Field(
         title = "down_time_lb",
-        description = "Minimum (hr) downtime "
+        description = "Minimum downtime "
     )
 
-    pg_ramp_ub: float = Field(
-        title = "pg_ramp_ub",
-        description = "Maximum ramp up on operating cond."
-    )
-
-    pg_ramp_lb: float = Field(
-        title = "pg_ramp_lb",
-        description = "Maximum ramp down on operating cond."
-    )
-
-    pg_startup_ramp_ub: float = Field(
-        title = "pg_startup_ramp_ub",
-        description = "Maximum ramp up on startup "
-    )
-
-    pg_shutdown_ramp_lb: float = Field(
-        title = "pg_shutdown_ramp_lb",
-        description = "Maximum ramp down on shutdown "
-    )
-
-    pg_regulation_up_ub: float = Field(
-        title = "pg_regulation_up_ub",
-        description = "Maximum regulation up reserve "
-    )
-
-    pg_regulation_down_ub: float = Field(
-        title = "pg_regulation_down_ub",
-        description = "Maximum regulation down reserve "
-    )
-
-    pg_spin_ub: float = Field(
-        title = "pg_spin_ub",
-        description = "Maximum spinning reserve "
-    )
-
-    pg_nonspin_ub: float = Field(
-        title = "pg_nonspin_ub",
-        description = "Maximum non-spinning reserve "
-    )
-
-    pg_flexi_up_online_ub: float = Field(
-        title = "pg_flexi_up_online_ub",
-        description = "Maximum flexible ramp up reserve when online "
-    )
-
-    pg_flexi_down_online_ub: float = Field(
-        title = "pg_flexi_down_online_ub",
-        description = "Maximum flexible ramp down reserve when online "
-    )
-
-    pg_flexi_up_offline_ub: float = Field(
-        title = "pg_flexi_up_offline_ub",
-        description = "Maximum flexible ramp up reserve when offline "
-    )
-
-    pg_flexi_down_offline_ub: float = Field(
-        title = "pg_flexi_down_offline_ub",
-        description = "Maximum flexible ramp down reserve when offline "
+    p_ramp_up_ub: float = Field(
+        title = "p_ramp_up_ub",
+        description = "{\color{red}(Case: producer) Max production ramp up when operating "
     )
 
     # 
+
+    p_ramp_down_ub: float = Field(
+        title = "p_ramp_down_ub",
+        description = "{\color{red}(Case: producer) Max production ramp down when operating "
+    )
+
+    # 
+
+    p_startup_ramp_ub: float = Field(
+        title = "p_startup_ramp_ub",
+        description = "{\color{red}(Case: producer) Max production ramp up when start up "
+    )
+
+    # 
+
+    p_shutdown_ramp_ub: float = Field(
+        title = "p_shutdown_ramp_ub",
+        description = "{\color{red}(Case: producer) Max production ramp down when shut down "
+    )
 
     # 
 
@@ -309,66 +315,131 @@ class ProducingDevices_SingleModeGeneratingUnits(BidDSJsonBaseModel):
         description = "Device has storage capability "
     )
 
+    # \end{tabular}
 
-class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
+    # \end{center}
 
-    # Input attributes
+    # \begin{center}
 
-    uid: str = Field(
-        title = "uid",
-        description = "Producing device unique identifier "
+    # \small
+
+    # \begin{tabular}{ l | l | c | c | c |}
+
+    # Reserve attributes
+
+    p_reg_res_up_ub: float = Field(
+        title = "p_reg_res_up_ub",
+        description = "Maximum regulation reserve up "
     )
 
-    bus: str = Field(
-        title = "bus",
-        description = "Unique identifier for connecting bus "
+    p_reg_res_down_ub: float = Field(
+        title = "p_reg_res_down_ub",
+        description = "Maximum regulation reserve down "
     )
 
-    vm_setpoint: Optional[float] = Field(
-        title = "vm_setpoint",
-        description = "Voltage magnitude setpoint "
+    p_syn_res_ub: float = Field(
+        title = "p_syn_res_ub",
+        description = "Maximum synchronized reserve "
     )
 
-    startup_cost: float = Field(
-        title = "startup_cost",
-        description = "Producing device startup cost "
+    p_nsyn_res_ub: float = Field(
+        title = "p_nsyn_res_ub",
+        description = "Maximum non-synchronized reserve "
     )
 
-    shutdown_cost: float = Field(
-        title = "shutdown_cost",
-        description = "Producing device shutdown cost "
+    p_ramp_res_up_online_ub: float = Field(
+        title = "p_ramp_res_up_online_ub",
+        description = "Maximum ramp up reserve when online "
     )
 
-    startup_num_ub: int = Field(
-        title = "startup_num_ub",
-        description = "Maximum startups "
+    p_ramp_res_down_online_ub: float = Field(
+        title = "p_ramp_res_down_online_ub",
+        description = "Maximum ramp down reserve when online "
     )
 
-    in_service_time_lb: float = Field(
-        title = "in_service_time_lb",
-        description = "Minimum uptime (hr) to operate/in service "
+    p_ramp_res_up_offline_ub: float = Field(
+        title = "p_ramp_res_up_offline_ub",
+        description = "Maximum ramp up reserve when offline "
     )
 
-    down_time_lb: float = Field(
-        title = "down_time_lb",
-        description = "Minimum (hr) downtime "
+    p_ramp_res_down_offline_ub: float = Field(
+        title = "p_ramp_res_down_offline_ub",
+        description = "Maximum ramp down reserve when offline "
     )
 
-    pg_startup_ramp_ub: float = Field(
-        title = "pg_startup_ramp_ub",
-        description = "Maximum ramp up on startup "
+    q_res_up_ub: float = Field(
+        title = "q_res_up_ub",
+        description = "Maximum reactive reserve up "
     )
 
-    pg_shutdown_ramp_lb: float = Field(
-        title = "pg_shutdown_ramp_lb",
-        description = "Maximum ramp down on shutdown "
+    q_res_down_ub: float = Field(
+        title = "q_res_down_ub",
+        description = "Maximum reactive reserve down "
     )
+
+    p_reg_res_up_cost: float = Field(
+        title = "p_reg_res_up_cost",
+        description = "Costs for regulation reserve up "
+    )
+
+    p_reg_res_down_cost: float = Field(
+        title = "p_reg_res_down_cost",
+        description = "Costs for regulation reserve down "
+    )
+
+    p_syn_res_cost: float = Field(
+        title = "p_syn_res_cost",
+        description = "Costs for synchronized reserve "
+    )
+
+    p_nsyn_res_cost: float = Field(
+        title = "p_nsyn_res_cost",
+        description = "Costs for non-synchronized reserve "
+    )
+
+    p_ramp_res_up_online_cost: float = Field(
+        title = "p_ramp_res_up_online_cost",
+        description = "Costs for ramp up reserve when online "
+    )
+
+    p_ramp_res_down_online_cost: float = Field(
+        title = "p_ramp_res_down_online_cost",
+        description = "Costs for ramp down reserve when online "
+    )
+
+    p_ramp_res_up_offline_cost: float = Field(
+        title = "p_ramp_res_up_offline_cost",
+        description = "Costs for ramp up reserve when offline "
+    )
+
+    p_ramp_res_down_offline_cost: float = Field(
+        title = "p_ramp_res_down_offline_cost",
+        description = "Costs for ramp down reserve when offline "
+    )
+
+    q_res_up_cost: float = Field(
+        title = "q_res_up_cost",
+        description = "Costs for reactive reserve up "
+    )
+
+    q_res_down_cost: float = Field(
+        title = "q_res_down_cost",
+        description = "Costs for reactive reserve down "
+    )
+
+    # \end{tabular}
+
+    # \end{center}
 
     # 
 
-    # \hline \hline
+    # \begin{center}
 
-    # Initial status attributes within:
+    # \small
+
+    # \begin{tabular}{ l | l | c | c | c |}
+
+    # Initial condition attributes
 
     on_status: int = Field(
         title = "on_status",
@@ -376,20 +447,19 @@ class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
         options = [0, 1]
     )
 
-    select_mode: str = Field(
-        title = "select_mode",
-        description = "Active mode uid for initial time step "
+    p: float = Field(
+        title = "p",
+        description = "{\color{red} (Case: producer) Active production for initial time step "
     )
 
-    pg: float = Field(
-        title = "pg",
-        description = "Active dispatch for initial time step "
+    # 
+
+    q: float = Field(
+        title = "q",
+        description = "{\color{red} (Case: producer) Reactive production for initial time step "
     )
 
-    qg: float = Field(
-        title = "qg",
-        description = "Reactive dispatch for initial time step "
-    )
+    # 
 
     energy: float = Field(
         title = "energy",
@@ -408,7 +478,144 @@ class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
         description = "Accumulated up time "
     )
 
-    # \hline \hline
+    # Reactive cap. attributes
+
+    q_0: float = Field(
+        title = "q_0",
+        description = "{\color{red} (Case: producer) Reactive production at zero active production "
+    )
+
+    # 
+
+    pq_ratio: float = Field(
+        title = "pq_ratio",
+        description = "Sensitivity of reactive w.r.t active dispatch "
+    )
+
+    # Reactive cap. attributes
+
+    q_0_ub: float = Field(
+        title = "q_0_ub",
+        description = "{\color{red} (Case: producer) Max reactive production at zero active production "
+    )
+
+    # 
+
+    q_0_lb: float = Field(
+        title = "q_0_lb",
+        description = "{\color{red} (Case: producer) Min reactive production at zero active production "
+    )
+
+    # 
+
+    # 
+
+    pq_ratio_ub: float = Field(
+        title = "pq_ratio_ub",
+        description = "Upper bound for sensitivity of reactive w.r.t active dispatch "
+    )
+
+    pq_ratio_lb: float = Field(
+        title = "pq_ratio_lb",
+        description = "Lower bound for sensitivity of reactive w.r.t active dispatch "
+    )
+
+    # Storage attributes
+
+    storage_efficiency: float = Field(
+        title = "storage_efficiency",
+        description = "Efficiency of storage device "
+    )
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # 
+
+    # \begin{todo}[]{}
+
+    # Output solution --- a preliminary version with state/configuration is drafted.
+
+    # \end{todo}
+
+    # 
+
+
+class DispatchableDevices_MultimodeProducingConsumingDevices(BidDSJsonBaseModel):
+
+    # Operations attributes
+
+    uid: str = Field(
+        title = "uid",
+        description = "Producing device unique identifier "
+    )
+
+    bus: str = Field(
+        title = "bus",
+        description = "Unique identifier for connecting bus "
+    )
+
+    device_type: str = Field(
+        title = "device_type",
+        description = "Type of device ",
+        options = ["producer / consumer"]
+    )
+
+    vm_setpoint: Optional[float] = Field(
+        title = "vm_setpoint",
+        description = "Voltage magnitude setpoint "
+    )
+
+    startup_cost: float = Field(
+        title = "startup_cost",
+        description = "Device start up cost "
+    )
+
+    shutdown_cost: float = Field(
+        title = "shutdown_cost",
+        description = "Device shut down cost "
+    )
+
+    startup_num_ub: int = Field(
+        title = "startup_num_ub",
+        description = "Maximum startups "
+    )
+
+    in_service_time_lb: float = Field(
+        title = "in_service_time_lb",
+        description = "Minimum uptime in service "
+    )
+
+    down_time_lb: float = Field(
+        title = "down_time_lb",
+        description = "Minimum downtime "
+    )
+
+    p_startup_ramp_ub: float = Field(
+        title = "p_startup_ramp_ub",
+        description = "{\color{red}(Case: producer) Max production ramp up when start up "
+    )
+
+    # 
+
+    p_shutdown_ramp_ub: float = Field(
+        title = "p_shutdown_ramp_ub",
+        description = "{\color{red}(Case: producer) Max production ramp down when shut down "
+    )
+
+    # 
+
+    # 
+
+    # 
+
+    mode_num: Optional[int] = Field(
+        title = "mode_num",
+        description = "Number of operating modes "
+    )
 
     # Flags for extra parameters
 
@@ -427,11 +634,57 @@ class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
         description = "Device has storage capability "
     )
 
-    # \hline \hline
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # \begin{center}
+
+    # \small
+
+    # \begin{tabular}{ l | l | c | c | c |}
+
+    # Initial condition attributes
+
+    on_status: int = Field(
+        title = "on_status",
+        description = "On status indicator for initial time step ",
+        options = [0, 1]
+    )
+
+    select_mode: str = Field(
+        title = "select_mode",
+        description = "Active mode uid for initial time step "
+    )
+
+    p: float = Field(
+        title = "p",
+        description = "{\color{red} (Case: producer) Active production for initial time step "
+    )
+
+    # 
+
+    q: float = Field(
+        title = "q",
+        description = "{\color{red} (Case: producer) Reactive production for initial time step "
+    )
+
+    # 
+
+    energy: float = Field(
+        title = "energy",
+        description = "Energy storage for initial time step "
+    )
+
+    # 
 
     # \end{tabular}
 
     # \end{center}
+
+    # 
 
     # \begin{center}
 
@@ -440,15 +693,6 @@ class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
     # \begin{tabular}{ l | l | c | c | c |}
 
     # Mode attributes
-
-    mode_num: int = Field(
-        title = "mode_num",
-        description = "Number of operating modes "
-    )
-
-    # \hline \hline
-
-    # Inner mode attributes ---
 
     uid: str = Field(
         title = "uid",
@@ -466,6 +710,16 @@ class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
 
     # 
 
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
     on_cost: float = Field(
         title = "on_cost",
         description = "Mode fixed operating cost "
@@ -473,180 +727,214 @@ class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
 
     # 
 
-    pg_ramp_ub: float = Field(
-        title = "pg_ramp_ub",
-        description = "Maximum ramp up on operating cond."
-    )
-
-    pg_ramp_lb: float = Field(
-        title = "pg_ramp_lb",
-        description = "Maximum ramp down on operating cond."
-    )
-
-    pg_regulation_up_ub: float = Field(
-        title = "pg_regulation_up_ub",
-        description = "Maximum regulation up reserve "
-    )
-
-    pg_regulation_down_ub: float = Field(
-        title = "pg_regulation_down_ub",
-        description = "Maximum regulation down reserve "
-    )
-
-    pg_spin_ub: float = Field(
-        title = "pg_spin_ub",
-        description = "Maximum spinning reserve "
-    )
-
-    pg_nonspin_ub: float = Field(
-        title = "pg_nonspin_ub",
-        description = "Maximum non-spinning reserve "
-    )
-
-    pg_flexi_up_online_ub: float = Field(
-        title = "pg_flexi_up_online_ub",
-        description = "Maximum flexible ramp up reserve when online "
-    )
-
-    pg_flexi_down_online_ub: float = Field(
-        title = "pg_flexi_down_online_ub",
-        description = "Maximum flexible ramp down reserve when online "
-    )
-
-    pg_flexi_up_offline_ub: float = Field(
-        title = "pg_flexi_up_offline_ub",
-        description = "Maximum flexible ramp up reserve when offline "
-    )
-
-    pg_flexi_down_offline_ub: float = Field(
-        title = "pg_flexi_down_offline_ub",
-        description = "Maximum flexible ramp down reserve when offline "
-    )
-
-
-class ConsumingDevices_LoadsandDemandResponse(BidDSJsonBaseModel):
-
-    # Input attributes
-
-    uid: str = Field(
-        title = "uid",
-        description = "Consuming device unique identifier "
-    )
-
-    bus: str = Field(
-        title = "bus",
-        description = "Unique identifier for connecting bus "
-    )
-
-    connection_cost: float = Field(
-        title = "connection_cost",
-        description = "Consumption device connection cost "
-    )
-
-    disconnection_cost: float = Field(
-        title = "disconnection_cost",
-        description = "Consumption device disconnection cost "
-    )
-
-    connection_num_ub: int = Field(
-        title = "connection_num_ub",
-        description = "Maximum connection limits per time horizon "
+    p_ramp_up_ub: float = Field(
+        title = "p_ramp_up_ub",
+        description = "{\color{red}(Case: producer) Max production ramp up when operating "
     )
 
     # 
 
+    p_ramp_down_ub: float = Field(
+        title = "p_ramp_down_ub",
+        description = "{\color{red}(Case: producer) Max production ramp down when operating "
+    )
+
+    # 
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # \begin{center}
+
+    # \small
+
+    # \begin{tabular}{ l | l | c | c | c |}
+
+    # Reserve attributes
+
+    p_reg_res_up_ub: float = Field(
+        title = "p_reg_res_up_ub",
+        description = "Maximum regulation reserve up "
+    )
+
+    p_reg_res_down_ub: float = Field(
+        title = "p_reg_res_down_ub",
+        description = "Maximum regulation reserve down "
+    )
+
+    p_syn_res_ub: float = Field(
+        title = "p_syn_res_ub",
+        description = "Maximum synchronized reserve "
+    )
+
+    p_nsyn_res_ub: float = Field(
+        title = "p_nsyn_res_ub",
+        description = "Maximum non-synchronized reserve "
+    )
+
+    p_ramp_res_up_online_ub: float = Field(
+        title = "p_ramp_res_up_online_ub",
+        description = "Maximum ramp up reserve when online "
+    )
+
+    p_ramp_res_down_online_ub: float = Field(
+        title = "p_ramp_res_down_online_ub",
+        description = "Maximum ramp down reserve when online "
+    )
+
+    p_ramp_res_up_offline_ub: float = Field(
+        title = "p_ramp_res_up_offline_ub",
+        description = "Maximum ramp up reserve when offline "
+    )
+
+    p_ramp_res_down_offline_ub: float = Field(
+        title = "p_ramp_res_down_offline_ub",
+        description = "Maximum ramp down reserve when offline "
+    )
+
+    q_res_up_ub: float = Field(
+        title = "q_res_up_ub",
+        description = "Maximum reactive reserve up "
+    )
+
+    q_res_down_ub: float = Field(
+        title = "q_res_down_ub",
+        description = "Maximum reactive reserve down "
+    )
+
+    p_reg_res_up_cost: float = Field(
+        title = "p_reg_res_up_cost",
+        description = "Costs for regulation reserve up "
+    )
+
+    p_reg_res_down_cost: float = Field(
+        title = "p_reg_res_down_cost",
+        description = "Costs for regulation reserve down "
+    )
+
+    p_syn_res_cost: float = Field(
+        title = "p_syn_res_cost",
+        description = "Costs for synchronized reserve "
+    )
+
+    p_nsyn_res_cost: float = Field(
+        title = "p_nsyn_res_cost",
+        description = "Costs for non-synchronized reserve "
+    )
+
+    p_ramp_res_up_online_cost: float = Field(
+        title = "p_ramp_res_up_online_cost",
+        description = "Costs for ramp up reserve when online "
+    )
+
+    p_ramp_res_down_online_cost: float = Field(
+        title = "p_ramp_res_down_online_cost",
+        description = "Costs for ramp down reserve when online "
+    )
+
+    p_ramp_res_up_offline_cost: float = Field(
+        title = "p_ramp_res_up_offline_cost",
+        description = "Costs for ramp up reserve when offline "
+    )
+
+    p_ramp_res_down_offline_cost: float = Field(
+        title = "p_ramp_res_down_offline_cost",
+        description = "Costs for ramp down reserve when offline "
+    )
+
+    q_res_up_cost: float = Field(
+        title = "q_res_up_cost",
+        description = "Costs for reactive reserve up "
+    )
+
+    q_res_down_cost: float = Field(
+        title = "q_res_down_cost",
+        description = "Costs for reactive reserve down "
+    )
+
+    # Initial condition attributes
+
+    accu_down_time: float = Field(
+        title = "accu_down_time",
+        description = "Accumulated down time for current mode "
+    )
+
+    accu_up_time: float = Field(
+        title = "accu_up_time",
+        description = "Accumulated up time for current mode "
+    )
+
+    # 
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # \begin{center}
+
+    # \small
+
+    # \begin{tabular}{ l | l | c | c | c |}
+
+    # Reactive cap. attributes
+
+    q_0: float = Field(
+        title = "q_0",
+        description = "{\color{red} (Case: producer) Reactive production at zero active production "
+    )
+
+    # 
+
+    pq_ratio: float = Field(
+        title = "pq_ratio",
+        description = "Sensitivity of reactive w.r.t active dispatch "
+    )
+
+    # \hline \hline
+
+    # Reactive cap.
+
+    q_0_ub: float = Field(
+        title = "q_0_ub",
+        description = "{\color{red} (Case: producer) Max reactive production at zero active production "
+    )
+
+    # 
+
+    q_0_lb: float = Field(
+        title = "q_0_lb",
+        description = "{\color{red} (Case: producer) Min reactive production at zero active production "
+    )
+
+    # 
+
+    pq_ratio_ub: float = Field(
+        title = "pq_ratio_ub",
+        description = "Upper bound for sensitivity of reactive w.r.t active dispatch "
+    )
+
+    pq_ratio_lb: float = Field(
+        title = "pq_ratio_lb",
+        description = "Lower bound for sensitivity of reactive w.r.t active dispatch "
+    )
+
+    # Storage attributes
+
+    storage_efficiency: float = Field(
+        title = "storage_efficiency",
+        description = "Efficiency of storage device "
+    )
+
+    # \end{tabular}
+
+    # \end{center}
+
     # 
 
     # 
-
-    on_cost: float = Field(
-        title = "on_cost",
-        description = "Consumption device fixed cost "
-    )
-
-    in_service_time_lb: float = Field(
-        title = "in_service_time_lb",
-        description = "Minimum uptime (hr) in service "
-    )
-
-    down_time_lb: float = Field(
-        title = "down_time_lb",
-        description = "Minimum (hr) disconnection time "
-    )
-
-    pg_ramp_ub: float = Field(
-        title = "pg_ramp_ub",
-        description = "Maximum ramp up in nominal  cond."
-    )
-
-    pg_ramp_lb: float = Field(
-        title = "pg_ramp_lb",
-        description = "Maximum ramp down in nominal cond."
-    )
-
-    pg_startup_ramp_ub: float = Field(
-        title = "pg_startup_ramp_ub",
-        description = "Maximum ramp up on startup "
-    )
-
-    pg_shutdown_ramp_lb: float = Field(
-        title = "pg_shutdown_ramp_lb",
-        description = "Maximum ramp down on shutdown "
-    )
-
-    pg_regulation_up_ub: float = Field(
-        title = "pg_regulation_up_ub",
-        description = "Maximum regulation up reserve "
-    )
-
-    pg_regulation_down_ub: float = Field(
-        title = "pg_regulation_down_ub",
-        description = "Maximum regulation down reserve "
-    )
-
-    pg_spin_ub: float = Field(
-        title = "pg_spin_ub",
-        description = "Maximum spinning reserve "
-    )
-
-    pg_nonspin_ub: float = Field(
-        title = "pg_nonspin_ub",
-        description = "Maximum non-spinning reserve "
-    )
-
-    pg_flexi_up_online_ub: float = Field(
-        title = "pg_flexi_up_online_ub",
-        description = "Maximum flexible ramp up reserve when online "
-    )
-
-    pg_flexi_down_online_ub: float = Field(
-        title = "pg_flexi_down_online_ub",
-        description = "Maximum flexible ramp down reserve when online "
-    )
-
-    pg_flexi_up_offline_ub: float = Field(
-        title = "pg_flexi_up_offline_ub",
-        description = "Maximum flexible ramp up reserve when offline "
-    )
-
-    pg_flexi_down_offline_ub: float = Field(
-        title = "pg_flexi_down_offline_ub",
-        description = "Maximum flexible ramp down reserve when offline "
-    )
-
-    # Flags for extra parameters
-
-    q_linear_cap: bool = Field(
-        title = "q_linear_cap",
-        description = "Device has additional reactive constraint "
-    )
-
-    q_bound_cap: bool = Field(
-        title = "q_bound_cap",
-        description = "Device has additional reactive bounds "
-    )
-
-    # \sout{\tt\color{red} storage\_cap}
 
 
 class ACTransmissionLine(BidDSJsonBaseModel):
@@ -678,9 +966,9 @@ class ACTransmissionLine(BidDSJsonBaseModel):
         description = "Series reactance  "
     )
 
-    b_ch: float = Field(
-        title = "b_ch",
-        description = "AC line charging susceptance "
+    b: float = Field(
+        title = "b",
+        description = "Shunt susceptance "
     )
 
     mva_ub_nom: float = Field(
@@ -740,6 +1028,16 @@ class ACTransmissionLine(BidDSJsonBaseModel):
         description = "Susceptance for shunt component at to bus "
     )
 
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # 
+
+    # 
+
 
 class TwoWindingTransformer(BidDSJsonBaseModel):
 
@@ -770,9 +1068,9 @@ class TwoWindingTransformer(BidDSJsonBaseModel):
         description = "Series reactance  "
     )
 
-    b_lk: float = Field(
-        title = "b_lk",
-        description = "Susceptance for transformer leakage "
+    b: float = Field(
+        title = "b",
+        description = "Shunt susceptance "
     )
 
     tm_ub: float = Field(
@@ -854,6 +1152,18 @@ class TwoWindingTransformer(BidDSJsonBaseModel):
         description = "Susceptance for shunt component at to bus "
     )
 
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
 
 class DCLine(BidDSJsonBaseModel):
 
@@ -919,6 +1229,12 @@ class DCLine(BidDSJsonBaseModel):
         description = "{DC line disconnection cost "
     )
 
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
 
 class RegionalReserves(BidDSJsonBaseModel):
 
@@ -939,15 +1255,54 @@ class RegionalReserves(BidDSJsonBaseModel):
         description = "Regulation reserve down violation cost "
     )
 
-    SPIN_vio_cost: float = Field(
-        title = "SPIN_vio_cost",
-        description = "Spinning reserve violation cost "
+    SYN_vio_cost: float = Field(
+        title = "SYN_vio_cost",
+        description = "Synchronized reserve violation cost "
     )
 
-    NON_SPIN_vio_cost: float = Field(
-        title = "NON_SPIN_vio_cost",
-        description = "Non-spinning reserve violation cost "
+    NSYN_vio_cost: float = Field(
+        title = "NSYN_vio_cost",
+        description = "Non-synchronized reserve violation cost "
     )
+
+    # 
+
+    # 
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # \begin{center}
+
+    # \small
+
+    # \begin{tabular}{ l | l | c | c | c |}
+
+    # Reactive reserve attributes
+
+    uid: str = Field(
+        title = "uid",
+        description = "Region reserve unique identifier "
+    )
+
+    REACT_UP_vio_cost: float = Field(
+        title = "REACT_UP_vio_cost",
+        description = "Reactive reserve power violation cost "
+    )
+
+    REACT_DOWN_vio_cost: float = Field(
+        title = "REACT_DOWN_vio_cost",
+        description = "Reactive reserve power violation cost "
+    )
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
 
     # 
 

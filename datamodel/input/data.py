@@ -18,20 +18,40 @@ class Network(BidDSJsonBaseModel):
         title = "general"
     )
 
-    buses: List[datamodel.input.static.Bus] = Field(
-        title = "buses"
+    violation_cost: datamodel.input.static.ViolationCostsParameters = Field(
+        title = "violation_cost"
     )
 
-    shunts: List[datamodel.input.static.Shunt] = Field(
-        title = "shunts"
+    bus: List[datamodel.input.static.Bus] = Field(
+        title = "bus"
     )
 
-    two_winding_transformers: List[datamodel.input.static.TwoWindingTransformer] = Field(
-        title = "two_winding_transformers"
+    shunt: List[datamodel.input.static.Shunt] = Field(
+        title = "shunt"
     )
 
-    dc_lines: List[datamodel.input.static.DCLine] = Field(
-        title = "dc_lines"
+    simple_dispatchable_device: List[datamodel.input.static.DispatchableDevices_SimpleProducingConsumingDevices] = Field(
+        title = "simple_dispatchable_device"
+    )
+
+    multi_mode_dispatchable_device: List[datamodel.input.static.DispatchableDevices_MultimodeProducingConsumingDevices] = Field(
+        title = "multi_mode_dispatchable_device"
+    )
+
+    ac_line: List[datamodel.input.static.ACTransmissionLine] = Field(
+        title = "ac_line"
+    )
+
+    two_winding_transformer: List[datamodel.input.static.TwoWindingTransformer] = Field(
+        title = "two_winding_transformer"
+    )
+
+    dc_line: List[datamodel.input.static.DCLine] = Field(
+        title = "dc_line"
+    )
+
+    active_regional_reserve: List[datamodel.input.static.RegionalReserves] = Field(
+        title = "active_regional_reserve"
     )
 
 
@@ -39,6 +59,14 @@ class TimeSeriesInput(BidDSJsonBaseModel):
 
     generals: List[datamodel.input.timeseries.General] = Field(
         title = "generals"
+    )
+
+    simple_dispatchable_device: List[datamodel.input.timeseries.DispatchableDevices_SimpleProducingConsumingDevices] = Field(
+        title = "simple_dispatchable_device"
+    )
+
+    multi_mode_dispatchable_device: List[datamodel.input.timeseries.DispatchableDevices_MultimodeProducingConsumingDevices] = Field(
+        title = "multi_mode_dispatchable_device"
     )
 
 
