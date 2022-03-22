@@ -46,6 +46,29 @@ class BidDSJsonBaseModel(BaseModel):
         finally:
             os.chdir(orig)
 
+    def save(cls, filename):
+        """
+        Save a data model to a file
+        TODO: Valiodate that the model matches the schema (typically an output model)
+        Parameters
+        ----------
+        filename : str
+        """
+        filename = Path(filename)
+        base_dir = filename.parent.absolute()
+        orig = os.getcwd()
+        os.chdir(base_dir)
+        try:
+            # TODO: Check if this validates. If not do a validation
+            json_model = self.json()
+            with open(filesname.name,'w') as file_pointer:
+                json.dump(json_model,file_pointer,indent=4)
+        except ValidationError:
+            logger.exception("Failed to validate %s", filename)
+        except IOError:
+            raise(f"Problem writing file {filename}")
+
+
     @classmethod
     def schema_json(cls, by_alias=True, indent=None) -> str:
         data = cls.schema(by_alias=by_alias)
