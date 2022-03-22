@@ -1,0 +1,577 @@
+This section presents the latest data format in JSON for 
+each network electrical component for the competition.
+%The data format is described in a top-down approach.
+This section first starts by presenting the static Network object ---
+the top level JSON object containing all the \textbf{static data}
+(attributes marked with `S'/`B' in Section~\ref{sec:naming}) for each network component.
+JSON objects associated with each individual component will be presented afterwards.
+
+\subsection{Network}
+\label{sec:network}
+The Network object in JSON consists of: 
+\begin{itemize}
+    % \item A \texttt{"substation"} object\\
+    % The object contains a list of substations, defined in~\ref{sec:substation}.
+    \item A \texttt{"general"} object\\
+    The object contains data specified for the general attributes in Section~\ref{nom:top-level}.
+    \item A \texttt{"violation\_cost"} object\\
+    The object contains specifications for various violation costs, defined in~\ref{sec:violation}.
+    \item A \texttt{"bus"} array\\
+    The object contains a JSON array of buses, defined in~\ref{sec:bus}.
+    \item A \texttt{"shunt"} array\\
+    The object contains a JSON array of shunts, defined in~\ref{sec:shunt}.
+    \item A \texttt{"simple\_dispatchable\_device"} array\\
+    The object contains a JSON array of simple producing \& consuming devices, defined in~\ref{sec:generator}.
+    \item A \texttt{"multi-mode\_dispatchable\_device"} array\\
+    The object contains a JSON array of multi-mode producing \& consuming devices, defined in~\ref{sec:multi-generator}.
+    \item A \texttt{"sub\_device"} array\\
+    The object contains a JSON array of subdevices, defined in~\ref{sec:subdevice}.
+    \item A \texttt{"storage\_device"} array\\
+    The object contains a JSON array of storage devices, defined in~\ref{sec:storage}.
+    \item A \texttt{"ac\_line"} array\\
+    The object contains a JSON array of AC lines, defined in~\ref{sec:acline}.
+    \item A \texttt{"two\_winding\_transformer"} array\\
+    The object contains a JSON array of two winding transformers, defined in~\ref{sec:2wtransformer}.
+    \item A \texttt{"dc\_line"} array\\
+    The object contains a JSON array of DC lines, defined in~\ref{sec:dcline}.
+    \item A \texttt{"active\_regional\_reserve"} array\\
+    The object contains a JSON array of active regional/zonal reserve requirements, defined in~\ref{sec:reserve}.
+    \item A \texttt{"reactive\_regional\_reserve"} array\\
+    The object contains a JSON array of reactive regional/zonal reserve requirements, defined in~\ref{sec:reserve}.
+    \item A \texttt{"development"} object\\
+    The object contains development data for ARPA-E Dataset Teams. This section is primarily reserved for development. Competitors are not required to process the JSON object. The object may or may not be presented. 
+\end{itemize}
+
+Below shows a high-level schematic description for the network object and the general object in JSON:
+\begin{verbatim}
+"network”: {
+   "general" : { "base_norm_mva" : 100.0 },
+   "violation_cost": { … },
+   "bus": [ … ],
+   "shunt": [ … ],
+   "simple_dispatchable_device": [ … ],
+   "multi-mode_dispatchable_device": [ … ],
+   "sub_device": [ … ],
+   "storage": [ … ],
+   "ac_line”: [ … ],
+   "two_winding_transformer”: [ … ],
+   "dc_line”: [ … ],   
+   "active_regional_reserve”: [ … ],
+   "reactive_regional_reserve”: [ … ],
+   "development" : { ... }
+}    
+\end{verbatim}
+
+\subsection{Violation Cost}
+\label{sec:violation}
+Below shows a schematic example on the static violation cost parameters for 
+describing the costs/penalties for violating the bus active flows, bus reactive flows, 
+and branch (thermal) MVA limits. 
+
+\begin{verbatim}
+{
+ "p_bus_vio_cost" : 1000000.0,
+ "q_bus_vio_cost" : 1000000.0,
+ "s_vio_cost" : 500.0
+}
+\end{verbatim}
+
+
+\subsection{Bus}
+\label{sec:bus}
+A bus represents a location point where equipment connected together.
+It could be a physical bus bar of a substation, or 
+a connection point between various equipment, 
+or a virtual location/split-point resulting from
+component aggregation or model transformation.
+Attributes for buses are listed in Section~\ref{nom:bus}.
+Below shows a schematic example on static parameters for buses.
+\begin{verbatim}
+{
+  "uid" : "IDB0001",
+  "vm_ub" : 1.1,
+  "vm_lb" : 0.95,
+  "con_loss_factor" : 1.0,
+  "active_reserve_uids" : ["IDRES0001", "IDRES0002"],
+  "reactive_reserve_uids" : ["IDRES0010"],
+  "base_nom_volt” : 100.0,
+  "type” : "PQ",
+  "area” : "MI",
+  "zone” : "DET",
+  "longitude" : -83.045753,
+  "latitude" : 42.331429,
+  "city" : "Detroit",
+  "county" : "Wayne",
+  "state" : "Michigan",
+  "country" : "USA"
+},
+...
+\end{verbatim}
+
+
+\subsection{Shunt}
+\label{sec:shunt}
+Bus shunts are bus components for modeling losses to ground, and 
+usually will be defined as an admittance to ground.
+% :
+% $$
+%   I = -Y \cdot V,
+% $$
+% where $Y$ is the admittance, and $V$ is the voltage at the connecting point. Figure \ref{fig:shunt} illustrates a shunt.
+% \begin{figure}[h]
+%     \centering
+%   \includegraphics[width=0.25\linewidth]{img/shunt_new}
+%   \caption{\label{fig:shunt} A shunt.}
+% \end{figure}
+Attributes for shunts are listed in Section~\ref{nom:shunt}.
+Below shows a schematic example on the static parameters for shunts.
+\begin{verbatim}
+{
+    "uid" : "IDSH0001",
+    "bus" : "IDB0002",
+    "gs”  : 0.0,
+    "bs”  : 0.001,
+    "steps_ub" : 2,
+    "steps_lb" : 0
+},
+…    
+\end{verbatim}
+
+
+\subsection{Dispatchable Devices: Simple Producing \& Consuming Devices}
+\label{sec:generator}
+Producing devices
+produce active power and reactive power, and support voltage at target voltage set-point.
+These devices can be classical synchronous generators, renewable generations, or supporting 
+power from other lumped/aggregated areas. 
+Consuming devices consume active power and reactive power.
+These devices can be household demands, industrial loads, pump storage, or
+supporting power to other lumped/aggregated areas. 
+For the competition, a producing/consuming device is classified as a simple device if it
+does not have switchable modes.
+Attributes for simple producing \& consuming devices are listed in Section~\ref{nom:gen_single}.
+Below shows a schematic example on the static parameters for simple producing \& consuming devices.
+
+\begin{verbatim}
+{
+    "uid" : "IDG0001",
+    "bus" : "IDB0002",
+    "device_type" : "producer",
+    "vm_setpoint” : 1.2,
+    "startup_cost" : 5.0, "shutdown_cost" : 2.0,
+    "startups_ub" : 1,
+    "on_cost" : 0.1,
+    "in_service_time_lb" : 5.0, "down_time_lb" : 10.0,
+    "p_ramp_up_ub" : 10.0, "p_ramp_down_ub" : 10.0, 
+    "p_startup_ramp_ub" : 5.0, "p_shutdown_ramp_ub" : 5.0,
+    "initial_status": {
+        "on_status": 0,
+        "p" : 0.0,
+        "q" : 0.0,
+        "accu_down_time" : 10.0,
+        "accu_up_time" : 0.0
+    },
+    "q_linear_cap" : false, 
+    "q_bound_cap" : true, 
+    "p_reg_res_up_ub" : 1.0, "p_reg_res_down_ub" : 1.0,
+    "p_syn_res_ub" : 2.0, "p_nsyn_res_ub" : 4.0, 
+    "p_ramp_res_up_online_ub" : 2.0, "p_ramp_res_down_online_ub" : 2.0,
+    "p_ramp_res_up_offline_ub" : 1.0, "p_ramp_res_down_offline_ub" : 0.0,
+    "p_reg_res_up_cost" : 1244.0, "p_reg_res_down_cost" : 1244.0,
+    "p_syn_res_cost" : 305.0, "p_nsyn_res_cost" : 24.0, 
+    "p_ramp_res_up_online_cost" : 0.1, "p_ramp_res_down_online_cost" : 0.1,
+    "p_ramp_res_up_offline_cost" : 0.1, "p_ramp_res_down_offline_cost" : 0.1,
+    "q_res_up_cost" : 24.0, "q_res_down_cost" : 24.0,
+    "q_0_ub" : 5.0,
+    "q_0_lb" : 0.0,
+    "pg_ratio_ub" : 2.0,
+    "pg_ratio_lb" : 0.5    
+},
+…     
+\end{verbatim}
+
+\subsection{Dispatchable Devices: Multi-mode Producing \& Consuming Devices}
+\label{sec:multi-generator}
+A producing/consuming device is classified as a multi-mode device if it
+has more than one switchable modes.
+Attributes for multi-mode producing \& consuming devices are listed in Section~\ref{nom:gen_multi}.
+Below shows a schematic example on the static parameters for multi-mode producing \& consuming devices.
+
+
+\begin{verbatim}
+{
+    "uid" : "IDG0015",
+    "bus" : "IDB0004",
+    "device_type" : "producer",
+    "vm_setpoint” : 1.0,
+    "startup_cost" : 4.0, "shutdown_cost" : 1.0,
+    "startups_ub" : 2,
+    "in_service_time_lb" : 2.0, "down_time_lb" : 0.0,
+    "p_startup_ramp_ub" : 4.0, "p_shutdown_ramp_ub" : 4.0,
+    "initial_status": {
+        "on_status": 1,
+        "select_mode" : "IDG0015-M1",
+        "p" : 1.0,
+        "q" : 0.7        
+    },
+    "q_linear_cap" : false, 
+    "q_bound_cap" : true, 
+    "mode_num" : 2,
+    "subdevice_uids" : ["IDG0015-SD1"],
+    "modes" : [
+        {
+        "uid" : "IDG0015-M1",
+        "mode_transition_uids" : ["IDG0015-M1", "IDG0015-M2"],
+        "on_subdevice_uids" : [],
+        "on_cost" : 1.0,
+        "mode_transit_cost" : {
+          "IDG0015-M1" : 0.0,
+          "IDG0015-M2" : 1.0,
+        },
+        "p_ramp_up_ub" :  8.0,
+        "p_ramp_down_ub" : 8.0,
+        "dwell_time_ub" : 5.0, "dwell_time_lb" : 2.0,        
+        "initial_status" : {
+            "accu_down_time" : 0.0,
+            "accu_up_time" : 10.0
+        },
+        "p_reg_res_up_ub" : 1.0, "p_reg_res_down_ub" : 1.0,
+        "p_syn_res_ub" : 3.0, "p_nsyn_res_ub" : 4.0, 
+        "p_ramp_res_up_online_ub" : 8.0, "p_ramp_res_down_online_ub" : 8.0,
+        "p_ramp_res_up_offline_ub" : 0.0, "p_ramp_res_down_offline_ub" : 0.0,
+        "p_reg_res_up_cost" : 1300.0, "p_reg_res_down_cost" : 1300.0,
+        "p_syn_res_cost" : 300.0, "p_nsyn_res_cost" : 20.0, 
+        "p_ramp_res_up_online_cost" : 0.1, "p_ramp_res_down_online_cost" : 0.1,
+        "p_ramp_res_up_offline_cost" : 0.1, "p_ramp_res_down_offline_cost" : 0.1,
+        "q_res_up_cost" : 20.0, "q_res_down_cost" : 20.0,
+        "q_0_ub" : 5.0,
+        "q_0_lb" : 0.0,
+        "pg_ratio_ub" : 2.0,
+        "pg_ratio_lb" : 0.5    
+        },
+        {
+        "uid" : "IDG0015-M2",
+        "mode_transition_uids" : ["IDG0015-M1", "IDG0015-M2"],
+        "on_subdevice_uids" : ["IDG0015-SD1"],
+        "on_cost" : 0.0,
+        "mode_transit_cost" : {
+          "IDG0015-M1" : 1.0,
+          "IDG0015-M2" : 0.0,
+        },
+        "p_ramp_up_ub" :  10.0,
+        "p_ramp_down_ub" : 10.0,
+        "dwell_time_ub" : 240.0, "dwell_time_lb" : 10.0,
+        "initial_status" : {
+            "accu_down_time" : 10.0,
+            "accu_up_time" : 0.0
+        },
+        "p_reg_res_up_ub" : 2.0, "p_reg_res_down_ub" : 2.0,
+        "p_syn_res_ub" : 7.0, "p_nsyn_res_ub" : 0.0, 
+        "p_ramp_res_up_online_ub" : 10.0, "p_ramp_res_down_online_ub" : 10.0,
+        "p_ramp_res_up_offline_ub" : 10.0, "p_ramp_res_down_offline_ub" : 0.0,
+        "p_reg_res_up_cost" : 1000.0, "p_reg_res_down_cost" : 1000.0,
+        "p_syn_res_cost" : 200.0, "p_nsyn_res_cost" : 0.0, 
+        "p_ramp_res_up_online_cost" : 0.1, "p_ramp_res_down_online_cost" : 0.1,
+        "p_ramp_res_up_offline_cost" : 0.1, "p_ramp_res_down_offline_cost" : 0.1,
+        "q_res_up_cost" : 0.0, "q_res_down_cost" : 0.0,
+        "q_0_ub" : 5.0,
+        "q_0_lb" : 0.0,
+        "pg_ratio_ub" : 2.0,
+        "pg_ratio_lb" : 0.5    
+        }
+    ]
+}
+…     
+\end{verbatim}
+
+\subsection{Producing Devices: Subdevice Units}
+\label{sec:subdevice}
+A subdevice unit can be coarsely viewed as 
+a device without direct power/energy connection
+to the grid and belongs to a multi-mode producing \& consuming device.
+Attributes for subdevice units are listed in Section~\ref{nom:gen_sub}.
+Below shows a schematic example on the static parameters for subdevice units.
+
+
+\begin{verbatim}
+{
+    "uid" : "IDG0015-SD1",
+    "startup_cost" : 10.0, "shutdown_cost" : 0.0,
+    "startups_ub" : 5,
+    "on_cost" : 1.0,
+    "in_service_time_lb" : 0.0, "down_time_lb" : 5.0,
+    "initial_status": {
+        "on_status": 0,
+        "accu_down_time" : 20.0,
+        "accu_up_time" : 0.0
+    },    
+}
+…     
+\end{verbatim}
+
+\subsection{Storage Device Units}
+\label{sec:storage}
+\begin{todo}[]{}
+TBD 
+\end{todo}
+
+
+\subsection{AC Line}
+\label{sec:acline}
+An AC line connects network devices in two different points of the network. 
+It has has two sides: \emph{from} (fr) side and the \emph{to} side.
+In general, power flows are bi-directional. 
+Readers should always refer to the formulation document for the +ve and -ve signs
+requirements for indicating directions in their solutions,
+and consulate the competition team if questions arise.
+% For ease of illustration, we assume the current is positive when flowing from side from to side to.
+% The currents $I_1$ (from side) and $I_2$ (to side) are given by:
+% \begin{align}
+%   I_1 &= Y_1 \cdot V_1 + \frac{1}{Z} (V_1 - V_2) \\
+%   I_2 &= - Y_2 \cdot V_2 + \frac{1}{Z} (V_1 - V_2),
+% \end{align}
+% where $Y_1 = G_1 + jB_1$ and $Y_2 = G_2 + jB_2$ are the admittances at the
+% from side and to side, respectively, $Z = R + jX$ is the line impedance, and $V_1$ and $V_2$ are the 
+% voltages at the connecting points. 
+% Line current limits are monitored at both ends. 
+% %
+% Figure \ref{fig:line} illustrates an AC line.
+% %between nodes 1 at side from and node 2 at side to (represented by the black points at the ends).
+% The power $S_i$ (where $i \in \{1,2\})$ is given by:
+% \begin{equation}
+%   S_i = \bar{I}_i \cdot V_i
+% \end{equation}
+% Note that software implementations can choose any current/power flow directions, 
+% and differences in signs are expected. 
+% %Users will need to flip the sign of the current variables or power variables if the direction %is changed from "left to right" to "right to left".
+% \begin{figure}[h]
+%     \centering
+%   \includegraphics[width=0.75\linewidth]{img/line_new}
+%   \caption{\label{fig:line} Illustration of an AC line.}
+% \end{figure}
+Attributes for lines are listed in Section~\ref{nom:line}.
+Below shows a schematic example on the static parameters for lines.
+
+Static component data example:
+\begin{verbatim}
+{
+    "uid" : "IDAC0001",
+    "fr_bus” : "IDB0021",
+    "to_bus” : "IDB0025",
+    "r” : 0.001, "x” : 0.05, 
+    "b" : 0.0001,
+    "mva_ub_nom” : 10.0, "mva_ub_sht” : 15.0, "mva_ub_em” : 100.0,
+    "standby_cost" : 1.0,
+    "connection_cost" : 0.01,
+    "disconnection_cost" : 0.01,
+    "additional_shunt" : true,
+    "g_fr” : 0.0, "b_fr” : 0.01,
+    "g_to” : 0.0, "b_to” : 0.0    
+}
+…     
+\end{verbatim}
+
+
+\subsection{Two Winding Transformer}
+\label{sec:2wtransformer}
+A two winding transformer connects devices located at two different voltage levels of the network. 
+% We denote the voltage level at the \emph{from} side to be $\text{VL}_1$, and 
+% the voltage level at the \emph{to} side to be $\text{VL}_2$.
+% Their associated nominal voltage values are denoted to be 
+% $V_1^\text{nom}$ and $V_2^\text{nom}$ respectively.
+Transformers are usually equipped with taps on their winding to adjust the voltage transformation or the phase angles through the transformer.
+% For a specific tap $k$, we denote the voltage magnitude ratio for a transformer to be $r_k$, phase shift to be $\delta_k$, 
+% impedance to be $Z_k = R_k + j X_k$, and admittance to be $Y_k = G_k + j B_k$.
+% Figure \ref{fig:2windingtransformer} illustrates a two winding transformer.
+% %----------------------------------------------------------------------------------------
+% \begin{figure}[h]
+%     \centering
+%   \includegraphics[width=0.75\linewidth]{img/2wtranf_T}
+%   \caption{\label{fig:2windingtransformer} Illustration of a two winding transformer.}
+% \end{figure}
+% %----------------------------------------------------------------------------------------
+% %We define \emph{side 1} as the high voltage side, and \emph{side 2} as the low voltage side. 
+% Similar to AC transmission line, without loss of generality, 
+% we assume the current is positive when flowing from the from side to the to side (i.e. left to right). 
+% The currents $I_1$ (from side) and $I_2$ (to side) are given by:
+% \begin{align}
+%   I_1 &= \bar{\rho_k} \cdot \big( Y_k \cdot V_1' + \frac{1}{Z_k} (V_1' - V_2) \big) \\
+%   I_2 &= \frac{1}{Z_k} ( V_1' - V_2), \mbox{ where} \\
+%  \rho_k &=   \big( (\frac{V_2^\text{nom}}{V_1^\text{nom}}) \cdot r_k \big) \cdot e^{j \delta_k} \mbox{ and } V_1' = V_1 \rho_k 
+% \end{align}
+% where $Y_k = G_k + j B_k$ is the admittance of the transformer on tap $k$,
+% $Z_k = R_k + j X_k$ is the impedance of the transformer on tap $k$,
+% %\begin{equation}
+% % Z_k' = \big( R \cdot (1 + \frac{R_k}{100})\big) + j\big( X \cdot (1 + \frac{X_k}{100}) \big),
+% %\end{equation}
+% $V_1$ and $V_2$ are the voltages at the connecting buses in VL$_1$ and VL$_2$, respectively. 
+% We use $V_1^\text{nom}$ and $V_2^\text{nom}$ to denote the 
+% nominal voltage magnitudes at sides 1 and 2 of the transformer, respectively. 
+% %Figure \ref{fig:2windingtransformer} illustrates a two winding transformer, where the points labeled 1 and 2 represent sides 1 and 2 connected by the branch.
+% The power $S_i$ at sides $i$ ($i \in \{1,2\})$ is given by:
+% \begin{equation}
+%   S_i = \bar{I}_i \cdot V_i
+% \end{equation}
+% Similar to AC lines, transformers also have current limits.
+Similar to AC lines, power flows are also bi-directional for transformers. 
+Readers should always refer to the formulation document for the +ve and -ve signs
+requirements for indicating directions in their solutions,
+and consulate the competition team if questions arise.
+Attributes for two winding transformers are listed in Section~\ref{nom:transformer}.
+Below shows a schematic example on the static parameters for transformers.
+
+Static component data example:
+\begin{verbatim}
+{
+    "uid" : "ID2T0001",
+    "fr_bus” : "IDB0021", "to_bus” : "IDB0025",
+    "r” : 0.005, "x” : 0.01, 
+    "b” : 0.0001,
+    "tm_lb” : 0.98, "tm_ub” : 1.02, 
+    "ta_lb” : 0.0, "ta_ub” : 0.0, 
+    "mva_ub_nom” : 100.0, "mva_ub_sht” : 250.0, "mva_ub_em” : 500.0,
+    "standby_cost" : 2.0,
+    "connection_cost" : 0.1,
+    "disconnection_cost" : 0.1,
+    "additional_shunt" : true,
+    "g_fr” : 0.0, "b_fr” : 0.0,
+    "g_to” : 0.0, "b_to” : 0.01    
+},
+…     
+\end{verbatim}
+
+
+\subsection{DC Line}
+\label{sec:dcline}
+A DC line connects network devices at two different points of the network, with an AC-DC converter on each side.
+% If the converter converts power from AC to DC, it is a rectifier. 
+% If the converter converts power from DC to AC, it is an inverter.
+Power flowing through the DC line are first
+converted from AC to DC by a rectifier, before delivering power 
+back to the network in AC by an inverter.
+For simplicity, the competition models DC lines as two generators 
+on each side with active power coupling.
+Similar to an AC line, DC line has two sides ---  \emph{from} (fr) side and \emph{to} side.
+% %with \emph{side 1} as the from side, and \emph{side 2} as the to side.
+% For consistency, we assume the current flows from side 1 (from side) to side 2 (to side).
+% %Therefore, we also assume side 1  will connect to a rectifier, and side 2 will be connecting to an inverter. 
+% The DC voltages $V_1$ (at from side) and $V_2$ (at to side) of a DC line are linked by:
+% \begin{align}
+%   V_1 &= V_2 + R I 
+% \end{align}
+% where $R$ is the DC line resistance, and $I$ is the DC current flowing through the DC line. 
+% The DC \hyperref[sec:power]{power} $S_i$ at side $i$ ($i \in \{1,2\})$ is given by:
+% \begin{equation}
+%   S_i = I \cdot V_i
+% \end{equation}
+% %Again, many softwares/implementations may assume a different current/power flow directions. 
+% %Users will need to flip the sign of the current/power variables if the direction is changed from "left to right" to "right to left".
+% %Active power loss for the converters can also be modeled by: 
+% %\begin{equation}
+% % \min(\max(l_{\mbox{min}}, \lvert c_1 P + c_0 \rvert), l_{\mbox{max}} )
+% %l_a I^2 + l_b I + l_c 
+% %\end{equation}
+% %where $I$ is the current flowing through the converter, $l_{a}, l_b$, and $l_c$ are the loss
+% %function parameters.
+% {\color{red} Extra modeling data for specific converter control mechanism (e.g. VSC or LCC controls) can also be added to the data format if needed. }
+% Figure \ref{fig:dc_line} illustrates a DC line connecting to two converters.
+% \begin{figure}[h]
+% \centering
+%   \includegraphics[width=0.75\linewidth]{img/dc_line}
+%   \caption{\label{fig:dc_line} Illustration of a DC line.}
+% \end{figure}
+% DC line current limits can also be monitored on DC lines at both ends. 
+Attributes for DC lines are listed in Section~\ref{nom:dcline}.
+Below shows a schematic example on the static parameters for DC lines.
+\begin{verbatim}
+{
+   "uid" : "IDDC0001",
+   "fr_bus” : "IDB0009", 
+   "to_bus” : "IDB0010",
+   "pdc_fr_lb” : -1.0, "pdc_fr_ub” : 1.0, 
+   "qdc_fr_lb” : -1.0, "qdc_fr_ub” : 1.0,
+   "qdc_to_lb” : -0.5, "qdc_to_ub” : 0.5,
+   "standby_cost" : 1.0,
+   "connection_cost" : 0.01,
+   "disconnection_cost" : 0.01
+},
+…    
+\end{verbatim}
+
+
+
+\subsection{Regional Reserve}
+\label{sec:reserve}
+A reserve region is a partition of the grid containing a collection of resources with individual reserve requirements.
+In practice, each reserve region/zone is designed to handle contingencies and daily regulation activities within the area.
+In the competition, we consider two types of reserve zones/regions --- active reserve zones and reactive reserve zones. 
+% \begin{itemize}
+%     \item A \texttt{"uid"} object\\
+%     The value of the object must be a unique ID (string) identifying the reserve region.    
+%     \item A \texttt{"type"} object\\
+%     The value of the object is a string indicating the type of the reserve: SPIN for spinning reserve, RAMP-UP for ramp up reserve, RAMP-DOWN for ramp down reserve, REG-UP for regulation up reserve, REG-DOWN for regulation down reserve, CONT for contingency reserve, REACT-UP for reactive up reserve, and REACT-DOWN for reactive down reserve.   
+%     \item A \texttt{"reserve\_required"} object\\
+%     The value of the object specifies the amount of active reserves required.
+%     \item A \texttt{"res\_vio\_block"} object\\
+%     The violation cost blocks for describing the penalties when violating reserve products.
+% \end{itemize}
+Below shows a schematic example on the static parameters for the active reserve zones. 
+%Time varying parameters will be shown in the next section.
+
+\begin{verbatim}
+{
+  "uid" : "IDRES0001",
+  "REG_UP_vio_cost" : 1244.0,
+  "REG_DOWN_vio_cost" : 1244.0,
+  "SYN_vio_cost" : 305.0,
+  "NSYN_vio_cost" : 24.0,  
+  "RAMPING_RESERVE_UP_vio_cost" : 0.10,  
+  "RAMPING_RESERVE_DOWN_vio_cost" : 0.10
+},
+...
+\end{verbatim}
+
+% \begin{verbatim}
+% {
+%   "uid" : "IDRES0001",
+%   "REG_UP" : 0.03,
+%   "REG_DOWN" : 0.03,
+%   "SPIN" : 0.30,
+%   "NON_SPIN" : 0.70,  
+%   "FLEXI_RAMP_UP" : ,  
+%   "FLEXI_RAMP_DOWN" : , 
+%   "REG_UP_cost" : ,
+%   "REG_DOWN_cost" : ,
+%   "SPIN_cost" : ,
+%   "NON_SPIN_cost" : ,  
+%   "FLEXI_RAMP_UP_online_cost" : ,  
+%   "FLEXI_RAMP_DOWN_online_cost" : ,
+%   "FLEXI_RAMP_UP_offline_cost" : ,
+%   "FLEXI_RAMP_DOWN_offline_cost" : 
+% },
+% ...
+% \end{verbatim}
+
+Below shows a schematic example on the static parameters for the reactive reserve zones. 
+\begin{verbatim}
+{
+  "uid" : "IDRES0010",
+  "REACT_UP_vio_cost" : 24.0,
+  "REACT_DOWN_vio_cost" : 24.0
+},
+...
+\end{verbatim}
+
+% \begin{verbatim}
+% {
+%  "p_vio_cost" : 1000000.0,
+%  "q_vio_cost" : 1000000.0,
+%  "p_bus_vio_cost" : 1000000.0,
+%  "q_bus_vio_cost" : 1000000.0,
+%  "v_bus_vio_cost" : 1000.0,
+%  "mva_branch_vio_cost" : 500.0,
+% }
+% \end{verbatim}
+
+
+
