@@ -82,7 +82,6 @@ def create_objects(format_docs_dir):
 
 
 def get_objects_from_table(object_name, astr):
-    print(object_name)
     static_result = ""
     timeseries_result = ""
 
@@ -124,7 +123,6 @@ def get_objects_from_table(object_name, astr):
             ln_cnt +=2 # skip the new line
             while True: #This is bad practice...
                 ln = all_lines[ln_cnt]
-                #print(ln)
                 if '\hline' in ln:
                     break
                 sec,field = parse_field(ln,object_name)
@@ -184,7 +182,6 @@ def get_objects_from_table(object_name, astr):
     if not has_timeseries:
         timeseries_result = None
 
-    #import pdb;pdb.set_trace()
     return (static_result, timeseries_result) if table_started else (None, None)
 
 
@@ -210,17 +207,13 @@ types_map = {
 }
 
 def parse_field(ln,object_name):
-    try:
-        name, desc, req, sec, sym = ln.split("&")
-    except:
-        import pdb;pdb.set_trace()
+    name, desc, req, sec, sym = ln.split("&")
     sec = sec.strip()
     
     # get name
     m = re.match("\{\\\\tt\S* (.+)\}", name.strip())
     if not m:
         logger.warning(f"Unable to extract name from {name!r}")
-        import pdb;pdb.set_trace()
         return sec, ""
     name = m.group(1).replace("\\_", "_")
 
@@ -228,7 +221,6 @@ def parse_field(ln,object_name):
     m = re.match("(.*)\((.*)\)", desc.strip())
     if not m:
         logger.warning(f"Unable to partition {desc!r} into description and type")
-        import pdb;pdb.set_trace()
         return sec, ""
     desc = m.group(1); type_name = m.group(2)
 
@@ -257,7 +249,6 @@ def parse_field(ln,object_name):
             type_name = "int"
         else:
             logger.warning(f"Unable to extract type_name from {type_name!r}")
-            import pdb;pdb.set_trace()
             return sec, ""
     
     if req.lower().strip() == "n":
@@ -335,14 +326,12 @@ def create_models(format_docs_dir, input_objects, output_objects):
                 if obj is None:
                     logger.warning(f"Unable to parse {object_name} from first "
                         f"subsection of {file}.tex")
-                    import pdb;pdb.set_trace()
                     continue
                 object_store[object_name] = obj
             else:
                 orig_name = f"{names[0].title()} Data File"
                 if not orig_name in subsections:
                     logger.warning(f"Unable to find subsection {orig_name}")
-                    import pdb;pdb.set_trace()
                     continue
                 object_name = orig_name.title().replace(" ","")
                 logger.info(f"Creating {object_name} object")
@@ -355,7 +344,6 @@ def create_models(format_docs_dir, input_objects, output_objects):
                 if obj is None:
                     logger.warning(f"Unable to parse {object_name} from first "
                         f"subsection of {file}.tex")
-                    import pdb;pdb.set_trace()
                     continue
                 object_store[object_name] = obj
 
@@ -363,7 +351,6 @@ def create_models(format_docs_dir, input_objects, output_objects):
 
 
 def get_object_from_subsection(object_name, astr, object_ref, object_preamble, is_schema=False):
-    print(object_name)
     result = f"class {object_name}(BidDSJsonBaseModel):\n"
 
     if is_schema:
@@ -423,7 +410,6 @@ def get_object_from_subsection(object_name, astr, object_ref, object_preamble, i
                     found_object = (name, obj_ref_map[key], object_type)
                     continue
             logger.warning(f"Unable to locate object in {ln.strip()}.")
-            import pdb;pdb.set_trace()
             if m:
                 logger.warning(f"Was able to parse object name {name} "
                     f"({m.group(1)}), but key {key} not in map:\n"
