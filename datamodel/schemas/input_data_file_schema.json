@@ -1617,71 +1617,71 @@
                         }
                     ]
                 },
-                "buses": {
-                    "title": "buses",
+                "bus": {
+                    "title": "bus",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/Bus"
                     }
                 },
-                "shunts": {
-                    "title": "shunts",
+                "shunt": {
+                    "title": "shunt",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/Shunt"
                     }
                 },
-                "simple_dispatchable_devices": {
-                    "title": "simple_dispatchable_devices",
+                "simple_dispatchable_device": {
+                    "title": "simple_dispatchable_device",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/datamodel__input__static__DispatchableDevices_SimpleProducingConsumingDevices"
                     }
                 },
-                "multi_mode_dispatchable_devices": {
-                    "title": "multi_mode_dispatchable_devices",
+                "multi_mode_dispatchable_device": {
+                    "title": "multi_mode_dispatchable_device",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/datamodel__input__static__DispatchableDevices_MultimodeProducingConsumingDevices"
                     }
                 },
-                "sub_devices": {
-                    "title": "sub_devices",
+                "sub_device": {
+                    "title": "sub_device",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/datamodel__input__static__SubdeviceUnitsforMultiModeProducingConsumingDevices"
                     }
                 },
-                "ac_lines": {
-                    "title": "ac_lines",
+                "ac_line": {
+                    "title": "ac_line",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ACTransmissionLine"
                     }
                 },
-                "two_winding_transformers": {
-                    "title": "two_winding_transformers",
+                "two_winding_transformer": {
+                    "title": "two_winding_transformer",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/TwoWindingTransformer"
                     }
                 },
-                "dc_lines": {
-                    "title": "dc_lines",
+                "dc_line": {
+                    "title": "dc_line",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/DCLine"
                     }
                 },
-                "active_regional_reserves": {
-                    "title": "active_regional_reserves",
+                "active_regional_reserve": {
+                    "title": "active_regional_reserve",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/datamodel__input__static__RegionalReserves"
                     }
                 },
-                "reactive_regional_reserves": {
-                    "title": "reactive_regional_reserves",
+                "reactive_regional_reserve": {
+                    "title": "reactive_regional_reserve",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/datamodel__input__static__RegionalReserves"
@@ -1691,16 +1691,16 @@
             "required": [
                 "general",
                 "violation_cost",
-                "buses",
-                "shunts",
-                "simple_dispatchable_devices",
-                "multi_mode_dispatchable_devices",
-                "sub_devices",
-                "ac_lines",
-                "two_winding_transformers",
-                "dc_lines",
-                "active_regional_reserves",
-                "reactive_regional_reserves"
+                "bus",
+                "shunt",
+                "simple_dispatchable_device",
+                "multi_mode_dispatchable_device",
+                "sub_device",
+                "ac_line",
+                "two_winding_transformer",
+                "dc_line",
+                "active_regional_reserve",
+                "reactive_regional_reserve"
             ],
             "additionalProperties": false
         },
@@ -1795,9 +1795,14 @@
                         "type": "array",
                         "items": {
                             "type": "array",
-                            "items": {
-                                "type": "number"
-                            }
+                            "items": [
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "number"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2080,36 +2085,36 @@
                         }
                     ]
                 },
-                "simple_dispatchable_devices": {
-                    "title": "simple_dispatchable_devices",
+                "simple_dispatchable_device": {
+                    "title": "simple_dispatchable_device",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/datamodel__input__timeseries__DispatchableDevices_SimpleProducingConsumingDevices"
                     }
                 },
-                "multi_mode_dispatchable_devices": {
-                    "title": "multi_mode_dispatchable_devices",
+                "multi_mode_dispatchable_device": {
+                    "title": "multi_mode_dispatchable_device",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/datamodel__input__timeseries__DispatchableDevices_MultimodeProducingConsumingDevices"
                     }
                 },
-                "subdevices": {
-                    "title": "subdevices",
+                "subdevice": {
+                    "title": "subdevice",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/datamodel__input__timeseries__SubdeviceUnitsforMultiModeProducingConsumingDevices"
                     }
                 },
-                "active_regional_reserves": {
-                    "title": "active_regional_reserves",
+                "active_regional_reserve": {
+                    "title": "active_regional_reserve",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/datamodel__input__timeseries__RegionalReserves"
                     }
                 },
-                "reactive_regional_reserves": {
-                    "title": "reactive_regional_reserves",
+                "reactive_regional_reserve": {
+                    "title": "reactive_regional_reserve",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/datamodel__input__timeseries__RegionalReserves"
@@ -2118,11 +2123,11 @@
             },
             "required": [
                 "general",
-                "simple_dispatchable_devices",
-                "multi_mode_dispatchable_devices",
-                "subdevices",
-                "active_regional_reserves",
-                "reactive_regional_reserves"
+                "simple_dispatchable_device",
+                "multi_mode_dispatchable_device",
+                "subdevice",
+                "active_regional_reserve",
+                "reactive_regional_reserve"
             ],
             "additionalProperties": false
         }

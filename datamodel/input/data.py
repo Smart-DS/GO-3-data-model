@@ -22,44 +22,44 @@ class Network(BidDSJsonBaseModel):
         title = "violation_cost"
     )
 
-    buses: List[datamodel.input.static.Bus] = Field(
-        title = "buses"
+    bus: List[datamodel.input.static.Bus] = Field(
+        title = "bus"
     )
 
-    shunts: List[datamodel.input.static.Shunt] = Field(
-        title = "shunts"
+    shunt: List[datamodel.input.static.Shunt] = Field(
+        title = "shunt"
     )
 
-    simple_dispatchable_devices: List[datamodel.input.static.DispatchableDevices_SimpleProducingConsumingDevices] = Field(
-        title = "simple_dispatchable_devices"
+    simple_dispatchable_device: List[datamodel.input.static.DispatchableDevices_SimpleProducingConsumingDevices] = Field(
+        title = "simple_dispatchable_device"
     )
 
-    multi_mode_dispatchable_devices: List[datamodel.input.static.DispatchableDevices_MultimodeProducingConsumingDevices] = Field(
-        title = "multi_mode_dispatchable_devices"
+    multi_mode_dispatchable_device: List[datamodel.input.static.DispatchableDevices_MultimodeProducingConsumingDevices] = Field(
+        title = "multi_mode_dispatchable_device"
     )
 
-    sub_devices: List[datamodel.input.static.SubdeviceUnitsforMultiModeProducingConsumingDevices] = Field(
-        title = "sub_devices"
+    sub_device: List[datamodel.input.static.SubdeviceUnitsforMultiModeProducingConsumingDevices] = Field(
+        title = "sub_device"
     )
 
-    ac_lines: List[datamodel.input.static.ACTransmissionLine] = Field(
-        title = "ac_lines"
+    ac_line: List[datamodel.input.static.ACTransmissionLine] = Field(
+        title = "ac_line"
     )
 
-    two_winding_transformers: List[datamodel.input.static.TwoWindingTransformer] = Field(
-        title = "two_winding_transformers"
+    two_winding_transformer: List[datamodel.input.static.TwoWindingTransformer] = Field(
+        title = "two_winding_transformer"
     )
 
-    dc_lines: List[datamodel.input.static.DCLine] = Field(
-        title = "dc_lines"
+    dc_line: List[datamodel.input.static.DCLine] = Field(
+        title = "dc_line"
     )
 
-    active_regional_reserves: List[datamodel.input.static.RegionalReserves] = Field(
-        title = "active_regional_reserves"
+    active_regional_reserve: List[datamodel.input.static.RegionalReserves] = Field(
+        title = "active_regional_reserve"
     )
 
-    reactive_regional_reserves: List[datamodel.input.static.RegionalReserves] = Field(
-        title = "reactive_regional_reserves"
+    reactive_regional_reserve: List[datamodel.input.static.RegionalReserves] = Field(
+        title = "reactive_regional_reserve"
     )
 
 
@@ -69,24 +69,24 @@ class TimeSeriesInput(BidDSJsonBaseModel):
         title = "general"
     )
 
-    simple_dispatchable_devices: List[datamodel.input.timeseries.DispatchableDevices_SimpleProducingConsumingDevices] = Field(
-        title = "simple_dispatchable_devices"
+    simple_dispatchable_device: List[datamodel.input.timeseries.DispatchableDevices_SimpleProducingConsumingDevices] = Field(
+        title = "simple_dispatchable_device"
     )
 
-    multi_mode_dispatchable_devices: List[datamodel.input.timeseries.DispatchableDevices_MultimodeProducingConsumingDevices] = Field(
-        title = "multi_mode_dispatchable_devices"
+    multi_mode_dispatchable_device: List[datamodel.input.timeseries.DispatchableDevices_MultimodeProducingConsumingDevices] = Field(
+        title = "multi_mode_dispatchable_device"
     )
 
-    subdevices: List[datamodel.input.timeseries.SubdeviceUnitsforMultiModeProducingConsumingDevices] = Field(
-        title = "subdevices"
+    subdevice: List[datamodel.input.timeseries.SubdeviceUnitsforMultiModeProducingConsumingDevices] = Field(
+        title = "subdevice"
     )
 
-    active_regional_reserves: List[datamodel.input.timeseries.RegionalReserves] = Field(
-        title = "active_regional_reserves"
+    active_regional_reserve: List[datamodel.input.timeseries.RegionalReserves] = Field(
+        title = "active_regional_reserve"
     )
 
-    reactive_regional_reserves: List[datamodel.input.timeseries.RegionalReserves] = Field(
-        title = "reactive_regional_reserves"
+    reactive_regional_reserve: List[datamodel.input.timeseries.RegionalReserves] = Field(
+        title = "reactive_regional_reserve"
     )
 
 
