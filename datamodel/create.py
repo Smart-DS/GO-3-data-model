@@ -422,7 +422,7 @@ def get_object_from_subsection(object_name, astr, object_ref, object_preamble, i
             type = f"{object_preamble}.{found_object[1]}"
             #if "array" in ln.strip():
             if object_type == 'array':
-                name += "es" if name.endswith("s") else "s"
+                #name += "es" if name.endswith("s") else "s"
                 type = f"List[{type}]"
             result += f"""
     {name}: {type} = Field(
