@@ -52,7 +52,7 @@ def get_attributes(element,element_name,network_element,schema,data):
                         validate_elements([(the_class,component)],schema,entry,False)
 
                     else:
-                        if not component in element:
+                        if not component in entry:
                             if component_type == 'number':
                                 entry[component] = 0.0
                             if component_type == 'integer':
