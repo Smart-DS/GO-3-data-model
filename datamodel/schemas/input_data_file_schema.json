@@ -1742,45 +1742,64 @@
                 "on_status_ub": {
                     "title": "on_status_ub",
                     "description": "On status indicator upper bound ",
-                    "options": [
-                        0,
-                        1
-                    ],
-                    "type": "integer"
+                    "type": "array",
+                    "items": {
+                        "type": "boolean"
+                    }
                 },
                 "on_status_lb": {
                     "title": "on_status_lb",
                     "description": "On status indicator lower bound ",
-                    "options": [
-                        0,
-                        1
-                    ],
-                    "type": "integer"
+                    "type": "array",
+                    "items": {
+                        "type": "boolean"
+                    }
                 },
                 "p_ub": {
                     "title": "p_ub",
-                    "description": "{ (Case: producer) Upper bound of active dispatch (Float, p.u.)   } { (Case: consumer) Upper bound of active demand   ",
-                    "type": "number"
+                    "description": "{ (Case: producer) Upper bound of active dispatch (Array of Float)   } { (Case: consumer) Upper bound of active demand   ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
                 },
                 "p_lb": {
                     "title": "p_lb",
-                    "description": "{ (Case: producer) Lower bound of active dispatch (Float, p.u.)   } { (Case: consumer) Lower bound of active demand   ",
-                    "type": "number"
+                    "description": "{ (Case: producer) Lower bound of active dispatch (Array of Float)   } { (Case: consumer) Lower bound of active demand   ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
                 },
                 "q_ub": {
                     "title": "q_ub",
-                    "description": "{ (Case: producer) Upper bound of reactive dispatch (Float, p.u.) } { (Case: consumer) Upper bound of reactive demand   ",
-                    "type": "number"
+                    "description": "{ (Case: producer) Upper bound of reactive dispatch (Array of Float) } { (Case: consumer) Upper bound of reactive demand   ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
                 },
                 "q_lb": {
                     "title": "q_lb",
-                    "description": "{ (Case: producer) Lower bound of reactive dispatch (Float, p.u.) } { (Case: consumer) Lower bound of reactive demand   ",
-                    "type": "number"
+                    "description": "{ (Case: producer) Lower bound of reactive dispatch (Array of Float) } { (Case: consumer) Lower bound of reactive demand   ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
                 },
                 "cost": {
                     "title": "cost",
-                    "description": "Array of cost blocks, where   each cost block is an array with exactly two elements:     1) marginal  cost (\\$/p.u.-hr), and 2) block size ",
-                    "type": "number"
+                    "description": "Array of cost blocks, where   each cost block is an array with exactly two elements:     1) marginal  cost (\\$/p.u.-hr), and 2) block size (p.u.) ",
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        }
+                    }
                 }
             },
             "required": [

@@ -192,7 +192,9 @@ types_map = {
     "Array of reserve zone uids": "List[str]",
     "Array of cost blocks": "List[float]",
     "Array of Float": "List[float]",
+    "Array of Binary": "List[bool]",
     "Array of String": "List[str]",
+    "Array of Array of Float Float": "List[List[Tuple[float,float]]]",
     "String": "str",
     "Timestamp": "str",
     "Int": "int",
@@ -490,7 +492,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field, ValidationError
 from pydantic.json import isoformat, timedelta_isoformat
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union, Tuple
 
 from datamodel.base import BidDSJsonBaseModel\n""")
         for to_import in imports:

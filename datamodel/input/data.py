@@ -6,11 +6,11 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field, ValidationError
 from pydantic.json import isoformat, timedelta_isoformat
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union, Tuple
 
 from datamodel.base import BidDSJsonBaseModel
-import datamodel.input.timeseries
 import datamodel.input.static
+import datamodel.input.timeseries
 
 class Network(BidDSJsonBaseModel):
 

@@ -6,7 +6,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field, ValidationError
 from pydantic.json import isoformat, timedelta_isoformat
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union, Tuple
 
 from datamodel.base import BidDSJsonBaseModel
 
@@ -71,45 +71,43 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
         description = "Producing device unique identifier "
     )
 
-    on_status_ub: int = Field(
+    on_status_ub: List[bool] = Field(
         title = "on_status_ub",
-        description = "On status indicator upper bound ",
-        options = [0, 1]
+        description = "On status indicator upper bound "
     )
 
-    on_status_lb: int = Field(
+    on_status_lb: List[bool] = Field(
         title = "on_status_lb",
-        description = "On status indicator lower bound ",
-        options = [0, 1]
+        description = "On status indicator lower bound "
     )
 
     # 
 
-    p_ub: float = Field(
+    p_ub: List[float] = Field(
         title = "p_ub",
-        description = "{ (Case: producer) Upper bound of active dispatch (Float, p.u.)   } { (Case: consumer) Upper bound of active demand   "
+        description = "{ (Case: producer) Upper bound of active dispatch (Array of Float)   } { (Case: consumer) Upper bound of active demand   "
     )
 
-    p_lb: float = Field(
+    p_lb: List[float] = Field(
         title = "p_lb",
-        description = "{ (Case: producer) Lower bound of active dispatch (Float, p.u.)   } { (Case: consumer) Lower bound of active demand   "
+        description = "{ (Case: producer) Lower bound of active dispatch (Array of Float)   } { (Case: consumer) Lower bound of active demand   "
     )
 
-    q_ub: float = Field(
+    q_ub: List[float] = Field(
         title = "q_ub",
-        description = "{ (Case: producer) Upper bound of reactive dispatch (Float, p.u.) } { (Case: consumer) Upper bound of reactive demand   "
+        description = "{ (Case: producer) Upper bound of reactive dispatch (Array of Float) } { (Case: consumer) Upper bound of reactive demand   "
     )
 
-    q_lb: float = Field(
+    q_lb: List[float] = Field(
         title = "q_lb",
-        description = "{ (Case: producer) Lower bound of reactive dispatch (Float, p.u.) } { (Case: consumer) Lower bound of reactive demand   "
+        description = "{ (Case: producer) Lower bound of reactive dispatch (Array of Float) } { (Case: consumer) Lower bound of reactive demand   "
     )
 
     # 
 
-    cost: float = Field(
+    cost: List[List[List[float]]] = Field(
         title = "cost",
-        description = "Array of cost blocks, where   each cost block is an array with exactly two elements:     1) marginal  cost (\$/p.u.-hr), and 2) block size "
+        description = "Array of cost blocks, where   each cost block is an array with exactly two elements:     1) marginal  cost (\$/p.u.-hr), and 2) block size (p.u.) "
     )
 
     # 

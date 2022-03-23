@@ -365,22 +365,22 @@ Device attributes & Description (Type) & Req & Sec & Sym\\
   {\tt vm\_setpoint} & Voltage magnitude setpoint (Float, p.u.) & N & S & \\
   {\tt startup\_cost} & Device start up cost (Float) & Y & S & $c^{su}$\\
   {\tt shutdown\_cost} & Device shut down cost (Float) & Y & S & $c^{sd}$\\  
-  {\tt on\_status\_ub} & On status indicator upper bound (Binary: 0/1) & Y & T & $u^{on,max}$\\
-  {\tt on\_status\_lb} & On status indicator lower bound (Binary: 0/1) & Y & T & $u^{on,min}$\\
+  {\tt on\_status\_ub} & On status indicator upper bound (Array of Binary) & Y & T & $u^{on,max}$\\
+  {\tt on\_status\_lb} & On status indicator lower bound (Array of Binary) & Y & T & $u^{on,min}$\\
 
   {\tt startups\_ub} & Maximum startups (Integer) & Y & S & $u^{su,max}$\\  
-  {\tt p\_ub} & { (Case: producer) Upper bound of active dispatch (Float, p.u.)   }& Y & T & $p^{max}$ \\
-              & { (Case: consumer) Upper bound of active demand   (Float, p.u.)   }& Y & T & $p^{max}$ \\
-  {\tt p\_lb} & { (Case: producer) Lower bound of active dispatch (Float, p.u.)   }& Y & T & $p^{min}$ \\
-              & { (Case: consumer) Lower bound of active demand   (Float, p.u.)   }& Y & T & $p^{min}$ \\
-  {\tt q\_ub} & { (Case: producer) Upper bound of reactive dispatch (Float, p.u.) }& Y & T & $q^{max}$\\
-              & { (Case: consumer) Upper bound of reactive demand   (Float, p.u.) }& Y & T & $q^{max}$\\
-  {\tt q\_lb} & { (Case: producer) Lower bound of reactive dispatch (Float, p.u.) }& Y & T & $q^{min}$\\ 
-              & { (Case: consumer) Lower bound of reactive demand   (Float, p.u.) }& Y & T & $q^{min}$\\ 
+  {\tt p\_ub} & { (Case: producer) Upper bound of active dispatch (Array of Float)   }& Y & T & $p^{max}$ \\
+              & { (Case: consumer) Upper bound of active demand   (Array of Float)   }& Y & T & $p^{max}$ \\
+  {\tt p\_lb} & { (Case: producer) Lower bound of active dispatch (Array of Float)   }& Y & T & $p^{min}$ \\
+              & { (Case: consumer) Lower bound of active demand   (Array of Float)   }& Y & T & $p^{min}$ \\
+  {\tt q\_ub} & { (Case: producer) Upper bound of reactive dispatch (Array of Float) }& Y & T & $q^{max}$\\
+              & { (Case: consumer) Upper bound of reactive demand   (Array of Float) }& Y & T & $q^{max}$\\
+  {\tt q\_lb} & { (Case: producer) Lower bound of reactive dispatch (Array of Float) }& Y & T & $q^{min}$\\ 
+              & { (Case: consumer) Lower bound of reactive demand   (Array of Float) }& Y & T & $q^{min}$\\ 
 
   {\tt cost} &  Array of cost blocks, where & Y & T &  \\
     &  each cost block is an array with exactly two elements:   &  &   &  \\
-    &  1) marginal  cost (\$/p.u.-hr), and 2) block size (p.u.) &  &   &$c^{en}, p^{max}$ \\
+    &  1) marginal  cost (\$/p.u.-hr), and 2) block size (p.u.) (Array of Array of Float Float) &  &   &$c^{en}, p^{max}$ \\
   {\tt on\_cost} & Device fixed operating cost (Float) & Y & S & $c^{on}$\\
   {\tt in\_service\_time\_lb} & Minimum uptime in service (Float, hr) & Y & S & $d^{up,min}$\\
   {\tt down\_time\_lb} & Minimum downtime (Float, hr) & Y & S & $d^{dn,min}$\\
@@ -1101,9 +1101,9 @@ The JSON format for contingencies consists of a JSON array,
 where each JSON object within the array contains data for each contingency.
 Each contingency JSON object will have two types of objects:
 \begin{enumerate}
-    \item A ``uid'' object \\
+    \item A ``uid'' string object \\
     The value of the object contains the unique identifier (string) of the contingency. 
-    \item A ``components'' object \\
+    \item A ``components'' array \\
     The value of the object is a JSON array storing the the unique identifier (string) of the contingency component.
 \end{enumerate}
 Competitors are reminded that the format may be more general than 

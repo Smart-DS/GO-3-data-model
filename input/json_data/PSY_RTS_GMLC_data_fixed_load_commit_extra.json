@@ -5,25 +5,25 @@
         "energy"
     ],
     "datamodel__input__static__DispatchableDevices_SimpleProducingConsumingDevices": [
-        "Reg_Down_ub",
-        "Flex_Up_ub",
+        "Spin_Up_R3_ub",
+        "Reg_Up_ub",
+        "Flex_Down_ub",
         "Spin_Up_R2_ub",
         "Spin_Up_R1_ub",
-        "Flex_Down_ub",
-        "Reg_Up_ub",
-        "storage_cap",
-        "Spin_Up_R3_ub"
+        "Reg_Down_ub",
+        "Flex_Up_ub",
+        "storage_cap"
     ],
     "ACTransmissionLine": [],
     "TwoWindingTransformer": [],
     "DCLine": [],
     "datamodel__input__static__RegionalReserves": [
+        "Reg_Up",
+        "Flex_Down",
         "Reg_Down",
         "Spin_Up_R1",
-        "Flex_Down",
-        "Reg_Up",
-        "Spin_Up_R2",
         "Flex_Up",
+        "Spin_Up_R2",
         "Spin_Up_R3"
     ],
     "datamodel__input__timeseries__General": [
@@ -31,16 +31,16 @@
     ],
     "datamodel__input__timeseries__DispatchableDevices_SimpleProducingConsumingDevices": [
         "pg_ext",
-        "energy_lb",
-        "energy_ub"
+        "energy_ub",
+        "energy_lb"
     ],
     "datamodel__input__timeseries__RegionalReserves": [
+        "Reg_Up",
+        "Flex_Down",
         "Reg_Down",
         "Spin_Up_R1",
-        "Flex_Down",
-        "Reg_Up",
-        "Spin_Up_R2",
         "Flex_Up",
+        "Spin_Up_R2",
         "Spin_Up_R3"
     ]
 }

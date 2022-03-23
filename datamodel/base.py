@@ -6,7 +6,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field, ValidationError
 from pydantic.json import isoformat, timedelta_isoformat
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union, Tuple
 
 logger = logging.getLogger(__name__)
 
