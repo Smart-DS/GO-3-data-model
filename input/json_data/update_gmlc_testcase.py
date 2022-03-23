@@ -3,9 +3,9 @@ import os
 
 schema_path = '../../datamodel/schemas/input_data_file_schema.json'
 
-data_path = 'PSY_RTS_GMLC_data_fixed_load_commit.json'
+data_path = 'PSY_RTS_GMLC_data_fixed_load_commit_v3.json'
 
-output_path = 'PSY_RTS_GMLC_data_fixed_load_commit_v2.json'
+output_path = 'PSY_RTS_GMLC_data_fixed_load_commit_v3_output.json'
 missing_path = 'PSY_RTS_GMLC_data_fixed_load_commit_missing.json' #elements that were not included in the data file
 extra_path = 'PSY_RTS_GMLC_data_fixed_load_commit_extra.json' #elements that were included in the data file but shouldn't have been
 
@@ -45,7 +45,7 @@ def get_attributes(element,element_name,network_element,schema,data):
             if network_element[1] == 'array':
                 if not network_element[0] in data and network_element[1] == 'array':
                     data[network_element[0]] = []
-                    all_missing_data[network_element[2]] = []
+                    all_missing_data[network_element[2]+' ('+network_element[0]+')'] = []
                 for entry in data[network_element[0]]:
                     if do_recurse:
                         the_class = schema['definitions'][network_element[2]]['properties'][component]['allOf'][0]['$ref'].split('/')[-1]
@@ -96,8 +96,8 @@ def get_attributes(element,element_name,network_element,schema,data):
                             data[network_element[0]].pop(component2)
 
         if len(missing) > 0 or len(extra) >0:
-            all_missing_data[network_element[2]] = list(missing)
-            all_extra_data[network_element[2]] = list(extra)
+            all_missing_data[network_element[2]+' ('+network_element[0]+')'] = list(missing)
+            all_extra_data[network_element[2]+' ('+network_element[0]+')'] = list(extra)
            # print(element_name)
            # print('missing',missing)
            # print('extra',extra)
