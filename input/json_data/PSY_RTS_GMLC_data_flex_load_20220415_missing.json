@@ -1,0 +1,111 @@
+{
+    "Bus_initial_status (initial_status)": [
+        "initial_status",
+        "vm",
+        "va"
+    ],
+    "Bus (bus)": [
+        "vm",
+        "va"
+    ],
+    "Shunt_initial_status (initial_status)": [
+        "initial_status",
+        "on_status",
+        "step"
+    ],
+    "Shunt (shunt)": [
+        "step_lb",
+        "step_ub",
+        "on_status",
+        "step"
+    ],
+    "DispatchableDevices_SimpleProducingConsumingDevices_initial_status (initial_status)": [],
+    "datamodel__input__static__DispatchableDevices_SimpleProducingConsumingDevices (simple_dispatchable_device)": [
+        "accu_down_time",
+        "q",
+        "accu_up_time",
+        "on_status",
+        "q_0",
+        "beta_lb",
+        "q_0_ub",
+        "q_0_lb",
+        "energy_req_ub",
+        "beta",
+        "p",
+        "energy_req_lb",
+        "beta_ub"
+    ],
+    "ACTransmissionLine_initial_status (initial_status)": [
+        "initial_status",
+        "on_status"
+    ],
+    "ACTransmissionLine (ac_line)": [
+        "g_fr",
+        "b_to",
+        "g_to",
+        "on_status",
+        "b_fr"
+    ],
+    "TwoWindingTransformer_initial_status (initial_status)": [
+        "initial_status",
+        "ta",
+        "on_status",
+        "tm"
+    ],
+    "TwoWindingTransformer (two_winding_transformer)": [
+        "g_fr",
+        "b_to",
+        "g_to",
+        "tm",
+        "ta",
+        "on_status",
+        "b_fr"
+    ],
+    "DCLine (dc_line)": [
+        "qdc_to",
+        "qdc_fr",
+        "on_status",
+        "pdc_fr"
+    ],
+    "datamodel__input__static__ZonalReserveRequirementsViolationCosts (active_zonal_reserve)": [
+        "REACT_UP_vio_cost",
+        "SYN",
+        "REG_DOWN",
+        "REG_UP",
+        "REACT_DOWN_vio_cost",
+        "NSYN"
+    ],
+    "datamodel__input__static__ZonalReserveRequirementsViolationCosts (reactive_zonal_reserve)": [
+        "REG_DOWN_vio_cost",
+        "REG_UP_vio_cost",
+        "NSYN_vio_cost",
+        "SYN",
+        "REG_DOWN",
+        "REG_UP",
+        "RAMPING_RESERVE_UP_vio_cost",
+        "SYN_vio_cost",
+        "NSYN",
+        "RAMPING_RESERVE_DOWN_vio_cost"
+    ],
+    "datamodel__input__timeseries__General (general)": [],
+    "datamodel__input__timeseries__DispatchableDevices_SimpleProducingConsumingDevices (simple_dispatchable_device)": [
+        "q_res_down_cost",
+        "p_ramp_res_down_online_cost",
+        "p_ramp_res_up_offline_cost",
+        "p_reg_res_up_cost",
+        "p_reg_res_down_cost",
+        "p_ramp_res_down_offline_cost",
+        "p_syn_res_cost",
+        "p_ramp_res_up_online_cost",
+        "p_nsyn_res_cost",
+        "q_res_up_cost"
+    ],
+    "datamodel__input__timeseries__ZonalReserveRequirementsViolationCosts (active_regional_reserve)": [
+        "REACT_DOWN",
+        "REACT_UP"
+    ],
+    "datamodel__input__timeseries__ZonalReserveRequirementsViolationCosts (reactive_regional_reserve)": [
+        "RAMPING_RESERVE_DOWN",
+        "RAMPING_RESERVE_UP"
+    ]
+}
