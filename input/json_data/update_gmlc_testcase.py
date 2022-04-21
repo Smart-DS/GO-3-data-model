@@ -3,11 +3,13 @@ import os
 
 schema_path = '../../datamodel/schemas/input_data_file_schema.json'
 
-data_path = 'PSY_RTS_GMLC_data_fixed_load_commit_v3.json'
+#data_path = 'PSY_RTS_GMLC_data_fixed_load_commit_v3.json'
+data_name = 'PSY_RTS_GMLC_data_fixed_load_20220415'
+data_path = data_name+'.json'
 
-output_path = 'PSY_RTS_GMLC_data_fixed_load_commit_v3_output.json'
-missing_path = 'PSY_RTS_GMLC_data_fixed_load_commit_missing.json' #elements that were not included in the data file
-extra_path = 'PSY_RTS_GMLC_data_fixed_load_commit_extra.json' #elements that were included in the data file but shouldn't have been
+output_path = data_name+'_output.json'
+missing_path = data_name + '_missing.json' #elements that were not included in the data file
+extra_path = data_name + '_extra.json' #elements that were included in the data file but shouldn't have been
 
 all_missing_data = {}
 all_extra_data = {}
@@ -76,6 +78,9 @@ def get_attributes(element,element_name,network_element,schema,data):
                     the_class = schema['definitions'][network_element[2]]['properties'][component]['allOf'][0]['$ref'].split('/')[-1]
                     validate_elements([(the_class,component)],schema,data[network_element[0]],False)
                 else:
+                    if not network_element[0] in data:
+                        data[network_element[0]] = {}
+                        missing.add(network_element[0])
                     if not component in data[network_element[0]]:
                         if component_type == 'number':
                             data[network_element[0]][component] = 0.0
