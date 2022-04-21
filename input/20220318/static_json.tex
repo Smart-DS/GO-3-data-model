@@ -159,7 +159,7 @@ Below shows a schematic example on the static parameters for simple producing \&
     "device_type" : "producer",
     "vm_setpoint” : 1.2,
     "startup_cost" : 5.0, "shutdown_cost" : 2.0,
-    "startups_ub" : 1,
+    "startups_ub" : [ [0.0, 1.0, 1], [1.0, 4.0, 1] ],
     "on_cost" : 0.1,
     "in_service_time_lb" : 5.0, "down_time_lb" : 10.0,
     "p_ramp_up_ub" : 10.0, "p_ramp_down_ub" : 10.0, 
@@ -205,14 +205,15 @@ Below shows a schematic example on the static parameters for multi-mode producin
     "device_type" : "producer",
     "vm_setpoint” : 1.0,
     "startup_cost" : 4.0, "shutdown_cost" : 1.0,
-    "startups_ub" : 2,
+    "startups_ub" : [ [0.0, 1.0, 1], [1.0, 4.0, 2] ],
     "in_service_time_lb" : 2.0, "down_time_lb" : 0.0,
     "p_startup_ramp_ub" : 4.0, "p_shutdown_ramp_ub" : 4.0,
     "initial_status": {
-        "on_status": 1,
         "select_mode" : "IDG0015-M1",
         "p" : 1.0,
-        "q" : 0.7        
+        "q" : 0.7,
+        "accu_up_time" : 10.0,
+        "accu_down_time" : 0.0
     },
     "q_linear_cap" : false, 
     "q_bound_cap" : true, 
@@ -232,7 +233,6 @@ Below shows a schematic example on the static parameters for multi-mode producin
         "p_ramp_down_ub" : 8.0,
         "dwell_time_ub" : 5.0, "dwell_time_lb" : 2.0,        
         "initial_status" : {
-            "accu_down_time" : 0.0,
             "accu_up_time" : 10.0
         },
         "p_reg_res_up_ub" : 1.0, "p_reg_res_down_ub" : 1.0,
@@ -262,7 +262,6 @@ Below shows a schematic example on the static parameters for multi-mode producin
         "p_ramp_down_ub" : 10.0,
         "dwell_time_ub" : 240.0, "dwell_time_lb" : 10.0,
         "initial_status" : {
-            "accu_down_time" : 10.0,
             "accu_up_time" : 0.0
         },
         "p_reg_res_up_ub" : 2.0, "p_reg_res_down_ub" : 2.0,
@@ -297,7 +296,7 @@ Below shows a schematic example on the static parameters for subdevice units.
 {
     "uid" : "IDG0015-SD1",
     "startup_cost" : 10.0, "shutdown_cost" : 0.0,
-    "startups_ub" : 5,
+    "startups_ub" : [ [0.0, 4.0, 5] ],
     "on_cost" : 1.0,
     "in_service_time_lb" : 0.0, "down_time_lb" : 5.0,
     "initial_status": {
