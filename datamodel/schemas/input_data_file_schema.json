@@ -141,6 +141,28 @@
             ],
             "additionalProperties": false
         },
+        "Bus_initial_status": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "vm": {
+                    "title": "vm",
+                    "description": "Bus voltage magnitude ",
+                    "type": "number"
+                },
+                "va": {
+                    "title": "va",
+                    "description": "Bus voltage angle     ",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "vm",
+                "va"
+            ],
+            "additionalProperties": false
+        },
         "Bus": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
@@ -161,11 +183,6 @@
                     "description": "Voltage magnitude lower bound ",
                     "type": "number"
                 },
-                "con_loss_factor": {
-                    "title": "con_loss_factor",
-                    "description": "Contingency participation loss factor ",
-                    "type": "number"
-                },
                 "active_reserve_uids": {
                     "title": "active_reserve_uids",
                     "description": "List of active reserve zones (uids) that the bus participating   ",
@@ -181,19 +198,6 @@
                     "items": {
                         "type": "string"
                     }
-                },
-                "base_nom_volt": {
-                    "title": "base_nom_volt",
-                    "description": "Bus nominal voltage ",
-                    "type": "number"
-                },
-                "type": {
-                    "title": "type",
-                    "description": "Bus type ",
-                    "options": [
-                        "PQ"
-                    ],
-                    "type": "string"
                 },
                 "area": {
                     "title": "area",
@@ -234,15 +238,80 @@
                     "title": "country",
                     "description": "Bus country location ",
                     "type": "string"
+                },
+                "con_loss_factor": {
+                    "title": "con_loss_factor",
+                    "description": "Contingency participation loss factor ",
+                    "type": "number"
+                },
+                "base_nom_volt": {
+                    "title": "base_nom_volt",
+                    "description": "Bus nominal voltage ",
+                    "type": "number"
+                },
+                "type": {
+                    "title": "type",
+                    "description": "Bus type ",
+                    "options": [
+                        "PQ"
+                    ],
+                    "type": "string"
+                },
+                "initial_status": {
+                    "title": "initial_status",
+                    "description": "A JSON inner object storing data   for initial time step ",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/Bus_initial_status"
+                        }
+                    ]
+                },
+                "vm": {
+                    "title": "vm",
+                    "description": "Bus voltage magnitude ",
+                    "type": "number"
+                },
+                "va": {
+                    "title": "va",
+                    "description": "Bus voltage angle     ",
+                    "type": "number"
                 }
             },
             "required": [
                 "uid",
                 "vm_ub",
                 "vm_lb",
-                "con_loss_factor",
                 "active_reserve_uids",
-                "reactive_reserve_uids"
+                "reactive_reserve_uids",
+                "initial_status",
+                "vm",
+                "va"
+            ],
+            "additionalProperties": false
+        },
+        "Shunt_initial_status": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "on_status": {
+                    "title": "on_status",
+                    "description": "On-off status ",
+                    "options": [
+                        0,
+                        1
+                    ],
+                    "type": "integer"
+                },
+                "step": {
+                    "title": "step",
+                    "description": "Number of step ",
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "on_status",
+                "step"
             ],
             "additionalProperties": false
         },
@@ -271,14 +340,37 @@
                     "description": "Shunt susceptance for one step ",
                     "type": "number"
                 },
-                "steps_ub": {
-                    "title": "steps_ub",
-                    "description": "Maximum number of steps ",
+                "step_ub": {
+                    "title": "step_ub",
+                    "description": "Maximum step number ",
                     "type": "integer"
                 },
-                "steps_lb": {
-                    "title": "steps_lb",
-                    "description": "Minimum number of steps ",
+                "step_lb": {
+                    "title": "step_lb",
+                    "description": "Minimum step number ",
+                    "type": "integer"
+                },
+                "initial_status": {
+                    "title": "initial_status",
+                    "description": "A JSON inner object storing data   for initial time step ",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/Shunt_initial_status"
+                        }
+                    ]
+                },
+                "on_status": {
+                    "title": "on_status",
+                    "description": "On-off status ",
+                    "options": [
+                        0,
+                        1
+                    ],
+                    "type": "integer"
+                },
+                "step": {
+                    "title": "step",
+                    "description": "Number of step ",
                     "type": "integer"
                 }
             },
@@ -287,8 +379,11 @@
                 "bus",
                 "gs",
                 "bs",
-                "steps_ub",
-                "steps_lb"
+                "step_ub",
+                "step_lb",
+                "initial_status",
+                "on_status",
+                "step"
             ],
             "additionalProperties": false
         },
@@ -381,8 +476,32 @@
                 },
                 "startups_ub": {
                     "title": "startups_ub",
-                    "description": "Maximum startups ",
-                    "type": "integer"
+                    "description": "Array of time interval startup data blocks, where each  data block is an array with exactly three elements:  1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and  3) maximum startups within the interval (Int) ",
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "integer"
+                            }
+                        ]
+                    }
+                },
+                "energy_req_ub": {
+                    "title": "energy_req_ub",
+                    "description": "Array of energy upper bound requirement data blocks, where each  data block is an array with exactly three elements:  1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and  3) maximum energy within the interval ",
+                    "type": "number"
+                },
+                "energy_req_lb": {
+                    "title": "energy_req_lb",
+                    "description": "Array of energy lower bound requirement data blocks, where each  data block is an array with exactly three elements:  1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and  3) minimum energy within the interval ",
+                    "type": "number"
                 },
                 "on_cost": {
                     "title": "on_cost",
@@ -478,56 +597,6 @@
                     "description": "Maximum ramp down reserve when offline ",
                     "type": "number"
                 },
-                "p_reg_res_up_cost": {
-                    "title": "p_reg_res_up_cost",
-                    "description": "Costs for regulation reserve up ",
-                    "type": "number"
-                },
-                "p_reg_res_down_cost": {
-                    "title": "p_reg_res_down_cost",
-                    "description": "Costs for regulation reserve down ",
-                    "type": "number"
-                },
-                "p_syn_res_cost": {
-                    "title": "p_syn_res_cost",
-                    "description": "Costs for synchronized reserve ",
-                    "type": "number"
-                },
-                "p_nsyn_res_cost": {
-                    "title": "p_nsyn_res_cost",
-                    "description": "Costs for non-synchronized reserve ",
-                    "type": "number"
-                },
-                "p_ramp_res_up_online_cost": {
-                    "title": "p_ramp_res_up_online_cost",
-                    "description": "Costs for ramp up reserve when online ",
-                    "type": "number"
-                },
-                "p_ramp_res_down_online_cost": {
-                    "title": "p_ramp_res_down_online_cost",
-                    "description": "Costs for ramp down reserve when online ",
-                    "type": "number"
-                },
-                "p_ramp_res_up_offline_cost": {
-                    "title": "p_ramp_res_up_offline_cost",
-                    "description": "Costs for ramp up reserve when offline ",
-                    "type": "number"
-                },
-                "p_ramp_res_down_offline_cost": {
-                    "title": "p_ramp_res_down_offline_cost",
-                    "description": "Costs for ramp down reserve when offline ",
-                    "type": "number"
-                },
-                "q_res_up_cost": {
-                    "title": "q_res_up_cost",
-                    "description": "Costs for reactive reserve up ",
-                    "type": "number"
-                },
-                "q_res_down_cost": {
-                    "title": "q_res_down_cost",
-                    "description": "Costs for reactive reserve down ",
-                    "type": "number"
-                },
                 "on_status": {
                     "title": "on_status",
                     "description": "On status indicator for initial time step ",
@@ -562,9 +631,9 @@
                     "description": "{ (Case: producer) Reactive production at zero active production (Float, p.u.) } { (Case: consumer) Reactive consumption at zero active consumption ",
                     "type": "number"
                 },
-                "pq_ratio": {
-                    "title": "pq_ratio",
-                    "description": "Sensitivity of reactive w.r.t active dispatch ",
+                "beta": {
+                    "title": "beta",
+                    "description": "Slope of active-reactive capability curve ",
                     "type": "number"
                 },
                 "q_0_ub": {
@@ -577,14 +646,14 @@
                     "description": "{ (Case: producer) Min reactive production at zero active production (Float, p.u.)}  { (Case: consumer) Min reactive consumption at zero active consumption ",
                     "type": "number"
                 },
-                "pq_ratio_ub": {
-                    "title": "pq_ratio_ub",
-                    "description": "Upper bound for sensitivity of reactive w.r.t active dispatch ",
+                "beta_ub": {
+                    "title": "beta_ub",
+                    "description": "Upper bound for slope of active-reactive capability curve ",
                     "type": "number"
                 },
-                "pq_ratio_lb": {
-                    "title": "pq_ratio_lb",
-                    "description": "Lower bound for sensitivity of reactive w.r.t active dispatch ",
+                "beta_lb": {
+                    "title": "beta_lb",
+                    "description": "Lower bound for slope of active-reactive capability curve ",
                     "type": "number"
                 }
             },
@@ -595,6 +664,8 @@
                 "startup_cost",
                 "shutdown_cost",
                 "startups_ub",
+                "energy_req_ub",
+                "energy_req_lb",
                 "on_cost",
                 "in_service_time_lb",
                 "down_time_lb",
@@ -613,594 +684,33 @@
                 "p_ramp_res_down_online_ub",
                 "p_ramp_res_up_offline_ub",
                 "p_ramp_res_down_offline_ub",
-                "p_reg_res_up_cost",
-                "p_reg_res_down_cost",
-                "p_syn_res_cost",
-                "p_nsyn_res_cost",
-                "p_ramp_res_up_online_cost",
-                "p_ramp_res_down_online_cost",
-                "p_ramp_res_up_offline_cost",
-                "p_ramp_res_down_offline_cost",
-                "q_res_up_cost",
-                "q_res_down_cost",
                 "on_status",
                 "p",
                 "q",
                 "accu_down_time",
                 "accu_up_time",
                 "q_0",
-                "pq_ratio",
+                "beta",
                 "q_0_ub",
                 "q_0_lb",
-                "pq_ratio_ub",
-                "pq_ratio_lb"
+                "beta_ub",
+                "beta_lb"
             ],
             "additionalProperties": false
         },
-        "DispatchableDevices_MultimodeProducingConsumingDevices_initial_status": {
+        "ACTransmissionLine_initial_status": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
             "properties": {
-                "accu_down_time": {
-                    "title": "accu_down_time",
-                    "description": "Accumulated down time for current mode ",
-                    "type": "number"
-                },
-                "accu_up_time": {
-                    "title": "accu_up_time",
-                    "description": "Accumulated up time for current mode ",
-                    "type": "number"
-                }
-            },
-            "required": [
-                "accu_down_time",
-                "accu_up_time"
-            ],
-            "additionalProperties": false
-        },
-        "datamodel__input__static__DispatchableDevices_MultimodeProducingConsumingDevices_modes": {
-            "title": "BidDSJsonModel",
-            "description": "Base data model for all dsgrid data models",
-            "type": "object",
-            "properties": {
-                "p_reg_res_up_ub": {
-                    "title": "p_reg_res_up_ub",
-                    "description": "Maximum regulation reserve up ",
-                    "type": "number"
-                },
-                "p_reg_res_down_ub": {
-                    "title": "p_reg_res_down_ub",
-                    "description": "Maximum regulation reserve down ",
-                    "type": "number"
-                },
-                "p_syn_res_ub": {
-                    "title": "p_syn_res_ub",
-                    "description": "Maximum synchronized reserve ",
-                    "type": "number"
-                },
-                "p_nsyn_res_ub": {
-                    "title": "p_nsyn_res_ub",
-                    "description": "Maximum non-synchronized reserve ",
-                    "type": "number"
-                },
-                "p_ramp_res_up_online_ub": {
-                    "title": "p_ramp_res_up_online_ub",
-                    "description": "Maximum ramp up reserve when online ",
-                    "type": "number"
-                },
-                "p_ramp_res_down_online_ub": {
-                    "title": "p_ramp_res_down_online_ub",
-                    "description": "Maximum ramp down reserve when online ",
-                    "type": "number"
-                },
-                "p_ramp_res_up_offline_ub": {
-                    "title": "p_ramp_res_up_offline_ub",
-                    "description": "Maximum ramp up reserve when offline ",
-                    "type": "number"
-                },
-                "p_ramp_res_down_offline_ub": {
-                    "title": "p_ramp_res_down_offline_ub",
-                    "description": "Maximum ramp down reserve when offline ",
-                    "type": "number"
-                }
-            },
-            "required": [
-                "p_reg_res_up_ub",
-                "p_reg_res_down_ub",
-                "p_syn_res_ub",
-                "p_nsyn_res_ub",
-                "p_ramp_res_up_online_ub",
-                "p_ramp_res_down_online_ub",
-                "p_ramp_res_up_offline_ub",
-                "p_ramp_res_down_offline_ub"
-            ],
-            "additionalProperties": false
-        },
-        "datamodel__input__static__DispatchableDevices_MultimodeProducingConsumingDevices": {
-            "title": "BidDSJsonModel",
-            "description": "Base data model for all dsgrid data models",
-            "type": "object",
-            "properties": {
-                "uid": {
-                    "title": "uid",
-                    "description": "Mode unique identifier ",
-                    "type": "string"
-                },
-                "bus": {
-                    "title": "bus",
-                    "description": "Unique identifier for connecting bus ",
-                    "type": "string"
-                },
-                "device_type": {
-                    "title": "device_type",
-                    "description": "Type of device ",
-                    "options": [
-                        "producer / consumer"
-                    ],
-                    "type": "string"
-                },
-                "description": {
-                    "title": "description",
-                    "description": "Mode description ",
-                    "type": "string"
-                },
-                "vm_setpoint": {
-                    "title": "vm_setpoint",
-                    "description": "Voltage magnitude setpoint ",
-                    "type": "number"
-                },
-                "startup_cost": {
-                    "title": "startup_cost",
-                    "description": "Device start up cost ",
-                    "type": "number"
-                },
-                "shutdown_cost": {
-                    "title": "shutdown_cost",
-                    "description": "Device shut down cost ",
-                    "type": "number"
-                },
-                "startups_ub": {
-                    "title": "startups_ub",
-                    "description": "Maximum startups ",
-                    "type": "integer"
-                },
-                "in_service_time_lb": {
-                    "title": "in_service_time_lb",
-                    "description": "Minimum uptime in service ",
-                    "type": "number"
-                },
-                "down_time_lb": {
-                    "title": "down_time_lb",
-                    "description": "Minimum downtime ",
-                    "type": "number"
-                },
-                "p_startup_ramp_ub": {
-                    "title": "p_startup_ramp_ub",
-                    "description": "{(Case: producer) Max production ramp up when start up (Float, p.u./hr)}  {(Case: consumer) Max consumption ramp up when start up ",
-                    "type": "number"
-                },
-                "p_shutdown_ramp_ub": {
-                    "title": "p_shutdown_ramp_ub",
-                    "description": "{(Case: producer) Max production ramp down when shut down (Float, pu/hr)}  {(Case: consumer) Max consumption ramp down when shut down ",
-                    "type": "number"
-                },
-                "initial_status": {
-                    "title": "initial_status",
-                    "description": "A JSON object storing data for the initial time step ",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/DispatchableDevices_MultimodeProducingConsumingDevices_initial_status"
-                        }
-                    ]
-                },
-                "mode_num": {
-                    "title": "mode_num",
-                    "description": "Number of operating modes ",
-                    "type": "integer"
-                },
-                "modes": {
-                    "title": "modes",
-                    "description": "An array of mode JSON objects ",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/datamodel__input__static__DispatchableDevices_MultimodeProducingConsumingDevices_modes"
-                    }
-                },
-                "subdevice_uids": {
-                    "title": "subdevice_uids",
-                    "description": "Array of associated subdevice uids ",
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "q_linear_cap": {
-                    "title": "q_linear_cap",
-                    "description": "Device has additional reactive constraint ",
+                "on_status": {
+                    "title": "on_status",
+                    "description": "Connection status ",
                     "type": "boolean"
-                },
-                "q_bound_cap": {
-                    "title": "q_bound_cap",
-                    "description": "Device has additional reactive bounds ",
-                    "type": "boolean"
-                },
-                "on_status": {
-                    "title": "on_status",
-                    "description": "On status indicator for initial time step ",
-                    "options": [
-                        0,
-                        1
-                    ],
-                    "type": "integer"
-                },
-                "select_mode": {
-                    "title": "select_mode",
-                    "description": "Active mode uid for initial time step ",
-                    "type": "string"
-                },
-                "p": {
-                    "title": "p",
-                    "description": "{ (Case: producer) Active production for initial time step (Float, p.u.) } { (Case: consumer) Active consumption for initial time step ",
-                    "type": "number"
-                },
-                "q": {
-                    "title": "q",
-                    "description": "{ (Case: producer) Reactive production for initial time step (Float, p.u.) } { (Case: consumer) Reactive consumption for initial time step ",
-                    "type": "number"
-                },
-                "mode_transition_uids": {
-                    "title": "mode_transition_uids",
-                    "description": "Array of feasible mode uids to transit to ",
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "on_subdevice_uids": {
-                    "title": "on_subdevice_uids",
-                    "description": "Array of associated subdevice uids that must be   online for current mode ",
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "on_cost": {
-                    "title": "on_cost",
-                    "description": "Mode fixed operating cost ",
-                    "type": "number"
-                },
-                "mode_transit_cost": {
-                    "title": "mode_transit_cost",
-                    "description": "An inner JSON object for describing transition cost from each operating   mode. (JSON keys: mode uids, JSON value: transition cost ",
-                    "type": "number"
-                },
-                "p_ramp_up_ub": {
-                    "title": "p_ramp_up_ub",
-                    "description": "{(Case: producer) Max production ramp up when operating (Float, p.u./hr)}  {(Case: consumer) Max consumption ramp up when operating ",
-                    "type": "number"
-                },
-                "p_ramp_down_ub": {
-                    "title": "p_ramp_down_ub",
-                    "description": "{(Case: producer) Max production ramp down when operating (Float, pu/hr)}  {(Case: consumer) Max consumption ramp down when operating ",
-                    "type": "number"
-                },
-                "dwell_time_ub": {
-                    "title": "dwell_time_ub",
-                    "description": "Maximum dwell time ",
-                    "type": "number"
-                },
-                "dwell_time_lb": {
-                    "title": "dwell_time_lb",
-                    "description": "Minimum dwell time ",
-                    "type": "number"
-                },
-                "p_reg_res_up_ub": {
-                    "title": "p_reg_res_up_ub",
-                    "description": "Maximum regulation reserve up ",
-                    "type": "number"
-                },
-                "p_reg_res_down_ub": {
-                    "title": "p_reg_res_down_ub",
-                    "description": "Maximum regulation reserve down ",
-                    "type": "number"
-                },
-                "p_syn_res_ub": {
-                    "title": "p_syn_res_ub",
-                    "description": "Maximum synchronized reserve ",
-                    "type": "number"
-                },
-                "p_nsyn_res_ub": {
-                    "title": "p_nsyn_res_ub",
-                    "description": "Maximum non-synchronized reserve ",
-                    "type": "number"
-                },
-                "p_ramp_res_up_online_ub": {
-                    "title": "p_ramp_res_up_online_ub",
-                    "description": "Maximum ramp up reserve when online ",
-                    "type": "number"
-                },
-                "p_ramp_res_down_online_ub": {
-                    "title": "p_ramp_res_down_online_ub",
-                    "description": "Maximum ramp down reserve when online ",
-                    "type": "number"
-                },
-                "p_ramp_res_up_offline_ub": {
-                    "title": "p_ramp_res_up_offline_ub",
-                    "description": "Maximum ramp up reserve when offline ",
-                    "type": "number"
-                },
-                "p_ramp_res_down_offline_ub": {
-                    "title": "p_ramp_res_down_offline_ub",
-                    "description": "Maximum ramp down reserve when offline ",
-                    "type": "number"
-                },
-                "p_reg_res_up_cost": {
-                    "title": "p_reg_res_up_cost",
-                    "description": "Costs for regulation reserve up ",
-                    "type": "number"
-                },
-                "p_reg_res_down_cost": {
-                    "title": "p_reg_res_down_cost",
-                    "description": "Costs for regulation reserve down ",
-                    "type": "number"
-                },
-                "p_syn_res_cost": {
-                    "title": "p_syn_res_cost",
-                    "description": "Costs for synchronized reserve ",
-                    "type": "number"
-                },
-                "p_nsyn_res_cost": {
-                    "title": "p_nsyn_res_cost",
-                    "description": "Costs for non-synchronized reserve ",
-                    "type": "number"
-                },
-                "p_ramp_res_up_online_cost": {
-                    "title": "p_ramp_res_up_online_cost",
-                    "description": "Costs for ramp up reserve when online ",
-                    "type": "number"
-                },
-                "p_ramp_res_down_online_cost": {
-                    "title": "p_ramp_res_down_online_cost",
-                    "description": "Costs for ramp down reserve when online ",
-                    "type": "number"
-                },
-                "p_ramp_res_up_offline_cost": {
-                    "title": "p_ramp_res_up_offline_cost",
-                    "description": "Costs for ramp up reserve when offline ",
-                    "type": "number"
-                },
-                "p_ramp_res_down_offline_cost": {
-                    "title": "p_ramp_res_down_offline_cost",
-                    "description": "Costs for ramp down reserve when offline ",
-                    "type": "number"
-                },
-                "q_res_up_cost": {
-                    "title": "q_res_up_cost",
-                    "description": "Costs for reactive reserve up ",
-                    "type": "number"
-                },
-                "q_res_down_cost": {
-                    "title": "q_res_down_cost",
-                    "description": "Costs for reactive reserve down ",
-                    "type": "number"
-                },
-                "accu_down_time": {
-                    "title": "accu_down_time",
-                    "description": "Accumulated down time for current mode ",
-                    "type": "number"
-                },
-                "accu_up_time": {
-                    "title": "accu_up_time",
-                    "description": "Accumulated up time for current mode ",
-                    "type": "number"
-                },
-                "q_0": {
-                    "title": "q_0",
-                    "description": "{ (Case: producer) Reactive production at zero active production (Float, p.u.) } { (Case: consumer) Reactive consumption at zero active consumption ",
-                    "type": "number"
-                },
-                "pq_ratio": {
-                    "title": "pq_ratio",
-                    "description": "Sensitivity of reactive w.r.t active dispatch ",
-                    "type": "number"
-                },
-                "q_0_ub": {
-                    "title": "q_0_ub",
-                    "description": "{ (Case: producer) Max reactive production at zero active production (Float, p.u.)}  { (Case: consumer) Max reactive consumption at zero active consumption ",
-                    "type": "number"
-                },
-                "q_0_lb": {
-                    "title": "q_0_lb",
-                    "description": "{ (Case: producer) Min reactive production at zero active production (Float, p.u.)}  { (Case: consumer) Min reactive consumption at zero active consumption ",
-                    "type": "number"
-                },
-                "pq_ratio_ub": {
-                    "title": "pq_ratio_ub",
-                    "description": "Upper bound for sensitivity of reactive w.r.t active dispatch ",
-                    "type": "number"
-                },
-                "pq_ratio_lb": {
-                    "title": "pq_ratio_lb",
-                    "description": "Lower bound for sensitivity of reactive w.r.t active dispatch ",
-                    "type": "number"
                 }
             },
             "required": [
-                "uid",
-                "bus",
-                "device_type",
-                "startup_cost",
-                "shutdown_cost",
-                "startups_ub",
-                "in_service_time_lb",
-                "down_time_lb",
-                "p_startup_ramp_ub",
-                "p_shutdown_ramp_ub",
-                "initial_status",
-                "modes",
-                "subdevice_uids",
-                "q_linear_cap",
-                "q_bound_cap",
-                "on_status",
-                "select_mode",
-                "p",
-                "q",
-                "mode_transition_uids",
-                "on_subdevice_uids",
-                "on_cost",
-                "mode_transit_cost",
-                "p_ramp_up_ub",
-                "p_ramp_down_ub",
-                "dwell_time_ub",
-                "dwell_time_lb",
-                "p_reg_res_up_ub",
-                "p_reg_res_down_ub",
-                "p_syn_res_ub",
-                "p_nsyn_res_ub",
-                "p_ramp_res_up_online_ub",
-                "p_ramp_res_down_online_ub",
-                "p_ramp_res_up_offline_ub",
-                "p_ramp_res_down_offline_ub",
-                "p_reg_res_up_cost",
-                "p_reg_res_down_cost",
-                "p_syn_res_cost",
-                "p_nsyn_res_cost",
-                "p_ramp_res_up_online_cost",
-                "p_ramp_res_down_online_cost",
-                "p_ramp_res_up_offline_cost",
-                "p_ramp_res_down_offline_cost",
-                "q_res_up_cost",
-                "q_res_down_cost",
-                "accu_down_time",
-                "accu_up_time",
-                "q_0",
-                "pq_ratio",
-                "q_0_ub",
-                "q_0_lb",
-                "pq_ratio_ub",
-                "pq_ratio_lb"
-            ],
-            "additionalProperties": false
-        },
-        "SubdeviceUnitsforMultiModeProducingConsumingDevices_initial_status": {
-            "title": "BidDSJsonModel",
-            "description": "Base data model for all dsgrid data models",
-            "type": "object",
-            "properties": {
-                "on_status": {
-                    "title": "on_status",
-                    "description": "On status indicator for initial time step ",
-                    "options": [
-                        0,
-                        1
-                    ],
-                    "type": "integer"
-                },
-                "accu_down_time": {
-                    "title": "accu_down_time",
-                    "description": "Accumulated down time ",
-                    "type": "number"
-                },
-                "accu_up_time": {
-                    "title": "accu_up_time",
-                    "description": "Accumulated up time ",
-                    "type": "number"
-                }
-            },
-            "required": [
-                "on_status",
-                "accu_down_time",
-                "accu_up_time"
-            ],
-            "additionalProperties": false
-        },
-        "datamodel__input__static__SubdeviceUnitsforMultiModeProducingConsumingDevices": {
-            "title": "BidDSJsonModel",
-            "description": "Base data model for all dsgrid data models",
-            "type": "object",
-            "properties": {
-                "uid": {
-                    "title": "uid",
-                    "description": "Sub-device unique identifier ",
-                    "type": "string"
-                },
-                "description": {
-                    "title": "description",
-                    "description": "Detail description of the sub device  ",
-                    "type": "string"
-                },
-                "startup_cost": {
-                    "title": "startup_cost",
-                    "description": "Device start up cost ",
-                    "type": "number"
-                },
-                "shutdown_cost": {
-                    "title": "shutdown_cost",
-                    "description": "Device shut down cost ",
-                    "type": "number"
-                },
-                "startups_ub": {
-                    "title": "startups_ub",
-                    "description": "Maximum startups ",
-                    "type": "integer"
-                },
-                "on_cost": {
-                    "title": "on_cost",
-                    "description": "Device fixed operating cost ",
-                    "type": "number"
-                },
-                "in_service_time_lb": {
-                    "title": "in_service_time_lb",
-                    "description": "Minimum uptime in service ",
-                    "type": "number"
-                },
-                "down_time_lb": {
-                    "title": "down_time_lb",
-                    "description": "Minimum downtime ",
-                    "type": "number"
-                },
-                "initial_status": {
-                    "title": "initial_status",
-                    "description": "A JSON inner object storing data for initial time step ",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/SubdeviceUnitsforMultiModeProducingConsumingDevices_initial_status"
-                        }
-                    ]
-                },
-                "on_status": {
-                    "title": "on_status",
-                    "description": "On status indicator for initial time step ",
-                    "options": [
-                        0,
-                        1
-                    ],
-                    "type": "integer"
-                },
-                "accu_down_time": {
-                    "title": "accu_down_time",
-                    "description": "Accumulated down time ",
-                    "type": "number"
-                },
-                "accu_up_time": {
-                    "title": "accu_up_time",
-                    "description": "Accumulated up time ",
-                    "type": "number"
-                }
-            },
-            "required": [
-                "uid",
-                "startup_cost",
-                "shutdown_cost",
-                "startups_ub",
-                "on_cost",
-                "in_service_time_lb",
-                "down_time_lb",
-                "initial_status",
-                "on_status",
-                "accu_down_time",
-                "accu_up_time"
+                "on_status"
             ],
             "additionalProperties": false
         },
@@ -1269,10 +779,23 @@
                     "description": "AC line disconnection cost ",
                     "type": "number"
                 },
+                "initial_status": {
+                    "title": "initial_status",
+                    "description": "A JSON inner object storing data   for initial time step ",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/ACTransmissionLine_initial_status"
+                        }
+                    ]
+                },
                 "additional_shunt": {
                     "title": "additional_shunt",
                     "description": "Branch has additional shunt components ",
-                    "type": "boolean"
+                    "options": [
+                        0,
+                        1
+                    ],
+                    "type": "integer"
                 },
                 "g_fr": {
                     "title": "g_fr",
@@ -1293,6 +816,11 @@
                     "title": "b_to",
                     "description": "Susceptance for shunt component at to bus ",
                     "type": "number"
+                },
+                "on_status": {
+                    "title": "on_status",
+                    "description": "Connection status ",
+                    "type": "boolean"
                 }
             },
             "required": [
@@ -1307,11 +835,41 @@
                 "standby_cost",
                 "connection_cost",
                 "disconnection_cost",
+                "initial_status",
                 "additional_shunt",
                 "g_fr",
                 "b_fr",
                 "g_to",
-                "b_to"
+                "b_to",
+                "on_status"
+            ],
+            "additionalProperties": false
+        },
+        "TwoWindingTransformer_initial_status": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "on_status": {
+                    "title": "on_status",
+                    "description": "Connection status ",
+                    "type": "boolean"
+                },
+                "tm": {
+                    "title": "tm",
+                    "description": "Off-nominal tap ratio (p.u.) ",
+                    "type": "number"
+                },
+                "ta": {
+                    "title": "ta",
+                    "description": "Phase shifting angle (radian) ",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "on_status",
+                "tm",
+                "ta"
             ],
             "additionalProperties": false
         },
@@ -1352,12 +910,12 @@
                 },
                 "tm_ub": {
                     "title": "tm_ub",
-                    "description": "Upper bound for off-nominal taps ratio ",
+                    "description": "Upper bound for off-nominal tap ratio ",
                     "type": "number"
                 },
                 "tm_lb": {
                     "title": "tm_lb",
-                    "description": "Lower bound for off-nominal taps ratio ",
+                    "description": "Lower bound for off-nominal tap ratio ",
                     "type": "number"
                 },
                 "ta_ub": {
@@ -1400,10 +958,23 @@
                     "description": "Transformer disconnection cost ",
                     "type": "number"
                 },
+                "initial_status": {
+                    "title": "initial_status",
+                    "description": "A JSON inner object storing data   for initial time step ",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/TwoWindingTransformer_initial_status"
+                        }
+                    ]
+                },
                 "additional_shunt": {
                     "title": "additional_shunt",
                     "description": "Transformer has additional shunt components ",
-                    "type": "boolean"
+                    "options": [
+                        0,
+                        1
+                    ],
+                    "type": "integer"
                 },
                 "g_fr": {
                     "title": "g_fr",
@@ -1424,6 +995,21 @@
                     "title": "b_to",
                     "description": "Susceptance for shunt component at to bus ",
                     "type": "number"
+                },
+                "on_status": {
+                    "title": "on_status",
+                    "description": "Connection status ",
+                    "type": "boolean"
+                },
+                "tm": {
+                    "title": "tm",
+                    "description": "Off-nominal tap ratio (p.u.) ",
+                    "type": "number"
+                },
+                "ta": {
+                    "title": "ta",
+                    "description": "Phase shifting angle (radian) ",
+                    "type": "number"
                 }
             },
             "required": [
@@ -1442,11 +1028,49 @@
                 "standby_cost",
                 "connection_cost",
                 "disconnection_cost",
+                "initial_status",
                 "additional_shunt",
                 "g_fr",
                 "b_fr",
                 "g_to",
-                "b_to"
+                "b_to",
+                "on_status",
+                "tm",
+                "ta"
+            ],
+            "additionalProperties": false
+        },
+        "DCLine_initial_status": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "on_status": {
+                    "title": "on_status",
+                    "description": "Connection status ",
+                    "type": "boolean"
+                },
+                "pdc_fr": {
+                    "title": "pdc_fr",
+                    "description": "Active power flow, from bus ",
+                    "type": "number"
+                },
+                "qdc_fr": {
+                    "title": "qdc_fr",
+                    "description": "Reactive power flow, from bus ",
+                    "type": "number"
+                },
+                "qdc_to": {
+                    "title": "qdc_to",
+                    "description": "Reactive power flow, to bus ",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "on_status",
+                "pdc_fr",
+                "qdc_fr",
+                "qdc_to"
             ],
             "additionalProperties": false
         },
@@ -1514,6 +1138,35 @@
                     "title": "disconnection_cost",
                     "description": "{DC line disconnection cost ",
                     "type": "number"
+                },
+                "initial_status": {
+                    "title": "initial_status",
+                    "description": "A JSON inner object storing data   for initial time step ",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/DCLine_initial_status"
+                        }
+                    ]
+                },
+                "on_status": {
+                    "title": "on_status",
+                    "description": "Connection status ",
+                    "type": "boolean"
+                },
+                "pdc_fr": {
+                    "title": "pdc_fr",
+                    "description": "Active power flow, from bus ",
+                    "type": "number"
+                },
+                "qdc_fr": {
+                    "title": "qdc_fr",
+                    "description": "Reactive power flow, from bus ",
+                    "type": "number"
+                },
+                "qdc_to": {
+                    "title": "qdc_to",
+                    "description": "Reactive power flow, to bus ",
+                    "type": "number"
                 }
             },
             "required": [
@@ -1528,11 +1181,16 @@
                 "qdc_to_lb",
                 "standby_cost",
                 "connection_cost",
-                "disconnection_cost"
+                "disconnection_cost",
+                "initial_status",
+                "on_status",
+                "pdc_fr",
+                "qdc_fr",
+                "qdc_to"
             ],
             "additionalProperties": false
         },
-        "datamodel__input__static__RegionalReserves": {
+        "datamodel__input__static__ZonalReserveRequirementsViolationCosts": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -1541,6 +1199,26 @@
                     "title": "uid",
                     "description": "Region reserve unique identifier ",
                     "type": "string"
+                },
+                "REG_UP": {
+                    "title": "REG_UP",
+                    "description": "Regulation reserve up requirement ",
+                    "type": "number"
+                },
+                "REG_DOWN": {
+                    "title": "REG_DOWN",
+                    "description": "Regulation reserve down requirement ",
+                    "type": "number"
+                },
+                "SYN": {
+                    "title": "SYN",
+                    "description": "Synchronized reserve requirement ",
+                    "type": "number"
+                },
+                "NSYN": {
+                    "title": "NSYN",
+                    "description": "Non-synchronized reserve requirement ",
+                    "type": "number"
                 },
                 "REG_UP_vio_cost": {
                     "title": "REG_UP_vio_cost",
@@ -1585,6 +1263,10 @@
             },
             "required": [
                 "uid",
+                "REG_UP",
+                "REG_DOWN",
+                "SYN",
+                "NSYN",
                 "REG_UP_vio_cost",
                 "REG_DOWN_vio_cost",
                 "SYN_vio_cost",
@@ -1638,20 +1320,6 @@
                         "$ref": "#/definitions/datamodel__input__static__DispatchableDevices_SimpleProducingConsumingDevices"
                     }
                 },
-                "multi_mode_dispatchable_device": {
-                    "title": "multi_mode_dispatchable_device",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/datamodel__input__static__DispatchableDevices_MultimodeProducingConsumingDevices"
-                    }
-                },
-                "sub_device": {
-                    "title": "sub_device",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/datamodel__input__static__SubdeviceUnitsforMultiModeProducingConsumingDevices"
-                    }
-                },
                 "ac_line": {
                     "title": "ac_line",
                     "type": "array",
@@ -1673,18 +1341,18 @@
                         "$ref": "#/definitions/DCLine"
                     }
                 },
-                "active_regional_reserve": {
-                    "title": "active_regional_reserve",
+                "active_zonal_reserve": {
+                    "title": "active_zonal_reserve",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/datamodel__input__static__RegionalReserves"
+                        "$ref": "#/definitions/datamodel__input__static__ZonalReserveRequirementsViolationCosts"
                     }
                 },
-                "reactive_regional_reserve": {
-                    "title": "reactive_regional_reserve",
+                "reactive_zonal_reserve": {
+                    "title": "reactive_zonal_reserve",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/datamodel__input__static__RegionalReserves"
+                        "$ref": "#/definitions/datamodel__input__static__ZonalReserveRequirementsViolationCosts"
                     }
                 }
             },
@@ -1694,13 +1362,11 @@
                 "bus",
                 "shunt",
                 "simple_dispatchable_device",
-                "multi_mode_dispatchable_device",
-                "sub_device",
                 "ac_line",
                 "two_winding_transformer",
                 "dc_line",
-                "active_regional_reserve",
-                "reactive_regional_reserve"
+                "active_zonal_reserve",
+                "reactive_zonal_reserve"
             ],
             "additionalProperties": false
         },
@@ -1709,11 +1375,6 @@
             "description": "Base data model for all dsgrid data models",
             "type": "object",
             "properties": {
-                "time_periods": {
-                    "title": "time_periods",
-                    "description": "The number of time periods ",
-                    "type": "integer"
-                },
                 "interval_duration": {
                     "title": "interval_duration",
                     "description": "Time duration of the intervals, per time period in hours  ",
@@ -1724,7 +1385,6 @@
                 }
             },
             "required": [
-                "time_periods",
                 "interval_duration"
             ],
             "additionalProperties": false
@@ -1741,7 +1401,7 @@
                 },
                 "on_status_ub": {
                     "title": "on_status_ub",
-                    "description": "On status indicator upper bound ",
+                    "description": "{On status indicator upper bound ",
                     "type": "array",
                     "items": {
                         "type": "boolean"
@@ -1749,7 +1409,7 @@
                 },
                 "on_status_lb": {
                     "title": "on_status_lb",
-                    "description": "On status indicator lower bound ",
+                    "description": "{On status indicator lower bound ",
                     "type": "array",
                     "items": {
                         "type": "boolean"
@@ -1765,7 +1425,7 @@
                 },
                 "p_lb": {
                     "title": "p_lb",
-                    "description": "{ (Case: producer) Lower bound of active dispatch (Array of Float)   } { (Case: consumer) Lower bound of active demand   ",
+                    "description": "{ (Case: producer) Lower bound of active dispatch (Array of Float)    } { (Case: consumer) Lower bound of active demand   ",
                     "type": "array",
                     "items": {
                         "type": "number"
@@ -1773,7 +1433,7 @@
                 },
                 "q_ub": {
                     "title": "q_ub",
-                    "description": "{ (Case: producer) Upper bound of reactive dispatch (Array of Float) } { (Case: consumer) Upper bound of reactive demand   ",
+                    "description": "{ (Case: producer) Upper bound of reactive dispatch (Array of Float)  } { (Case: consumer) Upper bound of reactive demand   ",
                     "type": "array",
                     "items": {
                         "type": "number"
@@ -1781,7 +1441,7 @@
                 },
                 "q_lb": {
                     "title": "q_lb",
-                    "description": "{ (Case: producer) Lower bound of reactive dispatch (Array of Float) } { (Case: consumer) Lower bound of reactive demand   ",
+                    "description": "{ (Case: producer) Lower bound of reactive dispatch (Array of Float)  } { (Case: consumer) Lower bound of reactive demand   ",
                     "type": "array",
                     "items": {
                         "type": "number"
@@ -1789,7 +1449,7 @@
                 },
                 "cost": {
                     "title": "cost",
-                    "description": "Array of cost blocks, where   each cost block is an array with exactly two elements:     1) marginal  cost (\\$/p.u.-hr), and 2) block size (p.u.) ",
+                    "description": "Array of cost blocks where   each cost block is an array with exactly two elements:     1) marginal  cost (\\$/p.u.-hr), and 2) block size (p.u.) ",
                     "type": "array",
                     "items": {
                         "type": "array",
@@ -1805,210 +1465,111 @@
                             ]
                         }
                     }
-                }
-            },
-            "required": [
-                "uid",
-                "on_status_ub",
-                "on_status_lb",
-                "p_ub",
-                "p_lb",
-                "q_ub",
-                "q_lb",
-                "cost"
-            ],
-            "additionalProperties": false
-        },
-        "datamodel__input__timeseries__DispatchableDevices_MultimodeProducingConsumingDevices_modes": {
-            "title": "BidDSJsonModel",
-            "description": "Base data model for all dsgrid data models",
-            "type": "object",
-            "properties": {
-                "p_reg_res_up_ub": {
-                    "title": "p_reg_res_up_ub",
-                    "description": "Maximum regulation reserve up ",
-                    "type": "number"
                 },
-                "p_reg_res_down_ub": {
-                    "title": "p_reg_res_down_ub",
-                    "description": "Maximum regulation reserve down ",
-                    "type": "number"
-                },
-                "p_syn_res_ub": {
-                    "title": "p_syn_res_ub",
-                    "description": "Maximum synchronized reserve ",
-                    "type": "number"
-                },
-                "p_nsyn_res_ub": {
-                    "title": "p_nsyn_res_ub",
-                    "description": "Maximum non-synchronized reserve ",
-                    "type": "number"
-                },
-                "p_ramp_res_up_online_ub": {
-                    "title": "p_ramp_res_up_online_ub",
-                    "description": "Maximum ramp up reserve when online ",
-                    "type": "number"
-                },
-                "p_ramp_res_down_online_ub": {
-                    "title": "p_ramp_res_down_online_ub",
-                    "description": "Maximum ramp down reserve when online ",
-                    "type": "number"
-                },
-                "p_ramp_res_up_offline_ub": {
-                    "title": "p_ramp_res_up_offline_ub",
-                    "description": "Maximum ramp up reserve when offline ",
-                    "type": "number"
-                },
-                "p_ramp_res_down_offline_ub": {
-                    "title": "p_ramp_res_down_offline_ub",
-                    "description": "Maximum ramp down reserve when offline ",
-                    "type": "number"
-                }
-            },
-            "required": [
-                "p_reg_res_up_ub",
-                "p_reg_res_down_ub",
-                "p_syn_res_ub",
-                "p_nsyn_res_ub",
-                "p_ramp_res_up_online_ub",
-                "p_ramp_res_down_online_ub",
-                "p_ramp_res_up_offline_ub",
-                "p_ramp_res_down_offline_ub"
-            ],
-            "additionalProperties": false
-        },
-        "datamodel__input__timeseries__DispatchableDevices_MultimodeProducingConsumingDevices": {
-            "title": "BidDSJsonModel",
-            "description": "Base data model for all dsgrid data models",
-            "type": "object",
-            "properties": {
-                "uid": {
-                    "title": "uid",
-                    "description": "Mode unique identifier ",
-                    "type": "string"
-                },
-                "on_status_ub": {
-                    "title": "on_status_ub",
-                    "description": "On status indicator upper bound ",
-                    "options": [
-                        0,
-                        1
-                    ],
-                    "type": "integer"
-                },
-                "on_status_lb": {
-                    "title": "on_status_lb",
-                    "description": "On status indicator lower bound ",
-                    "options": [
-                        0,
-                        1
-                    ],
-                    "type": "integer"
-                },
-                "modes": {
-                    "title": "modes",
-                    "description": "An array of mode JSON objects ",
+                "p_reg_res_up_cost": {
+                    "title": "p_reg_res_up_cost",
+                    "description": "Costs for regulation reserve up (\\$/pu-h)  ",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/datamodel__input__timeseries__DispatchableDevices_MultimodeProducingConsumingDevices_modes"
+                        "type": "number"
                     }
                 },
-                "select_ub": {
-                    "title": "select_ub",
-                    "description": "Mode selection upper bound ",
-                    "options": [
-                        0,
-                        1
-                    ],
-                    "type": "integer"
+                "p_reg_res_down_cost": {
+                    "title": "p_reg_res_down_cost",
+                    "description": "Costs for regulation reserve down (\\$/pu-h) ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
                 },
-                "select_lb": {
-                    "title": "select_lb",
-                    "description": "Mode selection lower bound ",
-                    "options": [
-                        0,
-                        1
-                    ],
-                    "type": "integer"
+                "p_syn_res_cost": {
+                    "title": "p_syn_res_cost",
+                    "description": "Costs for synchronized reserve (\\$/pu-h)  ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
                 },
-                "p_ub": {
-                    "title": "p_ub",
-                    "description": "{ (Case: producer) Upper bound of active dispatch (Float, p.u.)   } { (Case: consumer) Upper bound of active demand   ",
-                    "type": "number"
+                "p_nsyn_res_cost": {
+                    "title": "p_nsyn_res_cost",
+                    "description": "Costs for non-synchronized reserve (\\$/pu-h)  ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
                 },
-                "p_lb": {
-                    "title": "p_lb",
-                    "description": "{ (Case: producer) Lower bound of active dispatch (Float, p.u.)   } { (Case: consumer) Lower bound of active demand   ",
-                    "type": "number"
+                "p_ramp_res_up_online_cost": {
+                    "title": "p_ramp_res_up_online_cost",
+                    "description": "Costs for ramp up reserve when online (\\$/pu-h)  ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
                 },
-                "q_ub": {
-                    "title": "q_ub",
-                    "description": "{ (Case: producer) Upper bound of reactive dispatch (Float, p.u.) } { (Case: consumer) Upper bound of reactive demand   ",
-                    "type": "number"
+                "p_ramp_res_down_online_cost": {
+                    "title": "p_ramp_res_down_online_cost",
+                    "description": "Costs for ramp down reserve when online (\\$/pu-h)  ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
                 },
-                "q_lb": {
-                    "title": "q_lb",
-                    "description": "{ (Case: producer) Lower bound of reactive dispatch (Float, p.u.) } { (Case: consumer) Lower bound of reactive demand   ",
-                    "type": "number"
+                "p_ramp_res_up_offline_cost": {
+                    "title": "p_ramp_res_up_offline_cost",
+                    "description": "Costs for ramp up reserve when offline (\\$/pu-h)  ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
                 },
-                "cost": {
-                    "title": "cost",
-                    "description": "Array of cost blocks, where   each block is an array with exactly two elements:     a) marginal cost (\\$/p.u.-hr), and b) block size ",
-                    "type": "number"
+                "p_ramp_res_down_offline_cost": {
+                    "title": "p_ramp_res_down_offline_cost",
+                    "description": "Costs for ramp down reserve when offline (\\$/pu-h)  ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "q_res_up_cost": {
+                    "title": "q_res_up_cost",
+                    "description": "Costs for reactive reserve up (\\$/pu-h) ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "q_res_down_cost": {
+                    "title": "q_res_down_cost",
+                    "description": "Costs for reactive reserve down (\\$/pu-h) ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
                 }
             },
             "required": [
                 "uid",
                 "on_status_ub",
                 "on_status_lb",
-                "modes",
-                "select_ub",
-                "select_lb",
                 "p_ub",
                 "p_lb",
                 "q_ub",
                 "q_lb",
-                "cost"
+                "cost",
+                "p_reg_res_up_cost",
+                "p_reg_res_down_cost",
+                "p_syn_res_cost",
+                "p_nsyn_res_cost",
+                "p_ramp_res_up_online_cost",
+                "p_ramp_res_down_online_cost",
+                "p_ramp_res_up_offline_cost",
+                "p_ramp_res_down_offline_cost",
+                "q_res_up_cost",
+                "q_res_down_cost"
             ],
             "additionalProperties": false
         },
-        "datamodel__input__timeseries__SubdeviceUnitsforMultiModeProducingConsumingDevices": {
-            "title": "BidDSJsonModel",
-            "description": "Base data model for all dsgrid data models",
-            "type": "object",
-            "properties": {
-                "uid": {
-                    "title": "uid",
-                    "description": "Sub-device unique identifier ",
-                    "type": "string"
-                },
-                "on_status_ub": {
-                    "title": "on_status_ub",
-                    "description": "On status indicator upper bound ",
-                    "options": [
-                        0,
-                        1
-                    ],
-                    "type": "integer"
-                },
-                "on_status_lb": {
-                    "title": "on_status_lb",
-                    "description": "On status indicator lower bound ",
-                    "options": [
-                        0,
-                        1
-                    ],
-                    "type": "integer"
-                }
-            },
-            "required": [
-                "uid",
-                "on_status_ub",
-                "on_status_lb"
-            ],
-            "additionalProperties": false
-        },
-        "datamodel__input__timeseries__RegionalReserves": {
+        "datamodel__input__timeseries__ZonalReserveRequirementsViolationCosts": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -2018,53 +1579,41 @@
                     "description": "Region reserve unique identifier ",
                     "type": "string"
                 },
-                "REG_UP": {
-                    "title": "REG_UP",
-                    "description": "Regulation reserve up requirement ",
-                    "type": "number"
-                },
-                "REG_DOWN": {
-                    "title": "REG_DOWN",
-                    "description": "Regulation reserve down requirement ",
-                    "type": "number"
-                },
-                "SYN": {
-                    "title": "SYN",
-                    "description": "Synchronized reserve requirement ",
-                    "type": "number"
-                },
-                "NSYN": {
-                    "title": "NSYN",
-                    "description": "Non-synchronized reserve requirement ",
-                    "type": "number"
-                },
                 "RAMPING_RESERVE_UP": {
                     "title": "RAMPING_RESERVE_UP",
                     "description": "Ramping reserve up requirement ",
-                    "type": "number"
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
                 },
                 "RAMPING_RESERVE_DOWN": {
                     "title": "RAMPING_RESERVE_DOWN",
                     "description": "Ramping reserve down requirement ",
-                    "type": "number"
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
                 },
                 "REACT_UP": {
                     "title": "REACT_UP",
                     "description": "Reactive reserve power up requirement ",
-                    "type": "number"
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
                 },
                 "REACT_DOWN": {
                     "title": "REACT_DOWN",
                     "description": "Reactive reserve power down requirement ",
-                    "type": "number"
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
                 }
             },
             "required": [
                 "uid",
-                "REG_UP",
-                "REG_DOWN",
-                "SYN",
-                "NSYN",
                 "RAMPING_RESERVE_UP",
                 "RAMPING_RESERVE_DOWN",
                 "REACT_UP",
@@ -2092,40 +1641,24 @@
                         "$ref": "#/definitions/datamodel__input__timeseries__DispatchableDevices_SimpleProducingConsumingDevices"
                     }
                 },
-                "multi_mode_dispatchable_device": {
-                    "title": "multi_mode_dispatchable_device",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/datamodel__input__timeseries__DispatchableDevices_MultimodeProducingConsumingDevices"
-                    }
-                },
-                "subdevice": {
-                    "title": "subdevice",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/datamodel__input__timeseries__SubdeviceUnitsforMultiModeProducingConsumingDevices"
-                    }
-                },
                 "active_regional_reserve": {
                     "title": "active_regional_reserve",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/datamodel__input__timeseries__RegionalReserves"
+                        "$ref": "#/definitions/datamodel__input__timeseries__ZonalReserveRequirementsViolationCosts"
                     }
                 },
                 "reactive_regional_reserve": {
                     "title": "reactive_regional_reserve",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/datamodel__input__timeseries__RegionalReserves"
+                        "$ref": "#/definitions/datamodel__input__timeseries__ZonalReserveRequirementsViolationCosts"
                     }
                 }
             },
             "required": [
                 "general",
                 "simple_dispatchable_device",
-                "multi_mode_dispatchable_device",
-                "subdevice",
                 "active_regional_reserve",
                 "reactive_regional_reserve"
             ],

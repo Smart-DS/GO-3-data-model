@@ -9,8 +9,8 @@ from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
 from datamodel.base import BidDSJsonBaseModel
-import datamodel.input.static
 import datamodel.input.timeseries
+import datamodel.input.static
 
 class Network(BidDSJsonBaseModel):
 
@@ -34,14 +34,6 @@ class Network(BidDSJsonBaseModel):
         title = "simple_dispatchable_device"
     )
 
-    multi_mode_dispatchable_device: List[datamodel.input.static.DispatchableDevices_MultimodeProducingConsumingDevices] = Field(
-        title = "multi_mode_dispatchable_device"
-    )
-
-    sub_device: List[datamodel.input.static.SubdeviceUnitsforMultiModeProducingConsumingDevices] = Field(
-        title = "sub_device"
-    )
-
     ac_line: List[datamodel.input.static.ACTransmissionLine] = Field(
         title = "ac_line"
     )
@@ -54,12 +46,12 @@ class Network(BidDSJsonBaseModel):
         title = "dc_line"
     )
 
-    active_regional_reserve: List[datamodel.input.static.RegionalReserves] = Field(
-        title = "active_regional_reserve"
+    active_zonal_reserve: List[datamodel.input.static.ZonalReserveRequirementsViolationCosts] = Field(
+        title = "active_zonal_reserve"
     )
 
-    reactive_regional_reserve: List[datamodel.input.static.RegionalReserves] = Field(
-        title = "reactive_regional_reserve"
+    reactive_zonal_reserve: List[datamodel.input.static.ZonalReserveRequirementsViolationCosts] = Field(
+        title = "reactive_zonal_reserve"
     )
 
 
@@ -73,19 +65,11 @@ class TimeSeriesInput(BidDSJsonBaseModel):
         title = "simple_dispatchable_device"
     )
 
-    multi_mode_dispatchable_device: List[datamodel.input.timeseries.DispatchableDevices_MultimodeProducingConsumingDevices] = Field(
-        title = "multi_mode_dispatchable_device"
-    )
-
-    subdevice: List[datamodel.input.timeseries.SubdeviceUnitsforMultiModeProducingConsumingDevices] = Field(
-        title = "subdevice"
-    )
-
-    active_regional_reserve: List[datamodel.input.timeseries.RegionalReserves] = Field(
+    active_regional_reserve: List[datamodel.input.timeseries.ZonalReserveRequirementsViolationCosts] = Field(
         title = "active_regional_reserve"
     )
 
-    reactive_regional_reserve: List[datamodel.input.timeseries.RegionalReserves] = Field(
+    reactive_regional_reserve: List[datamodel.input.timeseries.ZonalReserveRequirementsViolationCosts] = Field(
         title = "reactive_regional_reserve"
     )
 
