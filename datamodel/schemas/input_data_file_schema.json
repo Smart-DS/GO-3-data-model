@@ -464,6 +464,11 @@
                     "description": "Voltage magnitude setpoint ",
                     "type": "number"
                 },
+                "nameplate_capacity": {
+                    "title": "nameplate_capacity",
+                    "description": "Reference capacity ",
+                    "type": "number"
+                },
                 "startup_cost": {
                     "title": "startup_cost",
                     "description": "Device start up cost ",
@@ -492,16 +497,6 @@
                             }
                         ]
                     }
-                },
-                "energy_req_ub": {
-                    "title": "energy_req_ub",
-                    "description": "Array of energy upper bound requirement data blocks, where each  data block is an array with exactly three elements:  1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and  3) maximum energy within the interval ",
-                    "type": "number"
-                },
-                "energy_req_lb": {
-                    "title": "energy_req_lb",
-                    "description": "Array of energy lower bound requirement data blocks, where each  data block is an array with exactly three elements:  1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and  3) minimum energy within the interval ",
-                    "type": "number"
                 },
                 "on_cost": {
                     "title": "on_cost",
@@ -664,8 +659,6 @@
                 "startup_cost",
                 "shutdown_cost",
                 "startups_ub",
-                "energy_req_ub",
-                "energy_req_lb",
                 "on_cost",
                 "in_service_time_lb",
                 "down_time_lb",
@@ -1447,25 +1440,6 @@
                         "type": "number"
                     }
                 },
-                "cost": {
-                    "title": "cost",
-                    "description": "Array of cost blocks where   each cost block is an array with exactly two elements:     1) marginal  cost (\\$/p.u.-hr), and 2) block size (p.u.) ",
-                    "type": "array",
-                    "items": {
-                        "type": "array",
-                        "items": {
-                            "type": "array",
-                            "items": [
-                                {
-                                    "type": "number"
-                                },
-                                {
-                                    "type": "number"
-                                }
-                            ]
-                        }
-                    }
-                },
                 "p_reg_res_up_cost": {
                     "title": "p_reg_res_up_cost",
                     "description": "Costs for regulation reserve up (\\$/pu-h)  ",
@@ -1555,7 +1529,6 @@
                 "p_lb",
                 "q_ub",
                 "q_lb",
-                "cost",
                 "p_reg_res_up_cost",
                 "p_reg_res_down_cost",
                 "p_syn_res_cost",
@@ -1641,15 +1614,15 @@
                         "$ref": "#/definitions/datamodel__input__timeseries__DispatchableDevices_SimpleProducingConsumingDevices"
                     }
                 },
-                "active_regional_reserve": {
-                    "title": "active_regional_reserve",
+                "active_zonal_reserve": {
+                    "title": "active_zonal_reserve",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/datamodel__input__timeseries__ZonalReserveRequirementsViolationCosts"
                     }
                 },
-                "reactive_regional_reserve": {
-                    "title": "reactive_regional_reserve",
+                "reactive_zonal_reserve": {
+                    "title": "reactive_zonal_reserve",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/datamodel__input__timeseries__ZonalReserveRequirementsViolationCosts"
@@ -1659,8 +1632,8 @@
             "required": [
                 "general",
                 "simple_dispatchable_device",
-                "active_regional_reserve",
-                "reactive_regional_reserve"
+                "active_zonal_reserve",
+                "reactive_zonal_reserve"
             ],
             "additionalProperties": false
         }
