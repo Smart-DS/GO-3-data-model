@@ -195,6 +195,7 @@ types_map = {
     "Array of Binary": "List[bool]",
     "Array of String": "List[str]",
     "Array of Array of Float Float": "List[List[Tuple[float,float]]]",
+    "Array of Array of Float Float Float": "List[List[Tuple[float,float,float]]]",
     "Array of Float Float Int": "List[Tuple[float,float,int]]",
     "String": "str",
     "Timestamp": "str",
@@ -377,12 +378,8 @@ def get_object_from_subsection(object_name, astr, object_ref, object_preamble, i
         elif key == "actransmissionline":
             obj_ref_map["acline"] = obj_ref_map.pop("actransmissionline")
         elif key == "zonalreserverequirementsviolationcosts":
-            if object_name == 'Network':
-                obj_ref_map["activezonalreserve"] = obj_ref_map.pop("zonalreserverequirementsviolationcosts") 
-                obj_ref_map["reactivezonalreserve"] = obj_ref_map["activezonalreserve"]
-            if object_name == 'TimeSeriesInput':
-                obj_ref_map["activeregionalreserve"] = obj_ref_map.pop("zonalreserverequirementsviolationcosts")  
-                obj_ref_map["reactiveregionalreserve"] = obj_ref_map["activeregionalreserve"]
+            obj_ref_map["activezonalreserve"] = obj_ref_map.pop("zonalreserverequirementsviolationcosts") 
+            obj_ref_map["reactivezonalreserve"] = obj_ref_map["activezonalreserve"]
         elif key == "subdeviceunitsformultimodeproducingconsumingdevices":
             obj_ref_map["subdevice"] = obj_ref_map.pop("subdeviceunitsformultimodeproducingconsumingdevices")        
         # TODO: storage devices
