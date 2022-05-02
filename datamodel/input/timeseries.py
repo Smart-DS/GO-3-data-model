@@ -68,8 +68,6 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
 
     # 
 
-    # 
-
     # Flags for extra parameters
 
     # \end{tabular}
@@ -117,11 +115,6 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
     )
 
     # 
-
-    cost: List[List[Tuple[float,float]]] = Field(
-        title = "cost",
-        description = "Array of cost blocks where   each cost block is an array with exactly two elements:     1) marginal  cost (\$/p.u.-hr), and 2) block size (p.u.) "
-    )
 
     # \end{tabular}
 
@@ -206,6 +199,8 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
     # Reactive cap. attributes
 
     # Reactive cap. attributes
+
+    # 
 
     # 
 

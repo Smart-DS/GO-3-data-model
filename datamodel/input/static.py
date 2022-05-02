@@ -366,6 +366,11 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
         description = "Voltage magnitude setpoint "
     )
 
+    nameplate_capacity: Optional[float] = Field(
+        title = "nameplate_capacity",
+        description = "Reference capacity "
+    )
+
     startup_cost: float = Field(
         title = "startup_cost",
         description = "Device start up cost "
@@ -382,16 +387,6 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
     )
 
     # 
-
-    energy_req_ub: float = Field(
-        title = "energy_req_ub",
-        description = "Array of energy upper bound requirement data blocks, where each  data block is an array with exactly three elements:  1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and  3) maximum energy within the interval "
-    )
-
-    energy_req_lb: float = Field(
-        title = "energy_req_lb",
-        description = "Array of energy lower bound requirement data blocks, where each  data block is an array with exactly three elements:  1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and  3) minimum energy within the interval "
-    )
 
     on_cost: float = Field(
         title = "on_cost",
@@ -427,8 +422,6 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
         title = "p_shutdown_ramp_ub",
         description = "{(Case: producer) Max production ramp down when shut down (Float, pu/hr)}  {(Case: consumer) Max consumption ramp down when shut down "
     )
-
-    # 
 
     initial_status: DispatchableDevices_SimpleProducingConsumingDevices_initial_status = Field(
         title = "initial_status",
@@ -594,6 +587,8 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
         title = "beta_lb",
         description = "Lower bound for slope of active-reactive capability curve "
     )
+
+    # 
 
     # \end{tabular}
 

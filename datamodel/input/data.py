@@ -9,8 +9,8 @@ from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
 from datamodel.base import BidDSJsonBaseModel
-import datamodel.input.timeseries
 import datamodel.input.static
+import datamodel.input.timeseries
 
 class Network(BidDSJsonBaseModel):
 
@@ -65,12 +65,12 @@ class TimeSeriesInput(BidDSJsonBaseModel):
         title = "simple_dispatchable_device"
     )
 
-    active_regional_reserve: List[datamodel.input.timeseries.ZonalReserveRequirementsViolationCosts] = Field(
-        title = "active_regional_reserve"
+    active_zonal_reserve: List[datamodel.input.timeseries.ZonalReserveRequirementsViolationCosts] = Field(
+        title = "active_zonal_reserve"
     )
 
-    reactive_regional_reserve: List[datamodel.input.timeseries.ZonalReserveRequirementsViolationCosts] = Field(
-        title = "reactive_regional_reserve"
+    reactive_zonal_reserve: List[datamodel.input.timeseries.ZonalReserveRequirementsViolationCosts] = Field(
+        title = "reactive_zonal_reserve"
     )
 
 
