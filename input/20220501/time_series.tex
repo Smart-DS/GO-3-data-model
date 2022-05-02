@@ -25,10 +25,10 @@ The time series JSON object consists of:
     % The object contains a JSON array of subdevices, defined in~\ref{sec:subdevice_time}.
     % \item A \texttt{"storage"} \hl{array}\\
     % The object contains a JSON array of storage devices, defined in~\ref{sec:storage_time}.
-    \item A \texttt{"active\_regional\_reserve"} array\\
-    The object contains a list of active regional reserve requirements, defined in~\ref{sec:reserve_time}.
-    \item A \texttt{"reactive\_regional\_reserve"} array\\
-    The object contains a list of reactive regional reserve requirements, defined in~\ref{sec:reserve_time}.
+    \item A \texttt{"active\_zonal\_reserve"} array\\
+    The object contains a list of active regional/zonal reserve requirements, defined in~\ref{sec:reserve_time}.
+    \item A \texttt{"reactive\_zonal\_reserve"} array\\
+    The object contains a list of reactive regional/zonal reserve requirements, defined in~\ref{sec:reserve_time}.
     \item A \texttt{"development"} object\\
     The object contains development data for ARPA-E Dataset Teams. This section is primarily reserved for development and competitors are not required to process the JSON object. The object may or may not be presented.
     % \item A \texttt{regional\_reserve} object\\
@@ -51,8 +51,8 @@ The time series JSON object consists of:
 "time_series_input”: {
    "general" : {"time_periods": 3, "interval_duration": [1.0, 1.0, 1.0]},
    "simple_dispatchable_device" : [ ... ],
-   "active_regional_reserve" : [ ... ],
-   "reactive_regional_reserve" : [ ... ],
+   "active_zonal_reserve" : [ ... ],
+   "reactive_zonal_reserve" : [ ... ],
    "development" : { ... }
 }
 \end{verbatim}
