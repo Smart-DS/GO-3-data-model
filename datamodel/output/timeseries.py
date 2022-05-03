@@ -42,11 +42,34 @@ class Bus(BidDSJsonBaseModel):
     # 
 
 
-class DispatchableDevices_SimpleProducingConsumingDevices_initial_status(BidDSJsonBaseModel):
-class DispatchableDevices_SimpleProducingConsumingDevices_modes(BidDSJsonBaseModel):
-class DispatchableDevices_SimpleProducingConsumingDevices_modes(BidDSJsonBaseModel):
-class DispatchableDevices_SimpleProducingConsumingDevices_initial_status(BidDSJsonBaseModel):
-class DispatchableDevices_SimpleProducingConsumingDevices_initial_status(BidDSJsonBaseModel):
+class Shunt(BidDSJsonBaseModel):
+
+    # Output attributes
+
+    uid: str = Field(
+        title = "uid",
+        description = "Shunt unique identifier "
+    )
+
+    on_status: List[bool] = Field(
+        title = "on_status",
+        description = "On-off status "
+    )
+
+    step: List[int] = Field(
+        title = "step",
+        description = "Number of step "
+    )
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # 
+
+
 class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
 
     # Output attributes

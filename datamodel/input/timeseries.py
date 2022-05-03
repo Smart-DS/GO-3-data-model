@@ -14,6 +14,11 @@ class General(BidDSJsonBaseModel):
 
     # Global time attributes
 
+    time_periods: int = Field(
+        title = "time_periods",
+        description = "The number of time periods "
+    )
+
     interval_duration: List[float] = Field(
         title = "interval_duration",
         description = "Time duration of the intervals, per time period in hours  "
@@ -30,33 +35,6 @@ class General(BidDSJsonBaseModel):
     # 
 
 
-class DispatchableDevices_SimpleProducingConsumingDevices_initial_status(BidDSJsonBaseModel):
-
-    on_status: int = Field(
-        title = "on_status",
-        description = "On status indicator for initial time step ",
-        options = [0, 1]
-    )
-
-    p: float = Field(
-        title = "p",
-        description = "{ (Case: producer) Active production for initial time step (Float, p.u.) } { (Case: consumer) Active consumption for initial time step "
-    )
-
-    q: float = Field(
-        title = "q",
-        description = "{ (Case: producer) Reactive production for initial time step (Float, p.u.) } { (Case: consumer) Reactive consumption for initial time step "
-    )
-
-    accu_down_time: float = Field(
-        title = "accu_down_time",
-        description = "Accumulated down time "
-    )
-
-    accu_up_time: float = Field(
-        title = "accu_up_time",
-        description = "Accumulated up time "
-    )
 class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
 
     # Device attributes
@@ -115,6 +93,11 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
     )
 
     # 
+
+    cost: List[List[Tuple[float,float]]] = Field(
+        title = "cost",
+        description = "Array of cost blocks, where   each cost block is an array with exactly two elements:     1) marginal  cost (\$/p.u.-hr), and 2) block size (p.u.) "
+    )
 
     # \end{tabular}
 
@@ -194,14 +177,6 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
 
     # \begin{tabular}{ l | l | c | c | c |}
 
-    # Initial condition attributes
-
-    # Reactive cap. attributes
-
-    # Reactive cap. attributes
-
-    # 
-
     # 
 
     # \end{tabular}
@@ -213,9 +188,9 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
     # 
 
 
-class ZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
+class ActiveZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
 
-    # Active zonal reserve attributes
+    # Input attributes
 
     uid: str = Field(
         title = "uid",
@@ -238,13 +213,10 @@ class ZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
 
     # 
 
-    # \begin{center}
 
-    # \small
+class ReactiveZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
 
-    # \begin{tabular}{ l | l | c | c | c |}
-
-    # Reactive zonal reserve attributes
+    # Input attributes
 
     uid: str = Field(
         title = "uid",

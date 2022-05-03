@@ -46,11 +46,11 @@ class Network(BidDSJsonBaseModel):
         title = "dc_line"
     )
 
-    active_zonal_reserve: List[datamodel.input.static.ZonalReserveRequirementsViolationCosts] = Field(
+    active_zonal_reserve: List[datamodel.input.static.ActiveZonalReserveRequirementsViolationCosts] = Field(
         title = "active_zonal_reserve"
     )
 
-    reactive_zonal_reserve: List[datamodel.input.static.ZonalReserveRequirementsViolationCosts] = Field(
+    reactive_zonal_reserve: List[datamodel.input.static.ReactiveZonalReserveRequirementsViolationCosts] = Field(
         title = "reactive_zonal_reserve"
     )
 
@@ -65,11 +65,11 @@ class TimeSeriesInput(BidDSJsonBaseModel):
         title = "simple_dispatchable_device"
     )
 
-    active_zonal_reserve: List[datamodel.input.timeseries.ZonalReserveRequirementsViolationCosts] = Field(
+    active_zonal_reserve: List[datamodel.input.timeseries.ActiveZonalReserveRequirementsViolationCosts] = Field(
         title = "active_zonal_reserve"
     )
 
-    reactive_zonal_reserve: List[datamodel.input.timeseries.ZonalReserveRequirementsViolationCosts] = Field(
+    reactive_zonal_reserve: List[datamodel.input.timeseries.ReactiveZonalReserveRequirementsViolationCosts] = Field(
         title = "reactive_zonal_reserve"
     )
 

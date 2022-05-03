@@ -265,16 +265,6 @@
                             "$ref": "#/definitions/Bus_initial_status"
                         }
                     ]
-                },
-                "vm": {
-                    "title": "vm",
-                    "description": "Bus voltage magnitude ",
-                    "type": "number"
-                },
-                "va": {
-                    "title": "va",
-                    "description": "Bus voltage angle     ",
-                    "type": "number"
                 }
             },
             "required": [
@@ -283,9 +273,7 @@
                 "vm_lb",
                 "active_reserve_uids",
                 "reactive_reserve_uids",
-                "initial_status",
-                "vm",
-                "va"
+                "initial_status"
             ],
             "additionalProperties": false
         },
@@ -358,20 +346,6 @@
                             "$ref": "#/definitions/Shunt_initial_status"
                         }
                     ]
-                },
-                "on_status": {
-                    "title": "on_status",
-                    "description": "On-off status ",
-                    "options": [
-                        0,
-                        1
-                    ],
-                    "type": "integer"
-                },
-                "step": {
-                    "title": "step",
-                    "description": "Number of step ",
-                    "type": "integer"
                 }
             },
             "required": [
@@ -381,9 +355,7 @@
                 "bs",
                 "step_ub",
                 "step_lb",
-                "initial_status",
-                "on_status",
-                "step"
+                "initial_status"
             ],
             "additionalProperties": false
         },
@@ -498,6 +470,50 @@
                         ]
                     }
                 },
+                "energy_req_ub": {
+                    "title": "energy_req_ub",
+                    "description": "Array of energy upper bound requirement data blocks, where each  data block is an array with exactly three elements:  1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and  3) maximum energy within the interval (Float, p.u.) ",
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": [
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "number"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "energy_req_lb": {
+                    "title": "energy_req_lb",
+                    "description": "Array of energy lower bound requirement data blocks, where each  data block is an array with exactly three elements:  1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and  3) minimum energy within the interval (Float, p.u.) ",
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": [
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "number"
+                                }
+                            ]
+                        }
+                    }
+                },
                 "on_cost": {
                     "title": "on_cost",
                     "description": "Device fixed operating cost ",
@@ -591,65 +607,6 @@
                     "title": "p_ramp_res_down_offline_ub",
                     "description": "Maximum ramp down reserve when offline ",
                     "type": "number"
-                },
-                "on_status": {
-                    "title": "on_status",
-                    "description": "On status indicator for initial time step ",
-                    "options": [
-                        0,
-                        1
-                    ],
-                    "type": "integer"
-                },
-                "p": {
-                    "title": "p",
-                    "description": "{ (Case: producer) Active production for initial time step (Float, p.u.) } { (Case: consumer) Active consumption for initial time step ",
-                    "type": "number"
-                },
-                "q": {
-                    "title": "q",
-                    "description": "{ (Case: producer) Reactive production for initial time step (Float, p.u.) } { (Case: consumer) Reactive consumption for initial time step ",
-                    "type": "number"
-                },
-                "accu_down_time": {
-                    "title": "accu_down_time",
-                    "description": "Accumulated down time ",
-                    "type": "number"
-                },
-                "accu_up_time": {
-                    "title": "accu_up_time",
-                    "description": "Accumulated up time ",
-                    "type": "number"
-                },
-                "q_0": {
-                    "title": "q_0",
-                    "description": "{ (Case: producer) Reactive production at zero active production (Float, p.u.) } { (Case: consumer) Reactive consumption at zero active consumption ",
-                    "type": "number"
-                },
-                "beta": {
-                    "title": "beta",
-                    "description": "Slope of active-reactive capability curve ",
-                    "type": "number"
-                },
-                "q_0_ub": {
-                    "title": "q_0_ub",
-                    "description": "{ (Case: producer) Max reactive production at zero active production (Float, p.u.)}  { (Case: consumer) Max reactive consumption at zero active consumption ",
-                    "type": "number"
-                },
-                "q_0_lb": {
-                    "title": "q_0_lb",
-                    "description": "{ (Case: producer) Min reactive production at zero active production (Float, p.u.)}  { (Case: consumer) Min reactive consumption at zero active consumption ",
-                    "type": "number"
-                },
-                "beta_ub": {
-                    "title": "beta_ub",
-                    "description": "Upper bound for slope of active-reactive capability curve ",
-                    "type": "number"
-                },
-                "beta_lb": {
-                    "title": "beta_lb",
-                    "description": "Lower bound for slope of active-reactive capability curve ",
-                    "type": "number"
                 }
             },
             "required": [
@@ -659,6 +616,8 @@
                 "startup_cost",
                 "shutdown_cost",
                 "startups_ub",
+                "energy_req_ub",
+                "energy_req_lb",
                 "on_cost",
                 "in_service_time_lb",
                 "down_time_lb",
@@ -676,18 +635,7 @@
                 "p_ramp_res_up_online_ub",
                 "p_ramp_res_down_online_ub",
                 "p_ramp_res_up_offline_ub",
-                "p_ramp_res_down_offline_ub",
-                "on_status",
-                "p",
-                "q",
-                "accu_down_time",
-                "accu_up_time",
-                "q_0",
-                "beta",
-                "q_0_ub",
-                "q_0_lb",
-                "beta_ub",
-                "beta_lb"
+                "p_ramp_res_down_offline_ub"
             ],
             "additionalProperties": false
         },
@@ -789,31 +737,6 @@
                         1
                     ],
                     "type": "integer"
-                },
-                "g_fr": {
-                    "title": "g_fr",
-                    "description": "Conductance for shunt component at from bus ",
-                    "type": "number"
-                },
-                "b_fr": {
-                    "title": "b_fr",
-                    "description": "Susceptance for shunt component at from bus ",
-                    "type": "number"
-                },
-                "g_to": {
-                    "title": "g_to",
-                    "description": "Conductance for shunt component at to bus ",
-                    "type": "number"
-                },
-                "b_to": {
-                    "title": "b_to",
-                    "description": "Susceptance for shunt component at to bus ",
-                    "type": "number"
-                },
-                "on_status": {
-                    "title": "on_status",
-                    "description": "Connection status ",
-                    "type": "boolean"
                 }
             },
             "required": [
@@ -829,12 +752,7 @@
                 "connection_cost",
                 "disconnection_cost",
                 "initial_status",
-                "additional_shunt",
-                "g_fr",
-                "b_fr",
-                "g_to",
-                "b_to",
-                "on_status"
+                "additional_shunt"
             ],
             "additionalProperties": false
         },
@@ -968,41 +886,6 @@
                         1
                     ],
                     "type": "integer"
-                },
-                "g_fr": {
-                    "title": "g_fr",
-                    "description": "Conductance for shunt component at from bus ",
-                    "type": "number"
-                },
-                "b_fr": {
-                    "title": "b_fr",
-                    "description": "Susceptance for shunt component at from bus ",
-                    "type": "number"
-                },
-                "g_to": {
-                    "title": "g_to",
-                    "description": "Conductance for shunt component at to bus ",
-                    "type": "number"
-                },
-                "b_to": {
-                    "title": "b_to",
-                    "description": "Susceptance for shunt component at to bus ",
-                    "type": "number"
-                },
-                "on_status": {
-                    "title": "on_status",
-                    "description": "Connection status ",
-                    "type": "boolean"
-                },
-                "tm": {
-                    "title": "tm",
-                    "description": "Off-nominal tap ratio (p.u.) ",
-                    "type": "number"
-                },
-                "ta": {
-                    "title": "ta",
-                    "description": "Phase shifting angle (radian) ",
-                    "type": "number"
                 }
             },
             "required": [
@@ -1022,14 +905,7 @@
                 "connection_cost",
                 "disconnection_cost",
                 "initial_status",
-                "additional_shunt",
-                "g_fr",
-                "b_fr",
-                "g_to",
-                "b_to",
-                "on_status",
-                "tm",
-                "ta"
+                "additional_shunt"
             ],
             "additionalProperties": false
         },
@@ -1140,26 +1016,6 @@
                             "$ref": "#/definitions/DCLine_initial_status"
                         }
                     ]
-                },
-                "on_status": {
-                    "title": "on_status",
-                    "description": "Connection status ",
-                    "type": "boolean"
-                },
-                "pdc_fr": {
-                    "title": "pdc_fr",
-                    "description": "Active power flow, from bus ",
-                    "type": "number"
-                },
-                "qdc_fr": {
-                    "title": "qdc_fr",
-                    "description": "Reactive power flow, from bus ",
-                    "type": "number"
-                },
-                "qdc_to": {
-                    "title": "qdc_to",
-                    "description": "Reactive power flow, to bus ",
-                    "type": "number"
                 }
             },
             "required": [
@@ -1175,22 +1031,18 @@
                 "standby_cost",
                 "connection_cost",
                 "disconnection_cost",
-                "initial_status",
-                "on_status",
-                "pdc_fr",
-                "qdc_fr",
-                "qdc_to"
+                "initial_status"
             ],
             "additionalProperties": false
         },
-        "datamodel__input__static__ZonalReserveRequirementsViolationCosts": {
+        "datamodel__input__static__ActiveZonalReserveRequirementsViolationCosts": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
             "properties": {
                 "uid": {
                     "title": "uid",
-                    "description": "Region reserve unique identifier ",
+                    "description": "Zone reserve unique identifier ",
                     "type": "string"
                 },
                 "REG_UP": {
@@ -1242,6 +1094,32 @@
                     "title": "RAMPING_RESERVE_DOWN_vio_cost",
                     "description": "Flexible-ramp down violation cost ",
                     "type": "number"
+                }
+            },
+            "required": [
+                "uid",
+                "REG_UP",
+                "REG_DOWN",
+                "SYN",
+                "NSYN",
+                "REG_UP_vio_cost",
+                "REG_DOWN_vio_cost",
+                "SYN_vio_cost",
+                "NSYN_vio_cost",
+                "RAMPING_RESERVE_UP_vio_cost",
+                "RAMPING_RESERVE_DOWN_vio_cost"
+            ],
+            "additionalProperties": false
+        },
+        "datamodel__input__static__ReactiveZonalReserveRequirementsViolationCosts": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "Region reserve unique identifier ",
+                    "type": "string"
                 },
                 "REACT_UP_vio_cost": {
                     "title": "REACT_UP_vio_cost",
@@ -1256,16 +1134,6 @@
             },
             "required": [
                 "uid",
-                "REG_UP",
-                "REG_DOWN",
-                "SYN",
-                "NSYN",
-                "REG_UP_vio_cost",
-                "REG_DOWN_vio_cost",
-                "SYN_vio_cost",
-                "NSYN_vio_cost",
-                "RAMPING_RESERVE_UP_vio_cost",
-                "RAMPING_RESERVE_DOWN_vio_cost",
                 "REACT_UP_vio_cost",
                 "REACT_DOWN_vio_cost"
             ],
@@ -1338,14 +1206,14 @@
                     "title": "active_zonal_reserve",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/datamodel__input__static__ZonalReserveRequirementsViolationCosts"
+                        "$ref": "#/definitions/datamodel__input__static__ActiveZonalReserveRequirementsViolationCosts"
                     }
                 },
                 "reactive_zonal_reserve": {
                     "title": "reactive_zonal_reserve",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/datamodel__input__static__ZonalReserveRequirementsViolationCosts"
+                        "$ref": "#/definitions/datamodel__input__static__ReactiveZonalReserveRequirementsViolationCosts"
                     }
                 }
             },
@@ -1368,6 +1236,11 @@
             "description": "Base data model for all dsgrid data models",
             "type": "object",
             "properties": {
+                "time_periods": {
+                    "title": "time_periods",
+                    "description": "The number of time periods ",
+                    "type": "integer"
+                },
                 "interval_duration": {
                     "title": "interval_duration",
                     "description": "Time duration of the intervals, per time period in hours  ",
@@ -1378,6 +1251,7 @@
                 }
             },
             "required": [
+                "time_periods",
                 "interval_duration"
             ],
             "additionalProperties": false
@@ -1438,6 +1312,25 @@
                     "type": "array",
                     "items": {
                         "type": "number"
+                    }
+                },
+                "cost": {
+                    "title": "cost",
+                    "description": "Array of cost blocks, where   each cost block is an array with exactly two elements:     1) marginal  cost (\\$/p.u.-hr), and 2) block size (p.u.) ",
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": [
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "number"
+                                }
+                            ]
+                        }
                     }
                 },
                 "p_reg_res_up_cost": {
@@ -1529,6 +1422,7 @@
                 "p_lb",
                 "q_ub",
                 "q_lb",
+                "cost",
                 "p_reg_res_up_cost",
                 "p_reg_res_down_cost",
                 "p_syn_res_cost",
@@ -1542,14 +1436,14 @@
             ],
             "additionalProperties": false
         },
-        "datamodel__input__timeseries__ZonalReserveRequirementsViolationCosts": {
+        "datamodel__input__timeseries__ActiveZonalReserveRequirementsViolationCosts": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
             "properties": {
                 "uid": {
                     "title": "uid",
-                    "description": "Region reserve unique identifier ",
+                    "description": "Zone reserve unique identifier ",
                     "type": "string"
                 },
                 "RAMPING_RESERVE_UP": {
@@ -1567,6 +1461,24 @@
                     "items": {
                         "type": "number"
                     }
+                }
+            },
+            "required": [
+                "uid",
+                "RAMPING_RESERVE_UP",
+                "RAMPING_RESERVE_DOWN"
+            ],
+            "additionalProperties": false
+        },
+        "datamodel__input__timeseries__ReactiveZonalReserveRequirementsViolationCosts": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "Region reserve unique identifier ",
+                    "type": "string"
                 },
                 "REACT_UP": {
                     "title": "REACT_UP",
@@ -1587,8 +1499,6 @@
             },
             "required": [
                 "uid",
-                "RAMPING_RESERVE_UP",
-                "RAMPING_RESERVE_DOWN",
                 "REACT_UP",
                 "REACT_DOWN"
             ],
@@ -1618,14 +1528,14 @@
                     "title": "active_zonal_reserve",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/datamodel__input__timeseries__ZonalReserveRequirementsViolationCosts"
+                        "$ref": "#/definitions/datamodel__input__timeseries__ActiveZonalReserveRequirementsViolationCosts"
                     }
                 },
                 "reactive_zonal_reserve": {
                     "title": "reactive_zonal_reserve",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/datamodel__input__timeseries__ZonalReserveRequirementsViolationCosts"
+                        "$ref": "#/definitions/datamodel__input__timeseries__ReactiveZonalReserveRequirementsViolationCosts"
                     }
                 }
             },

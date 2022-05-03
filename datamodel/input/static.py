@@ -221,18 +221,6 @@ class Bus(BidDSJsonBaseModel):
         description = "A JSON inner object storing data   for initial time step "
     )
 
-    # Initial condition attributes
-
-    vm: float = Field(
-        title = "vm",
-        description = "Bus voltage magnitude "
-    )
-
-    va: float = Field(
-        title = "va",
-        description = "Bus voltage angle     "
-    )
-
     # \end{tabular}
 
     # \end{center}
@@ -287,19 +275,6 @@ class Shunt(BidDSJsonBaseModel):
     initial_status: Shunt_initial_status = Field(
         title = "initial_status",
         description = "A JSON inner object storing data   for initial time step "
-    )
-
-    # Initial condition attributes
-
-    on_status: int = Field(
-        title = "on_status",
-        description = "On-off status ",
-        options = [0, 1]
-    )
-
-    step: int = Field(
-        title = "step",
-        description = "Number of step "
     )
 
     # \end{tabular}
@@ -387,6 +362,16 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
     )
 
     # 
+
+    energy_req_ub: List[List[Tuple[float,float,float]]] = Field(
+        title = "energy_req_ub",
+        description = "Array of energy upper bound requirement data blocks, where each  data block is an array with exactly three elements:  1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and  3) maximum energy within the interval (Float, p.u.) "
+    )
+
+    energy_req_lb: List[List[Tuple[float,float,float]]] = Field(
+        title = "energy_req_lb",
+        description = "Array of energy lower bound requirement data blocks, where each  data block is an array with exactly three elements:  1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and  3) minimum energy within the interval (Float, p.u.) "
+    )
 
     on_cost: float = Field(
         title = "on_cost",
@@ -524,70 +509,6 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
 
     # \begin{tabular}{ l | l | c | c | c |}
 
-    # Initial condition attributes
-
-    on_status: int = Field(
-        title = "on_status",
-        description = "On status indicator for initial time step ",
-        options = [0, 1]
-    )
-
-    p: float = Field(
-        title = "p",
-        description = "{ (Case: producer) Active production for initial time step (Float, p.u.) } { (Case: consumer) Active consumption for initial time step "
-    )
-
-    q: float = Field(
-        title = "q",
-        description = "{ (Case: producer) Reactive production for initial time step (Float, p.u.) } { (Case: consumer) Reactive consumption for initial time step "
-    )
-
-    accu_down_time: float = Field(
-        title = "accu_down_time",
-        description = "Accumulated down time "
-    )
-
-    accu_up_time: float = Field(
-        title = "accu_up_time",
-        description = "Accumulated up time "
-    )
-
-    # Reactive cap. attributes
-
-    q_0: float = Field(
-        title = "q_0",
-        description = "{ (Case: producer) Reactive production at zero active production (Float, p.u.) } { (Case: consumer) Reactive consumption at zero active consumption "
-    )
-
-    beta: float = Field(
-        title = "beta",
-        description = "Slope of active-reactive capability curve "
-    )
-
-    # Reactive cap. attributes
-
-    q_0_ub: float = Field(
-        title = "q_0_ub",
-        description = "{ (Case: producer) Max reactive production at zero active production (Float, p.u.)}  { (Case: consumer) Max reactive consumption at zero active consumption "
-    )
-
-    q_0_lb: float = Field(
-        title = "q_0_lb",
-        description = "{ (Case: producer) Min reactive production at zero active production (Float, p.u.)}  { (Case: consumer) Min reactive consumption at zero active consumption "
-    )
-
-    # 
-
-    beta_ub: float = Field(
-        title = "beta_ub",
-        description = "Upper bound for slope of active-reactive capability curve "
-    )
-
-    beta_lb: float = Field(
-        title = "beta_lb",
-        description = "Lower bound for slope of active-reactive capability curve "
-    )
-
     # 
 
     # \end{tabular}
@@ -678,35 +599,6 @@ class ACTransmissionLine(BidDSJsonBaseModel):
         title = "additional_shunt",
         description = "Branch has additional shunt components ",
         options = [0, 1]
-    )
-
-    # Additional shunt attributes
-
-    g_fr: float = Field(
-        title = "g_fr",
-        description = "Conductance for shunt component at from bus "
-    )
-
-    b_fr: float = Field(
-        title = "b_fr",
-        description = "Susceptance for shunt component at from bus "
-    )
-
-    g_to: float = Field(
-        title = "g_to",
-        description = "Conductance for shunt component at to bus "
-    )
-
-    b_to: float = Field(
-        title = "b_to",
-        description = "Susceptance for shunt component at to bus "
-    )
-
-    # Initial condition attributes
-
-    on_status: bool = Field(
-        title = "on_status",
-        description = "Connection status "
     )
 
     # \end{tabular}
@@ -849,45 +741,6 @@ class TwoWindingTransformer(BidDSJsonBaseModel):
 
     # \begin{tabular}{ l | l | c | c | c |}
 
-    # Additional shunt attributes
-
-    g_fr: float = Field(
-        title = "g_fr",
-        description = "Conductance for shunt component at from bus "
-    )
-
-    b_fr: float = Field(
-        title = "b_fr",
-        description = "Susceptance for shunt component at from bus "
-    )
-
-    g_to: float = Field(
-        title = "g_to",
-        description = "Conductance for shunt component at to bus "
-    )
-
-    b_to: float = Field(
-        title = "b_to",
-        description = "Susceptance for shunt component at to bus "
-    )
-
-    # Initial condition attributes
-
-    on_status: bool = Field(
-        title = "on_status",
-        description = "Connection status "
-    )
-
-    tm: float = Field(
-        title = "tm",
-        description = "Off-nominal tap ratio (p.u.) "
-    )
-
-    ta: float = Field(
-        title = "ta",
-        description = "Phase shifting angle (radian) "
-    )
-
     # \end{tabular}
 
     # \end{center}
@@ -991,28 +844,6 @@ class DCLine(BidDSJsonBaseModel):
         description = "A JSON inner object storing data   for initial time step "
     )
 
-    # Initial condition attributes
-
-    on_status: bool = Field(
-        title = "on_status",
-        description = "Connection status "
-    )
-
-    pdc_fr: float = Field(
-        title = "pdc_fr",
-        description = "Active power flow, from bus "
-    )
-
-    qdc_fr: float = Field(
-        title = "qdc_fr",
-        description = "Reactive power flow, from bus "
-    )
-
-    qdc_to: float = Field(
-        title = "qdc_to",
-        description = "Reactive power flow, to bus "
-    )
-
     # \end{tabular}
 
     # \end{center}
@@ -1020,9 +851,9 @@ class DCLine(BidDSJsonBaseModel):
     # 
 
 
-class ZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
+class ActiveZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
 
-    # Active zonal reserve attributes
+    # Input attributes
 
     uid: str = Field(
         title = "uid",
@@ -1085,13 +916,10 @@ class ZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
 
     # 
 
-    # \begin{center}
 
-    # \small
+class ReactiveZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
 
-    # \begin{tabular}{ l | l | c | c | c |}
-
-    # Reactive zonal reserve attributes
+    # Input attributes
 
     uid: str = Field(
         title = "uid",
