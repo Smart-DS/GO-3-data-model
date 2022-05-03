@@ -124,7 +124,7 @@ used by the input data format are listed below.
 \begin{tabular}{ l | p{3.5in} | c | c | c |}
 Global time attributes & Description (Type) & Req & Sec & Sym\\
 \hline
-  {\tt time\_periods} & The number of time periods (Array of Int) & Y & T & $\lvert T \rvert$ \\
+  {\tt time\_periods} & The number of time periods (Int) & Y & T & $\lvert T \rvert$ \\
   {\tt interval\_duration} & Time duration of the intervals, per time period in hours & Y & T & $d_t$ \\
                            & (Array of Float) &  &  & \\
                            \hline
@@ -307,11 +307,11 @@ Device attributes & Description (Type) & Req & Sec & Sym\\
   {\tt energy\_req\_ub} & Array of energy upper bound requirement data blocks, where each & Y & S & \\
                         & data block is an array with exactly three elements: &   &   & \\
                         & 1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and &   &   & { $t^{max}, t^{min}$}\\
-                        & 3) maximum energy within the interval (Float, p.u.) (Array of Float Float Float) &   &   & { $e^{max}$ }\\
+                        & 3) maximum energy within the interval (Float, p.u.) (Array of Array of Float Float Float) &   &   & { $e^{max}$ }\\
   {\tt energy\_req\_lb} & Array of energy lower bound requirement data blocks, where each & Y & S &  \\
                         & data block is an array with exactly three elements: &   &   & \\
                         & 1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and &   &   & { $t^{max}, t^{min}$}\\
-                        & 3) minimum energy within the interval (Float, p.u.) (Array of Float Float Float) &   &   & { $e^{min}$}\\                               
+                        & 3) minimum energy within the interval (Float, p.u.) (Array of Array of Float Float Float) &   &   & { $e^{min}$}\\                               
   {\tt on\_cost} & Device fixed operating cost (Float) & Y & S & $c^{on}$\\
   {\tt in\_service\_time\_lb} & Minimum uptime in service (Float, hr) & Y & S & $d^{up,min}$\\
   {\tt down\_time\_lb} & Minimum downtime (Float, hr) & Y & S & $d^{dn,min}$\\
@@ -356,7 +356,7 @@ Device attributes & --- Time varying operational attributes &Req &Sec &Sym \\
 
   {\tt cost} &  Array of cost blocks, where & Y & T &  \\
     &  each cost block is an array with exactly two elements:   &  &   &  \\
-    &  1) marginal  cost (\$/p.u.-hr), and 2) block size (p.u.) (Array of Array of Float) &  &   &$c^{en}, p^{max}$ \\
+    &  1) marginal  cost (\$/p.u.-hr), and 2) block size (p.u.) (Array of Array of Float Float) &  &   &$c^{en}, p^{max}$ \\
 \hline
 \end{tabular}
 \end{center}
@@ -426,7 +426,6 @@ Device attributes & --- Time varying operational attributes &Req &Sec &Sym \\
                            & { (Case: consumer) Max reactive consumption at zero active consumption (Float, p.u.)} & Y & S & $q^{max,p0}$\\
   {\tt q\_0\_lb}           & { (Case: producer) Min reactive production at zero active production (Float, p.u.)} & Y & S & $q^{min,p0}$\\
                            & { (Case: consumer) Min reactive consumption at zero active consumption (Float, p.u.)} & Y & S & $q^{min,p0}$\\
-
   {\tt beta\_ub}      & Upper bound for slope of active-reactive capability curve (Float) & Y & S & $\beta^{max}$\\
   {\tt beta\_lb}      & Lower bound for slope of active-reactive capability curve (Float) & Y & S & $\beta^{min}$\\
   \hline
@@ -766,7 +765,7 @@ Input attributes & Description (Type)& Req & Sec & Sym\\
        & for initial time step (initial\_status) &  &  &  \\
   {\tt additional\_shunt} & Branch has additional shunt components (Binary: 0/1)& Y & S & \\
   \hline
-  Additional shunt attributes & Exist if {\tt additional\_shunt} is 1 &  & & \\
+  Additional shunt attributes & [Conditional Attributes] Exist if {\tt additional\_shunt} is 1 &  & & \\
   \hline
  % \sout{\tt\color{red} b\_sr} & AC line series   susceptance (Float, p.u.)& Y & S & $b^{sr}$\\
  % \sout{\tt\color{red} g\_sr} & AC line series   condutance  (Float, p.u.)& Y & S & $g^{sr}$\\
@@ -873,7 +872,7 @@ Input attributes & Description (Type) & Req & Sec & Sym\\
 \begin{center}
 \small
 \begin{tabular}{ l | l | c | c | c |}
-  Additional shunt attributes & Exist if {\tt additional\_shunt} is 1 &  & & \\
+  Additional shunt attributes & [Conditional Attributes] Exist if {\tt additional\_shunt} is 1 &  & & \\
   \hline
 %  {\tt\color{red} b\_sr} & Additional series susceptance (Float, p.u.)& Y & S & $b^{sr}$\\
 %  {\tt\color{red} g\_sr} & Additional series condutance  (Float, p.u.)& Y & S & $g^{sr}$\\
@@ -997,8 +996,8 @@ Output attributes & Description (Type) & Req & Sec & Sym\\
 \end{tabular}
 \end{center}
 
-\subsection{Zonal Reserve ---  Requirements \& Violation Costs}
-\label{nom:reserves}
+\subsection{Active Zonal Reserve ---  Requirements \& Violation Costs}
+\label{nom:reserves_active}
 
 \paragraph{Input Attributes}
 The attributes for zonal reserves
@@ -1008,7 +1007,7 @@ Names, descriptions, and types for each of the attributes are shown.
 \begin{center}
 \small
 \begin{tabular}{ l | l | c | c | c |}
-Active zonal reserve attributes & Description (Type) & Req & Sec & Sym\\
+Input attributes & Description (Type) & Req & Sec & Sym\\
 \hline
   {\tt uid} & Zone reserve unique identifier (String) & Y & B & \\
   \hline
@@ -1034,10 +1033,19 @@ Active zonal reserve attributes & Description (Type) & Req & Sec & Sym\\
 \end{tabular}
 \end{center}
 
+\subsection{Reactive Zonal Reserve ---  Requirements \& Violation Costs}
+\label{nom:reserves_reactive}
+
+\paragraph{Input Attributes}
+The attributes for zonal reserves
+used by the data format are listed below.
+Names, descriptions, and types for each of the attributes are shown.
+
+
 \begin{center}
 \small
 \begin{tabular}{ l | l | c | c | c |}
-Reactive zonal reserve attributes & Description (Type) & Req & Sec & Sym\\
+Input attributes & Description (Type) & Req & Sec & Sym\\
 \hline
   {\tt uid} & Region reserve unique identifier (String) & Y & B & \\
   \hline
