@@ -352,7 +352,7 @@ def create_models(format_docs_dir, input_objects, output_objects):
             subsections = _split(file_text, r"^\\subsection\{(.+)\}\s*$")
 
             if object_preamble:
-                orig_name = list(subsections.keys())[0] #WARNING - THIS WILL CAUSE PROBLEMS
+                orig_name = list(subsections.keys())[0] 
                 object_name = orig_name.title().replace(" ","")
                 logger.info(f"Creating {object_name} object")
                 obj = get_object_from_subsection(object_name, 

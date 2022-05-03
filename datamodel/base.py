@@ -55,13 +55,10 @@ class BidDSJsonBaseModel(BaseModel):
         filename : str
         """
         filename = Path(filename)
-        base_dir = filename.parent.absolute()
-        orig = os.getcwd()
-        os.chdir(base_dir)
         try:
             # TODO: Check if this validates. If not do a validation
             json_model = cls.dict()
-            with open(filename.name,'w') as file_pointer:
+            with open(filename,'w') as file_pointer:
                 json.dump(json_model,file_pointer,indent=4)
         except ValidationError:
             logger.exception("Failed to validate %s", filename)
