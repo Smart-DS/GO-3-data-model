@@ -476,20 +476,17 @@
                     "type": "array",
                     "items": {
                         "type": "array",
-                        "items": {
-                            "type": "array",
-                            "items": [
-                                {
-                                    "type": "number"
-                                },
-                                {
-                                    "type": "number"
-                                },
-                                {
-                                    "type": "number"
-                                }
-                            ]
-                        }
+                        "items": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "number"
+                            }
+                        ]
                     }
                 },
                 "energy_req_lb": {
@@ -498,20 +495,17 @@
                     "type": "array",
                     "items": {
                         "type": "array",
-                        "items": {
-                            "type": "array",
-                            "items": [
-                                {
-                                    "type": "number"
-                                },
-                                {
-                                    "type": "number"
-                                },
-                                {
-                                    "type": "number"
-                                }
-                            ]
-                        }
+                        "items": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "number"
+                            }
+                        ]
                     }
                 },
                 "on_cost": {

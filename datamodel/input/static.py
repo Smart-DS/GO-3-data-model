@@ -363,12 +363,12 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
 
     # 
 
-    energy_req_ub: List[List[Tuple[float,float,float]]] = Field(
+    energy_req_ub: List[Tuple[float,float,float]] = Field(
         title = "energy_req_ub",
         description = "Array of energy upper bound requirement data blocks, where each  data block is an array with exactly three elements:  1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and  3) maximum energy within the interval (Float, p.u.) "
     )
 
-    energy_req_lb: List[List[Tuple[float,float,float]]] = Field(
+    energy_req_lb: List[Tuple[float,float,float]] = Field(
         title = "energy_req_lb",
         description = "Array of energy lower bound requirement data blocks, where each  data block is an array with exactly three elements:  1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and  3) minimum energy within the interval (Float, p.u.) "
     )
