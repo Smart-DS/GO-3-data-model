@@ -106,12 +106,14 @@ def get_objects_from_table(object_name, astr):
 
     # Create objects that are of json type
     all_lines_new  = []
-    for ln_cnt in range(len(all_lines)):
+    ln_cnt = 0
+    while ln_cnt < len(all_lines):
         ln = all_lines[ln_cnt]
         if '[Inner Attributes]' in ln:
             m = re.match(".*\{\\\\tt\S* (.+)\}.*",ln)
             if not m:
                 logger.warning(f"Unable to extract inner attributes from {ln!r}")
+                ln_cnt+=1
                 continue
             inner_attribute = m.group(1).replace("\\_", "_")
             inner_attribute_formatted = object_name+'_'+inner_attribute
@@ -132,21 +134,46 @@ def get_objects_from_table(object_name, astr):
                     logger.warning(f"unable to parse line {ln!r}")
                 ln_cnt+=1
 
-            timeseries_result += internal_result
-            static_result += internal_result
+            if sec == 'S' or sec == 'B':
+                static_result += internal_result
+            if sec == 'T' or sec == 'B':
+                timeseries_result += internal_result
 
-                
+        elif 'Conditional Attributes]' in ln:
+            m = re.match(".*\{\\\\tt\S* (.+)\}.*",ln)
+            if not m:
+                logger.warning(f"Unable to extract conditional attributes from {ln!r}")
+                ln_cnt+=1
+                continue
+            conditional_attribute = m.group(1).replace("\\_", "_")
+
+            ln_cnt +=2 # skip the new line
+
+            while True: #This is bad practice...
+                ln = all_lines[ln_cnt]
+                if '\hline' in ln:
+                    break
+                sec,field = parse_field(ln,object_name)
+                if field:
+                    if False: #TODO: Find a way to manage the conditional elements based on the conditional_attribute
+                        timeseries_result += conditional_result
+                        static_result += conditional_result
+                else:
+                    logger.warning(f"unable to parse line {ln!r}")
+                ln_cnt+=1
 
 
         else:
             all_lines_new.append(ln)
+
+        ln_cnt+=1
 
     static_result += f"class {object_name}(BidDSJsonBaseModel):\n"
     timeseries_result += f"class {object_name}(BidDSJsonBaseModel):\n"
     has_static = False; has_timeseries = False
 
     table_started = False; expect_meta = True
-    for ln in all_lines:
+    for ln in all_lines_new:
         if not table_started:
             if ln.startswith("\\begin{tabular}"):
                 table_started = True
@@ -189,10 +216,12 @@ def get_objects_from_table(object_name, astr):
 types_map = {
     "uid": "str",
     "uids": "List[str]",
+    "Array of Int": "List[int]",
     "Array of reserve zone uids": "List[str]",
     "Array of cost blocks": "List[float]",
     "Array of Float": "List[float]",
     "Array of Binary": "List[bool]",
+    "Array of Binary: 0/1": "List[bool]",
     "Array of String": "List[str]",
     "Array of Array of Float Float": "List[List[Tuple[float,float]]]",
     "Array of Array of Float Float Float": "List[List[Tuple[float,float,float]]]",
@@ -377,9 +406,10 @@ def get_object_from_subsection(object_name, astr, object_ref, object_preamble, i
             obj_ref_map["multimodedispatchabledevice"] = obj_ref_map.pop("dispatchabledevices_multimodeproducingconsumingdevices")
         elif key == "actransmissionline":
             obj_ref_map["acline"] = obj_ref_map.pop("actransmissionline")
-        elif key == "zonalreserverequirementsviolationcosts":
-            obj_ref_map["activezonalreserve"] = obj_ref_map.pop("zonalreserverequirementsviolationcosts") 
-            obj_ref_map["reactivezonalreserve"] = obj_ref_map["activezonalreserve"]
+        elif key == "activezonalreserverequirementsviolationcosts":
+            obj_ref_map["activezonalreserve"] = obj_ref_map.pop("activezonalreserverequirementsviolationcosts") 
+        elif key == "reactivezonalreserverequirementsviolationcosts":
+            obj_ref_map["reactivezonalreserve"] = obj_ref_map.pop("reactivezonalreserverequirementsviolationcosts") 
         elif key == "subdeviceunitsformultimodeproducingconsumingdevices":
             obj_ref_map["subdevice"] = obj_ref_map.pop("subdeviceunitsformultimodeproducingconsumingdevices")        
         # TODO: storage devices
