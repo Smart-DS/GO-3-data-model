@@ -7,6 +7,7 @@ schema_path = '../../datamodel/schemas/input_data_file_schema.json'
 data_name = 'PSY_RTS_GMLC_data_fixed_load_20220415'
 data_name = 'PSY_RTS_GMLC_data_flex_load_20220415'
 data_name = 'PSY_RTS_GMLC_data_flex_load_20220501'
+data_name = 'PSY_RTS_GMLC_data_flex_load_20220502'
 data_path = data_name+'.json'
 
 output_path = data_name+'_output.json'
