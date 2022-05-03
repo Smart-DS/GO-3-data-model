@@ -6,7 +6,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field, ValidationError
 from pydantic.json import isoformat, timedelta_isoformat
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +45,26 @@ class BidDSJsonBaseModel(BaseModel):
             raise
         finally:
             os.chdir(orig)
+
+    def save(cls, filename):
+        """
+        Save a data model to a file
+        TODO: Valiodate that the model matches the schema (typically an output model)
+        Parameters
+        ----------
+        filename : str
+        """
+        filename = Path(filename)
+        try:
+            # TODO: Check if this validates. If not do a validation
+            json_model = cls.dict()
+            with open(filename,'w') as file_pointer:
+                json.dump(json_model,file_pointer,indent=4)
+        except ValidationError:
+            logger.exception("Failed to validate %s", filename)
+        except IOError:
+            raise(f"Problem writing file {filename}")
+
 
     @classmethod
     def schema_json(cls, by_alias=True, indent=None) -> str:

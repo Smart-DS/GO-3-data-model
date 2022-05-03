@@ -6,7 +6,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field, ValidationError
 from pydantic.json import isoformat, timedelta_isoformat
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union, Tuple
 
 from datamodel.base import BidDSJsonBaseModel
 
@@ -21,111 +21,38 @@ class General(BidDSJsonBaseModel):
 
     interval_duration: List[float] = Field(
         title = "interval_duration",
-        description = "Time duration of the intervals in hours "
+        description = "Time duration of the intervals, per time period in hours  "
     )
+
+    # Qualitative descriptors
 
     # Normalization attributes
-
-
-class ProducingDevices_SingleModeGeneratingUnits(BidDSJsonBaseModel):
-
-    # Input attributes
-
-    uid: str = Field(
-        title = "uid",
-        description = "Producing device unique identifier "
-    )
-
-    on_status_ub: int = Field(
-        title = "on_status_ub",
-        description = "On status indicator upper bound ",
-        options = [0, 1]
-    )
-
-    on_status_lb: int = Field(
-        title = "on_status_lb",
-        description = "On status indicator lower bound ",
-        options = [0, 1]
-    )
-
-    pg_ub: float = Field(
-        title = "pg_ub",
-        description = "Upper bound of active dispatch "
-    )
-
-    pg_lb: float = Field(
-        title = "pg_lb",
-        description = "Lower bound of active dispatch "
-    )
-
-    qg_ub: float = Field(
-        title = "qg_ub",
-        description = "Upper bound of reactive dispatch "
-    )
-
-    qg_lb: float = Field(
-        title = "qg_lb",
-        description = "Lower bound of reactive dispatch "
-    )
-
-    # 
-
-    cost: List[float] = Field(
-        title = "cost",
-        description = "Array of generation cost blocks "
-    )
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # Flags for extra parameters
-
-
-class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
-
-    # Input attributes
-
-    uid: str = Field(
-        title = "uid",
-        description = "Producing device unique identifier "
-    )
-
-    on_status_ub: int = Field(
-        title = "on_status_ub",
-        description = "On status indicator upper bound ",
-        options = [0, 1]
-    )
-
-    on_status_lb: int = Field(
-        title = "on_status_lb",
-        description = "On status indicator lower bound ",
-        options = [0, 1]
-    )
-
-    # 
-
-    # \hline \hline
-
-    # Initial status attributes within:
-
-    # 
-
-    # \hline \hline
-
-    # Flags for extra parameters
-
-    # \hline \hline
 
     # \end{tabular}
 
     # \end{center}
+
+    # 
+
+
+class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
+
+    # Device attributes
+
+    uid: str = Field(
+        title = "uid",
+        description = "Producing device unique identifier "
+    )
+
+    # 
+
+    # Flags for extra parameters
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
 
     # \begin{center}
 
@@ -133,170 +60,186 @@ class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
 
     # \begin{tabular}{ l | l | c | c | c |}
 
-    # Mode attributes
+    # Device attributes
 
-    # \hline \hline
-
-    # Inner mode attributes ---
-
-    uid: str = Field(
-        title = "uid",
-        description = "Mode unique identifier "
+    on_status_ub: List[bool] = Field(
+        title = "on_status_ub",
+        description = "{On status indicator upper bound "
     )
 
-    select_ub: int = Field(
-        title = "select_ub",
-        description = "Mode selection upper bound ",
-        options = [0, 1]
+    on_status_lb: List[bool] = Field(
+        title = "on_status_lb",
+        description = "{On status indicator lower bound "
     )
 
-    select_lb: int = Field(
-        title = "select_lb",
-        description = "Mode selection lower bound ",
-        options = [0, 1]
+    p_ub: List[float] = Field(
+        title = "p_ub",
+        description = "{ (Case: producer) Upper bound of active dispatch (Array of Float)   } { (Case: consumer) Upper bound of active demand   "
     )
 
-    pg_ub: float = Field(
-        title = "pg_ub",
-        description = "Upper bound of active dispatch "
+    p_lb: List[float] = Field(
+        title = "p_lb",
+        description = "{ (Case: producer) Lower bound of active dispatch (Array of Float)    } { (Case: consumer) Lower bound of active demand   "
     )
 
-    pg_lb: float = Field(
-        title = "pg_lb",
-        description = "Lower bound of active dispatch "
+    q_ub: List[float] = Field(
+        title = "q_ub",
+        description = "{ (Case: producer) Upper bound of reactive dispatch (Array of Float)  } { (Case: consumer) Upper bound of reactive demand   "
     )
 
-    qg_ub: float = Field(
-        title = "qg_ub",
-        description = "Upper bound of reactive dispatch "
-    )
-
-    qg_lb: float = Field(
-        title = "qg_lb",
-        description = "Lower bound of reactive dispatch "
+    q_lb: List[float] = Field(
+        title = "q_lb",
+        description = "{ (Case: producer) Lower bound of reactive dispatch (Array of Float)  } { (Case: consumer) Lower bound of reactive demand   "
     )
 
     # 
 
-    cost: List[float] = Field(
+    cost: List[List[Tuple[float,float]]] = Field(
         title = "cost",
-        description = "Array of generation cost blocks "
+        description = "Array of cost blocks, where   each cost block is an array with exactly two elements:     1) marginal  cost (\$/p.u.-hr), and 2) block size (p.u.) "
     )
 
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # \begin{center}
+
+    # \small
+
+    # \begin{tabular}{ l | l | c | c | c |}
+
+    # Reserve attributes
+
+    # Time varying reserve attributes
+
+    p_reg_res_up_cost: List[float] = Field(
+        title = "p_reg_res_up_cost",
+        description = "Costs for regulation reserve up (\$/pu-h)  "
+    )
+
+    p_reg_res_down_cost: List[float] = Field(
+        title = "p_reg_res_down_cost",
+        description = "Costs for regulation reserve down (\$/pu-h) "
+    )
+
+    p_syn_res_cost: List[float] = Field(
+        title = "p_syn_res_cost",
+        description = "Costs for synchronized reserve (\$/pu-h)  "
+    )
+
+    p_nsyn_res_cost: List[float] = Field(
+        title = "p_nsyn_res_cost",
+        description = "Costs for non-synchronized reserve (\$/pu-h)  "
+    )
+
+    p_ramp_res_up_online_cost: List[float] = Field(
+        title = "p_ramp_res_up_online_cost",
+        description = "Costs for ramp up reserve when online (\$/pu-h)  "
+    )
+
+    p_ramp_res_down_online_cost: List[float] = Field(
+        title = "p_ramp_res_down_online_cost",
+        description = "Costs for ramp down reserve when online (\$/pu-h)  "
+    )
+
+    p_ramp_res_up_offline_cost: List[float] = Field(
+        title = "p_ramp_res_up_offline_cost",
+        description = "Costs for ramp up reserve when offline (\$/pu-h)  "
+    )
+
+    p_ramp_res_down_offline_cost: List[float] = Field(
+        title = "p_ramp_res_down_offline_cost",
+        description = "Costs for ramp down reserve when offline (\$/pu-h)  "
+    )
+
+    q_res_up_cost: List[float] = Field(
+        title = "q_res_up_cost",
+        description = "Costs for reactive reserve up (\$/pu-h) "
+    )
+
+    q_res_down_cost: List[float] = Field(
+        title = "q_res_down_cost",
+        description = "Costs for reactive reserve down (\$/pu-h) "
+    )
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # \begin{center}
+
+    # \small
+
+    # \begin{tabular}{ l | l | c | c | c |}
+
+    # 
+
+    # \end{tabular}
+
+    # \end{center}
+
     # 
 
     # 
 
-    # 
 
-
-class ConsumingDevices_LoadsandDemandResponse(BidDSJsonBaseModel):
+class ActiveZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
 
     # Input attributes
 
     uid: str = Field(
         title = "uid",
-        description = "Consuming device unique identifier "
+        description = "Zone reserve unique identifier "
     )
 
-    on_status_ub: int = Field(
-        title = "on_status_ub",
-        description = "On status indicator upper bound ",
-        options = [0, 1]
+    RAMPING_RESERVE_UP: List[float] = Field(
+        title = "RAMPING_RESERVE_UP",
+        description = "Ramping reserve up requirement "
     )
 
-    on_status_lb: int = Field(
-        title = "on_status_lb",
-        description = "On status indicator lower bound ",
-        options = [0, 1]
+    RAMPING_RESERVE_DOWN: List[float] = Field(
+        title = "RAMPING_RESERVE_DOWN",
+        description = "Ramping reserve down requirement "
     )
 
-    connection_status_ub: int = Field(
-        title = "connection_status_ub",
-        description = "Connection capability  upper bound ",
-        options = [0, 1]
-    )
+    # \end{tabular}
 
-    connection_status_lb: int = Field(
-        title = "connection_status_lb",
-        description = "Connection capability lower bound ",
-        options = [0, 1]
-    )
-
-    pd_ub: float = Field(
-        title = "pd_ub",
-        description = "Upper bound of active demand "
-    )
-
-    pd_lb: float = Field(
-        title = "pd_lb",
-        description = "Lower bound of active demand "
-    )
-
-    qd_ub: float = Field(
-        title = "qd_ub",
-        description = "Upper bound of reactive demand "
-    )
-
-    qd_lb: float = Field(
-        title = "qd_lb",
-        description = "Lower bound of reactive demand "
-    )
+    # \end{center}
 
     # 
 
-    cost: List[float] = Field(
-        title = "cost",
-        description = "Array of demand bids/cost blocks "
-    )
 
-    # 
+class ReactiveZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
 
-    # 
-
-    # Flags for extra parameters
-
-    # \sout{\tt\color{red} storage\_cap}
-
-
-class RegionalReserves(BidDSJsonBaseModel):
-
-    # Active reserve attributes
+    # Input attributes
 
     uid: str = Field(
         title = "uid",
         description = "Region reserve unique identifier "
     )
 
-    REG_UP: float = Field(
-        title = "REG_UP",
-        description = "Regulation reserve up requirement "
+    REACT_UP: List[float] = Field(
+        title = "REACT_UP",
+        description = "Reactive reserve power up requirement "
     )
 
-    REG_DOWN: float = Field(
-        title = "REG_DOWN",
-        description = "Regulation reserve down requirement "
+    REACT_DOWN: List[float] = Field(
+        title = "REACT_DOWN",
+        description = "Reactive reserve power down requirement "
     )
 
-    SPIN: float = Field(
-        title = "SPIN",
-        description = "Spinning reserve requirement "
-    )
+    # \end{tabular}
 
-    NON_SPIN: float = Field(
-        title = "NON_SPIN",
-        description = "Non-spinning reserve requirement "
-    )
+    # \end{center}
 
-    RAMPING_RESERVE_UP: float = Field(
-        title = "RAMPING_RESERVE_UP",
-        description = "Ramping reserve up requirement "
-    )
+    # 
 
-    RAMPING_RESERVE_DOWN: float = Field(
-        title = "RAMPING_RESERVE_DOWN",
-        description = "Ramping reserve down requirement "
-    )
+    # 
 
     # 
 

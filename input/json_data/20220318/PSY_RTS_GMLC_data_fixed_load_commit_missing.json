@@ -1,0 +1,104 @@
+{
+    "Bus (bus)": [
+        "active_reserve_uids",
+        "reactive_reserve_uids",
+        "con_loss_factor"
+    ],
+    "Shunt (shunt)": [
+        "steps_lb",
+        "steps_ub",
+        "gs"
+    ],
+    "DispatchableDevices_SimpleProducingConsumingDevices_initial_status (initial_status)": [],
+    "datamodel__input__static__DispatchableDevices_SimpleProducingConsumingDevices (simple_dispatchable_device)": [
+        "p_reg_res_up_cost",
+        "pq_ratio_lb",
+        "pq_ratio_ub",
+        "q_0_ub",
+        "q_bound_cap",
+        "p_ramp_res_down_offline_ub",
+        "p_reg_res_down_cost",
+        "q_linear_cap",
+        "p_ramp_res_up_online_ub",
+        "p",
+        "pq_ratio",
+        "p_ramp_res_down_online_cost",
+        "accu_down_time",
+        "p_reg_res_down_ub",
+        "p_nsyn_res_cost",
+        "p_ramp_res_up_online_cost",
+        "accu_up_time",
+        "p_reg_res_up_ub",
+        "q",
+        "p_ramp_res_down_online_ub",
+        "p_syn_res_cost",
+        "q_0",
+        "p_ramp_res_up_offline_cost",
+        "p_nsyn_res_ub",
+        "q_0_lb",
+        "on_status",
+        "p_syn_res_ub",
+        "q_res_down_cost",
+        "p_ramp_res_down_offline_cost",
+        "q_res_up_cost",
+        "p_ramp_res_up_offline_ub"
+    ],
+    "datamodel__input__static__SubdeviceUnitsforMultiModeProducingConsumingDevices (sub_device)": [],
+    "ACTransmissionLine (ac_line)": [
+        "g_to",
+        "mva_ub_em",
+        "standby_cost",
+        "g_fr",
+        "connection_cost",
+        "additional_shunt",
+        "disconnection_cost",
+        "b"
+    ],
+    "TwoWindingTransformer (two_winding_transformer)": [
+        "ta_ub",
+        "g_to",
+        "mva_ub_em",
+        "standby_cost",
+        "ta_lb",
+        "g_fr",
+        "connection_cost",
+        "additional_shunt",
+        "b_fr",
+        "disconnection_cost",
+        "b_to",
+        "b"
+    ],
+    "DCLine (dc_line)": [
+        "disconnection_cost",
+        "connection_cost",
+        "standby_cost"
+    ],
+    "datamodel__input__static__RegionalReserves (active_regional_reserve)": [
+        "REACT_UP_vio_cost",
+        "REG_UP_vio_cost",
+        "RAMPING_RESERVE_DOWN_vio_cost",
+        "REACT_DOWN_vio_cost",
+        "RAMPING_RESERVE_UP_vio_cost",
+        "SYN_vio_cost",
+        "NSYN_vio_cost",
+        "REG_DOWN_vio_cost"
+    ],
+    "datamodel__input__static__RegionalReserves (reactive_regional_reserve)": [],
+    "datamodel__input__timeseries__General (general)": [],
+    "datamodel__input__timeseries__DispatchableDevices_SimpleProducingConsumingDevices (simple_dispatchable_device)": [
+        "q_ub",
+        "q_lb"
+    ],
+    "datamodel__input__timeseries__SubdeviceUnitsforMultiModeProducingConsumingDevices (subdevice)": [],
+    "datamodel__input__timeseries__RegionalReserves (active_regional_reserve)": [
+        "SYN",
+        "NSYN",
+        "REG_DOWN",
+        "REACT_UP",
+        "RAMPING_RESERVE_DOWN",
+        "REACT_DOWN",
+        "REG_UP",
+        "RAMPING_RESERVE_UP"
+    ],
+    "datamodel__input__timeseries__RegionalReserves (reactive_regional_reserve)": []
+}

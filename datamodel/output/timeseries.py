@@ -6,7 +6,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field, ValidationError
 from pydantic.json import isoformat, timedelta_isoformat
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union, Tuple
 
 from datamodel.base import BidDSJsonBaseModel
 
@@ -19,15 +19,27 @@ class Bus(BidDSJsonBaseModel):
         description = "Bus unique identifier "
     )
 
-    vm: float = Field(
+    # 
+
+    vm: List[float] = Field(
         title = "vm",
-        description = "Voltage magnitude "
+        description = "Voltage magnitude (p.u.) "
     )
 
-    va: Optional[float] = Field(
+    va: List[float] = Field(
         title = "va",
-        description = "Voltage angle "
+        description = "Voltage angle (radian) "
     )
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # 
+
+    # 
 
 
 class Shunt(BidDSJsonBaseModel):
@@ -39,13 +51,26 @@ class Shunt(BidDSJsonBaseModel):
         description = "Shunt unique identifier "
     )
 
-    steps: int = Field(
-        title = "steps",
-        description = "Number of steps "
+    on_status: List[bool] = Field(
+        title = "on_status",
+        description = "On-off status "
     )
 
+    step: List[int] = Field(
+        title = "step",
+        description = "Number of step "
+    )
 
-class ProducingDevices_SingleModeGeneratingUnits(BidDSJsonBaseModel):
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
+
+    # 
+
+
+class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
 
     # Output attributes
 
@@ -54,120 +79,114 @@ class ProducingDevices_SingleModeGeneratingUnits(BidDSJsonBaseModel):
         description = "Device unique identifier "
     )
 
-    status: bool = Field(
-        title = "status",
+    on_status: List[bool] = Field(
+        title = "on_status",
         description = "Connection status "
     )
 
-    pg: float = Field(
-        title = "pg",
-        description = "Active dispatch "
+    p: List[float] = Field(
+        title = "p",
+        description = "{ (Case: producer) Active production (p.u.) (Array of Float) }  { (Case: consumer) Active consumption (p.u.) "
     )
 
-    qg: float = Field(
-        title = "qg",
-        description = "Reactive dispatch "
+    q: List[float] = Field(
+        title = "q",
+        description = "{ (Case: producer) Reactive production (p.u.) (Array of Float)} { (Case: consumer) Reactive consumption (p.u.) "
     )
 
-    pg_regulation_up: float = Field(
-        title = "pg_regulation_up",
-        description = "Regulation up reserve "
+    p_reg_res_up: List[float] = Field(
+        title = "p_reg_res_up",
+        description = "Regulation up reserve (p.u.) "
     )
 
-    pg_regulation_down: float = Field(
-        title = "pg_regulation_down",
-        description = "Regulation down reserve "
+    p_reg_res_down: List[float] = Field(
+        title = "p_reg_res_down",
+        description = "Regulation down reserve (p.u.) "
     )
 
-    pg_spin: float = Field(
-        title = "pg_spin",
-        description = "Spinning reserve "
+    p_syn_res: List[float] = Field(
+        title = "p_syn_res",
+        description = "Synchronized reserve (p.u.) "
     )
 
-    pg_nonspin: float = Field(
-        title = "pg_nonspin",
-        description = "Non-spinning reserve "
+    p_nsyn_res: List[float] = Field(
+        title = "p_nsyn_res",
+        description = "Non-synchronized reserve (p.u.) "
     )
 
-    energy: float = Field(
-        title = "energy",
-        description = "Energy storage "
+    p_ramp_res_up_online: List[float] = Field(
+        title = "p_ramp_res_up_online",
+        description = "Ramp up reserve when online (p.u.) "
     )
 
-
-class ProducingDevices_MultipleModeGeneratingUnits(BidDSJsonBaseModel):
-
-    # Output attributes
-
-    uid: str = Field(
-        title = "uid",
-        description = "Device unique identifier "
+    p_ramp_res_down_online: List[float] = Field(
+        title = "p_ramp_res_down_online",
+        description = "Ramp down reserve when online (p.u.) "
     )
 
-    status: bool = Field(
-        title = "status",
-        description = "Connection status "
+    p_ramp_res_up_offline: List[float] = Field(
+        title = "p_ramp_res_up_offline",
+        description = "Ramp up reserve when offline (p.u.) "
     )
 
-    select_mode: List[str] = Field(
-        title = "select_mode",
-        description = "Active configuration uids for each time step "
+    p_ramp_res_down_offline: List[float] = Field(
+        title = "p_ramp_res_down_offline",
+        description = "Ramp down reserve when offline (p.u.) "
     )
 
-    pg: float = Field(
-        title = "pg",
-        description = "Active dispatch "
+    q_res_up: List[float] = Field(
+        title = "q_res_up",
+        description = "Reactive reserve up (p.u.) "
     )
 
-    qg: float = Field(
-        title = "qg",
-        description = "Reactive dispatch "
+    q_res_down: List[float] = Field(
+        title = "q_res_down",
+        description = "Reactive reserve down (p.u.) "
     )
 
-    pg_regulation_up: float = Field(
-        title = "pg_regulation_up",
-        description = "Regulation up reserve "
-    )
+    # \end{tabular}
 
-    pg_regulation_down: float = Field(
-        title = "pg_regulation_down",
-        description = "Regulation down reserve "
-    )
+    # \end{center}
 
-    pg_spin: float = Field(
-        title = "pg_spin",
-        description = "Spinning reserve "
-    )
+    # 
 
-    pg_nonspin: float = Field(
-        title = "pg_nonspin",
-        description = "Non-spinning reserve "
-    )
+    # 
 
-    pg_flexi_up_online: float = Field(
-        title = "pg_flexi_up_online",
-        description = "Flexible ramp up reserve when online "
-    )
+    # 
 
-    pg_flexi_down_online: float = Field(
-        title = "pg_flexi_down_online",
-        description = "Flexible ramp down reserve when online "
-    )
+    # 
 
-    pg_flexi_up_offline: float = Field(
-        title = "pg_flexi_up_offline",
-        description = "Flexible ramp up reserve when offline "
-    )
+    # 
 
-    pg_flexi_down_offline: float = Field(
-        title = "pg_flexi_down_offline",
-        description = "Flexible ramp down reserve when offline "
-    )
+    # 
 
-    energy: float = Field(
-        title = "energy",
-        description = "Energy storage "
-    )
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
+
+    # 
 
 
 class ACTransmissionLine(BidDSJsonBaseModel):
@@ -179,32 +198,14 @@ class ACTransmissionLine(BidDSJsonBaseModel):
         description = "AC line unique identifier "
     )
 
-    status: bool = Field(
-        title = "status",
+    on_status: List[bool] = Field(
+        title = "on_status",
         description = "Connection status "
     )
 
-    # Optional output attributes
+    # \end{tabular}
 
-    pl_fr: Optional[float] = Field(
-        title = "pl_fr",
-        description = "Active power flow, from side "
-    )
-
-    ql_fr: Optional[float] = Field(
-        title = "ql_fr",
-        description = "Reactive power flow, from side "
-    )
-
-    pl_to: Optional[float] = Field(
-        title = "pl_to",
-        description = "Active power flow, to side "
-    )
-
-    ql_to: Optional[float] = Field(
-        title = "ql_to",
-        description = "Reactive power flow, to side "
-    )
+    # \end{center}
 
 
 class TwoWindingTransformer(BidDSJsonBaseModel):
@@ -216,42 +217,34 @@ class TwoWindingTransformer(BidDSJsonBaseModel):
         description = "Transformer line unique identifier "
     )
 
-    tm: float = Field(
+    tm: List[float] = Field(
         title = "tm",
-        description = "Off-nominal taps ratio "
+        description = "Off-nominal taps ratio (p.u.) "
     )
 
-    ta: float = Field(
+    ta: List[float] = Field(
         title = "ta",
-        description = "Phase shifting angle "
+        description = "Phase shifting angle (radian) "
     )
 
-    status: bool = Field(
-        title = "status",
+    on_status: List[bool] = Field(
+        title = "on_status",
         description = "Connection status "
     )
 
-    # Optional output attributes
+    # \end{tabular}
 
-    pl_fr: Optional[float] = Field(
-        title = "pl_fr",
-        description = "Active power flow, from side "
-    )
+    # \end{center}
 
-    ql_fr: Optional[float] = Field(
-        title = "ql_fr",
-        description = "Reactive power flow, from side "
-    )
+    # 
 
-    pl_to: Optional[float] = Field(
-        title = "pl_to",
-        description = "Active power flow, to side "
-    )
+    # 
 
-    ql_to: Optional[float] = Field(
-        title = "ql_to",
-        description = "Reactive power flow, to side "
-    )
+    # 
+
+    # 
+
+    # 
 
 
 class DCLine(BidDSJsonBaseModel):
@@ -263,24 +256,30 @@ class DCLine(BidDSJsonBaseModel):
         description = "DC line unique identifier "
     )
 
-    status: bool = Field(
-        title = "status",
+    on_status: List[bool] = Field(
+        title = "on_status",
         description = "Connection status "
     )
 
-    pdc_fr: float = Field(
+    pdc_fr: List[float] = Field(
         title = "pdc_fr",
-        description = "Active power flow, from bus "
+        description = "Active power flow, from bus (p.u.) "
     )
 
-    qdc_fr: float = Field(
+    qdc_fr: List[float] = Field(
         title = "qdc_fr",
-        description = "Reactive power flow, from bus "
+        description = "Reactive power flow, from bus (p.u.) "
     )
 
-    qdc_to: float = Field(
+    qdc_to: List[float] = Field(
         title = "qdc_to",
-        description = "Reactive power flow, to bus "
+        description = "Reactive power flow, to bus (p.u.) "
     )
+
+    # \end{tabular}
+
+    # \end{center}
+
+    # 
 
 

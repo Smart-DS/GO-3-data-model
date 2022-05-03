@@ -82,12 +82,98 @@ def create_objects(format_docs_dir):
 
 
 def get_objects_from_table(object_name, astr):
-    static_result = f"class {object_name}(BidDSJsonBaseModel):\n"
-    timeseries_result = f"class {object_name}(BidDSJsonBaseModel):\n"
+    static_result = ""
+    timeseries_result = ""
+
+    # Some descriptions in the table overflow onto the following line. 
+    # This bit of code joins those lines together.
+    all_lines = astr.split('\n')
+    all_lines_new = []
+    for ln_cnt in range(len(all_lines)-1,-1,-1): 
+        ln = all_lines[ln_cnt]
+        if ln.strip().startswith('&'):
+            desc = ln.split('&')[1]
+            prev_line = all_lines[ln_cnt-1]
+            prev_line_fields = prev_line.split('&')
+            prev_line_fields[1]+=desc
+            updated_prev_line = '&'.join(prev_line_fields)
+            all_lines[ln_cnt -1] = updated_prev_line
+        else:
+            all_lines_new.append(ln)
+
+    all_lines_new.reverse()
+    all_lines = all_lines_new
+
+    # Create objects that are of json type
+    all_lines_new  = []
+    ln_cnt = 0
+    while ln_cnt < len(all_lines):
+        ln = all_lines[ln_cnt]
+        if '[Inner Attributes]' in ln:
+            m = re.match(".*\{\\\\tt\S* (.+)\}.*",ln)
+            if not m:
+                logger.warning(f"Unable to extract inner attributes from {ln!r}")
+                ln_cnt+=1
+                continue
+            inner_attribute = m.group(1).replace("\\_", "_")
+            inner_attribute_formatted = object_name+'_'+inner_attribute
+            inner_attribute_array = object_name+'_'+'Array of '+inner_attribute
+
+            types_map[inner_attribute_formatted] = inner_attribute_formatted
+            types_map[inner_attribute_array] = "List["+inner_attribute_formatted+"]"
+            internal_result = f"class {inner_attribute_formatted}(BidDSJsonBaseModel):\n"
+            ln_cnt +=2 # skip the new line
+            while True: #This is bad practice...
+                ln = all_lines[ln_cnt]
+                if '\hline' in ln:
+                    break
+                sec,field = parse_field(ln,object_name)
+                if field:
+                    internal_result += field
+                else:
+                    logger.warning(f"unable to parse line {ln!r}")
+                ln_cnt+=1
+
+            if sec == 'S' or sec == 'B':
+                static_result += internal_result
+            if sec == 'T' or sec == 'B':
+                timeseries_result += internal_result
+
+        elif 'Conditional Attributes]' in ln:
+            m = re.match(".*\{\\\\tt\S* (.+)\}.*",ln)
+            if not m:
+                logger.warning(f"Unable to extract conditional attributes from {ln!r}")
+                ln_cnt+=1
+                continue
+            conditional_attribute = m.group(1).replace("\\_", "_")
+
+            ln_cnt +=2 # skip the new line
+
+            while True: #This is bad practice...
+                ln = all_lines[ln_cnt]
+                if '\hline' in ln:
+                    break
+                sec,field = parse_field(ln,object_name)
+                if field:
+                    if False: #TODO: Find a way to manage the conditional elements based on the conditional_attribute
+                        timeseries_result += conditional_result
+                        static_result += conditional_result
+                else:
+                    logger.warning(f"unable to parse line {ln!r}")
+                ln_cnt+=1
+
+
+        else:
+            all_lines_new.append(ln)
+
+        ln_cnt+=1
+
+    static_result += f"class {object_name}(BidDSJsonBaseModel):\n"
+    timeseries_result += f"class {object_name}(BidDSJsonBaseModel):\n"
     has_static = False; has_timeseries = False
 
     table_started = False; expect_meta = True
-    for ln in astr.split("\n"):
+    for ln in all_lines_new:
         if not table_started:
             if ln.startswith("\\begin{tabular}"):
                 table_started = True
@@ -100,7 +186,7 @@ def get_objects_from_table(object_name, astr):
             expect_meta = True
             continue
         if ln.strip().startswith("{\\tt"):
-            sec, field = parse_field(ln)
+            sec, field = parse_field(ln,object_name)
             if field:
                 if sec == "S":
                     static_result += field
@@ -126,12 +212,22 @@ def get_objects_from_table(object_name, astr):
     return (static_result, timeseries_result) if table_started else (None, None)
 
 
+# Gets extended with internal json objects
 types_map = {
     "uid": "str",
     "uids": "List[str]",
+    "Array of Int": "List[int]",
+    "Array of reserve zone uids": "List[str]",
     "Array of cost blocks": "List[float]",
     "Array of Float": "List[float]",
+    "Array of Binary": "List[bool]",
+    "Array of Binary: 0/1": "List[bool]",
+    "Array of String": "List[str]",
+    "Array of Array of Float Float": "List[List[Tuple[float,float]]]",
+    "Array of Float Float Float": "List[Tuple[float,float,float]]",
+    "Array of Float Float Int": "List[Tuple[float,float,int]]",
     "String": "str",
+    "Timestamp": "str",
     "Int": "int",
     "Integer": "int",
     "Float": "float",
@@ -140,10 +236,11 @@ types_map = {
     "\\$/pu-h": "float",
     "\\$/pu-hr": "float",
     "p.u.": "float",
-    "bool: true/false": "bool"
+    "bool: true/false": "bool",
+    "Binary": "bool"
 }
 
-def parse_field(ln):
+def parse_field(ln,object_name):
     name, desc, req, sec, sym = ln.split("&")
     sec = sec.strip()
     
@@ -159,39 +256,42 @@ def parse_field(ln):
     if not m:
         logger.warning(f"Unable to partition {desc!r} into description and type")
         return sec, ""
-    desc = m.group(1); type = m.group(2)
+    desc = m.group(1); type_name = m.group(2)
 
-    tmp = type.split(',')
-    type = tmp[0].strip()
+    tmp = type_name.split(',')
+    type_name = tmp[0].strip().replace("\\_", "_")
     if len(tmp) > 1:
         # TODO: Put units somewhere in the Pydantic model
         units = ','.join(tmp[1:]).lstrip()
 
     choices = None
-    if type in types_map:
-        type = types_map[type]
+    if type_name in types_map:
+        type_name = types_map[type_name]
+    elif object_name+'_'+type_name in types_map:
+        type_name = types_map[object_name+'_'+type_name]
+
     else:
-        if type.startswith("String:"):
+        if type_name.startswith("String:"):
             # choices list
-            choices = type.split(":")[1].strip().split(",")
+            choices = type_name.split(":")[1].strip().split(",")
             choices = [choice.strip().replace("\\_","_") for choice in choices]
-            # TODO: Consider turning choices into an Enum and then setting type 
+            # TODO: Consider turning choices into an Enum and then setting type_name 
             # to be that Enum
-            type = "str"
-        elif type.startswith("Binary:"):
+            type_name = "str"
+        elif type_name.startswith("Binary:"):
             choices = [0,1]
-            type = "int"
+            type_name = "int"
         else:
-            logger.warning(f"Unable to extract type from {type!r}")
+            logger.warning(f"Unable to extract type_name from {type_name!r}")
             return sec, ""
     
     if req.lower().strip() == "n":
-        type = f"Optional[{type}]"
+        type_name = f"Optional[{type_name}]"
 
     sep = "," if choices else ""
     
     result = f"""
-    {name}: {type} = Field(
+    {name}: {type_name} = Field(
         title = "{name}",
         description = "{desc}"{sep}"""
    
@@ -245,13 +345,14 @@ def create_models(format_docs_dir, input_objects, output_objects):
             if object_preamble:
                 imports.add(object_preamble)
 
+
             with open(format_docs_dir / f"{file}.tex", encoding="utf8") as f:
                 file_text = f.read()
 
             subsections = _split(file_text, r"^\\subsection\{(.+)\}\s*$")
 
             if object_preamble:
-                orig_name = list(subsections.keys())[0]
+                orig_name = list(subsections.keys())[0] 
                 object_name = orig_name.title().replace(" ","")
                 logger.info(f"Creating {object_name} object")
                 obj = get_object_from_subsection(object_name, 
@@ -293,7 +394,10 @@ def get_object_from_subsection(object_name, astr, object_ref, object_preamble, i
         """
 
     obj_ref_map = {key.lower(): key for key in object_ref.keys()}
-    for key in obj_ref_map.keys():
+    obj_ref_map_keys = list(obj_ref_map.keys()) # TO avoid modifying dictionary
+    for key in obj_ref_map_keys:
+
+        # Provided due to inconsistencies in the naming of subsections in section 2 and json objects in sections 3 and 4
         if key == "violationcostsparameters":
             obj_ref_map["violationcost"] = obj_ref_map.pop("violationcostsparameters")
         elif key == "dispatchabledevices_simpleproducingconsumingdevices":
@@ -302,8 +406,14 @@ def get_object_from_subsection(object_name, astr, object_ref, object_preamble, i
             obj_ref_map["multimodedispatchabledevice"] = obj_ref_map.pop("dispatchabledevices_multimodeproducingconsumingdevices")
         elif key == "actransmissionline":
             obj_ref_map["acline"] = obj_ref_map.pop("actransmissionline")
-        elif key == "regionalreserves":
-            obj_ref_map["activeregionalreserve"] = obj_ref_map.pop("regionalreserves")        
+        elif key == "activezonalreserverequirementsviolationcosts":
+            obj_ref_map["activezonalreserve"] = obj_ref_map.pop("activezonalreserverequirementsviolationcosts") 
+        elif key == "reactivezonalreserverequirementsviolationcosts":
+            obj_ref_map["reactivezonalreserve"] = obj_ref_map.pop("reactivezonalreserverequirementsviolationcosts") 
+        elif key == "subdeviceunitsformultimodeproducingconsumingdevices":
+            obj_ref_map["subdevice"] = obj_ref_map.pop("subdeviceunitsformultimodeproducingconsumingdevices")        
+        # TODO: storage devices
+        # TODO: development
 
     def get_dict_str(adict):
         items = [f"{k}: {v}" for k, v in adict.items()]
@@ -325,13 +435,14 @@ def get_object_from_subsection(object_name, astr, object_ref, object_preamble, i
             continue
         if ln.strip().startswith("\\item"):
             found_object = None
-            m = re.match(r".+\\texttt\{(.+)\}.+", ln.strip())
+            m = re.match(r".+\\texttt\{(.+)\}.+(object|array).*", ln.strip())
             if m:
                 contains_objects = True
                 name = m.group(1).replace("\"","").replace("\\_","_").replace(":","_").replace("-","_")
+                object_type = m.group(2)
                 key = name.replace("_","").replace("-","")
                 if key in obj_ref_map:
-                    found_object = (name, obj_ref_map[key])
+                    found_object = (name, obj_ref_map[key], object_type)
                     continue
             logger.warning(f"Unable to locate object in {ln.strip()}.")
             if m:
@@ -340,9 +451,11 @@ def get_object_from_subsection(object_name, astr, object_ref, object_preamble, i
                     f"{get_dict_str(obj_ref_map)}")
         if found_object:
             name = found_object[0]
+            object_type = found_object[2]
             type = f"{object_preamble}.{found_object[1]}"
-            if "list" in ln.strip():
-                name += "es" if name.endswith("s") else "s"
+            #if "array" in ln.strip():
+            if object_type == 'array':
+                #name += "es" if name.endswith("s") else "s"
                 type = f"List[{type}]"
             result += f"""
     {name}: {type} = Field(
@@ -412,7 +525,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field, ValidationError
 from pydantic.json import isoformat, timedelta_isoformat
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union, Tuple
 
 from datamodel.base import BidDSJsonBaseModel\n""")
         for to_import in imports:
