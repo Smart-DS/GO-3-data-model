@@ -307,11 +307,11 @@ Device attributes & Description (Type) & Req & Sec & Sym\\
   {\tt energy\_req\_ub} & Array of energy upper bound requirement data blocks, where each & Y & S & \\
                         & data block is an array with exactly three elements: &   &   & \\
                         & 1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and &   &   & { $t^{max}, t^{min}$}\\
-                        & 3) maximum energy within the interval (Float, p.u.) (Array of Array of Float Float Float) &   &   & { $e^{max}$ }\\
+                        & 3) maximum energy within the interval (Float, p.u.) (Array of Float Float Float) &   &   & { $e^{max}$ }\\
   {\tt energy\_req\_lb} & Array of energy lower bound requirement data blocks, where each & Y & S &  \\
                         & data block is an array with exactly three elements: &   &   & \\
                         & 1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and &   &   & { $t^{max}, t^{min}$}\\
-                        & 3) minimum energy within the interval (Float, p.u.) (Array of Array of Float Float Float) &   &   & { $e^{min}$}\\                               
+                        & 3) minimum energy within the interval (Float, p.u.) (Array of Float Float Float) &   &   & { $e^{min}$}\\                               
   {\tt on\_cost} & Device fixed operating cost (Float) & Y & S & $c^{on}$\\
   {\tt in\_service\_time\_lb} & Minimum uptime in service (Float, hr) & Y & S & $d^{up,min}$\\
   {\tt down\_time\_lb} & Minimum downtime (Float, hr) & Y & S & $d^{dn,min}$\\
