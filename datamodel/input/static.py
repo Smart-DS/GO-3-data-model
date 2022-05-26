@@ -94,17 +94,17 @@ class ViolationCostsParameters(BidDSJsonBaseModel):
 
     p_bus_vio_cost: float = Field(
         title = "p_bus_vio_cost",
-        description = "Bus violation costs for active power violation "
+        description = "Bus violation costs for active power violation (\$/pu-h) "
     )
 
     q_bus_vio_cost: float = Field(
         title = "q_bus_vio_cost",
-        description = "Bus violation costs for reactive power violation  "
+        description = "Bus violation costs for reactive power violation  (\$/pu-h) "
     )
 
     s_vio_cost: float = Field(
         title = "s_vio_cost",
-        description = "Branch violation costs for thermal violation "
+        description = "Branch violation costs for thermal violation (\$/pu-h) "
     )
 
     # \end{tabular}
@@ -228,10 +228,9 @@ class Bus(BidDSJsonBaseModel):
 
 class Shunt_initial_status(BidDSJsonBaseModel):
 
-    on_status: int = Field(
+    on_status: bool = Field(
         title = "on_status",
-        description = "On-off status ",
-        options = [0, 1]
+        description = "On-off status "
     )
 
     step: int = Field(
@@ -254,12 +253,12 @@ class Shunt(BidDSJsonBaseModel):
 
     gs: float = Field(
         title = "gs",
-        description = "Shunt conductance for one step "
+        description = "Shunt conductance for one step (p.u.) "
     )
 
     bs: float = Field(
         title = "bs",
-        description = "Shunt susceptance for one step "
+        description = "Shunt susceptance for one step (p.u.) "
     )
 
     step_ub: int = Field(
@@ -286,10 +285,9 @@ class Shunt(BidDSJsonBaseModel):
 
 class DispatchableDevices_SimpleProducingConsumingDevices_initial_status(BidDSJsonBaseModel):
 
-    on_status: int = Field(
+    on_status: bool = Field(
         title = "on_status",
-        description = "On status indicator for initial time step ",
-        options = [0, 1]
+        description = "On status indicator for initial time step "
     )
 
     p: float = Field(
@@ -595,10 +593,9 @@ class ACTransmissionLine(BidDSJsonBaseModel):
         description = "A JSON inner object storing data   for initial time step "
     )
 
-    additional_shunt: int = Field(
+    additional_shunt: bool = Field(
         title = "additional_shunt",
-        description = "Branch has additional shunt components ",
-        options = [0, 1]
+        description = "Branch has additional shunt components "
     )
 
     # \end{tabular}
@@ -719,10 +716,9 @@ class TwoWindingTransformer(BidDSJsonBaseModel):
         description = "A JSON inner object storing data   for initial time step "
     )
 
-    additional_shunt: int = Field(
+    additional_shunt: bool = Field(
         title = "additional_shunt",
-        description = "Transformer has additional shunt components ",
-        options = [0, 1]
+        description = "Transformer has additional shunt components "
     )
 
     # \end{tabular}
@@ -763,17 +759,17 @@ class DCLine_initial_status(BidDSJsonBaseModel):
 
     pdc_fr: float = Field(
         title = "pdc_fr",
-        description = "Active power flow, from bus "
+        description = "Active power flow, from bus (p.u.) "
     )
 
     qdc_fr: float = Field(
         title = "qdc_fr",
-        description = "Reactive power flow, from bus "
+        description = "Reactive power flow, from bus (p.u.) "
     )
 
     qdc_to: float = Field(
         title = "qdc_to",
-        description = "Reactive power flow, to bus "
+        description = "Reactive power flow, to bus (p.u.) "
     )
 class DCLine(BidDSJsonBaseModel):
 
@@ -882,32 +878,32 @@ class ActiveZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
 
     REG_UP_vio_cost: float = Field(
         title = "REG_UP_vio_cost",
-        description = "Regulation reserve up violation cost "
+        description = "Regulation reserve up violation cost (\$/pu-hr) "
     )
 
     REG_DOWN_vio_cost: float = Field(
         title = "REG_DOWN_vio_cost",
-        description = "Regulation reserve down violation cost "
+        description = "Regulation reserve down violation cost (\$/pu-hr) "
     )
 
     SYN_vio_cost: float = Field(
         title = "SYN_vio_cost",
-        description = "Synchronized reserve violation cost "
+        description = "Synchronized reserve violation cost (\$/pu-hr) "
     )
 
     NSYN_vio_cost: float = Field(
         title = "NSYN_vio_cost",
-        description = "Non-synchronized reserve violation cost "
+        description = "Non-synchronized reserve violation cost (\$/pu-hr) "
     )
 
     RAMPING_RESERVE_UP_vio_cost: float = Field(
         title = "RAMPING_RESERVE_UP_vio_cost",
-        description = "Flexible-ramp up violation cost "
+        description = "Flexible-ramp up violation cost (\$/pu-hr) "
     )
 
     RAMPING_RESERVE_DOWN_vio_cost: float = Field(
         title = "RAMPING_RESERVE_DOWN_vio_cost",
-        description = "Flexible-ramp down violation cost "
+        description = "Flexible-ramp down violation cost (\$/pu-hr) "
     )
 
     # \end{tabular}
@@ -928,12 +924,12 @@ class ReactiveZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
 
     REACT_UP_vio_cost: float = Field(
         title = "REACT_UP_vio_cost",
-        description = "Reactive reserve power violation cost "
+        description = "Reactive reserve power violation cost (\$/pu-hr) "
     )
 
     REACT_DOWN_vio_cost: float = Field(
         title = "REACT_DOWN_vio_cost",
-        description = "Reactive reserve power violation cost "
+        description = "Reactive reserve power violation cost (\$/pu-hr) "
     )
 
     # \end{tabular}

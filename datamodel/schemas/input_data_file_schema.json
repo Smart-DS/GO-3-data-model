@@ -148,17 +148,17 @@
             "properties": {
                 "p_bus_vio_cost": {
                     "title": "p_bus_vio_cost",
-                    "description": "Bus violation costs for active power violation ",
+                    "description": "Bus violation costs for active power violation (\\$/pu-h) ",
                     "type": "number"
                 },
                 "q_bus_vio_cost": {
                     "title": "q_bus_vio_cost",
-                    "description": "Bus violation costs for reactive power violation  ",
+                    "description": "Bus violation costs for reactive power violation  (\\$/pu-h) ",
                     "type": "number"
                 },
                 "s_vio_cost": {
                     "title": "s_vio_cost",
-                    "description": "Branch violation costs for thermal violation ",
+                    "description": "Branch violation costs for thermal violation (\\$/pu-h) ",
                     "type": "number"
                 }
             },
@@ -317,11 +317,7 @@
                 "on_status": {
                     "title": "on_status",
                     "description": "On-off status ",
-                    "options": [
-                        0,
-                        1
-                    ],
-                    "type": "integer"
+                    "type": "boolean"
                 },
                 "step": {
                     "title": "step",
@@ -352,12 +348,12 @@
                 },
                 "gs": {
                     "title": "gs",
-                    "description": "Shunt conductance for one step ",
+                    "description": "Shunt conductance for one step (p.u.) ",
                     "type": "number"
                 },
                 "bs": {
                     "title": "bs",
-                    "description": "Shunt susceptance for one step ",
+                    "description": "Shunt susceptance for one step (p.u.) ",
                     "type": "number"
                 },
                 "step_ub": {
@@ -399,11 +395,7 @@
                 "on_status": {
                     "title": "on_status",
                     "description": "On status indicator for initial time step ",
-                    "options": [
-                        0,
-                        1
-                    ],
-                    "type": "integer"
+                    "type": "boolean"
                 },
                 "p": {
                     "title": "p",
@@ -765,11 +757,7 @@
                 "additional_shunt": {
                     "title": "additional_shunt",
                     "description": "Branch has additional shunt components ",
-                    "options": [
-                        0,
-                        1
-                    ],
-                    "type": "integer"
+                    "type": "boolean"
                 }
             },
             "required": [
@@ -914,11 +902,7 @@
                 "additional_shunt": {
                     "title": "additional_shunt",
                     "description": "Transformer has additional shunt components ",
-                    "options": [
-                        0,
-                        1
-                    ],
-                    "type": "integer"
+                    "type": "boolean"
                 }
             },
             "required": [
@@ -954,17 +938,17 @@
                 },
                 "pdc_fr": {
                     "title": "pdc_fr",
-                    "description": "Active power flow, from bus ",
+                    "description": "Active power flow, from bus (p.u.) ",
                     "type": "number"
                 },
                 "qdc_fr": {
                     "title": "qdc_fr",
-                    "description": "Reactive power flow, from bus ",
+                    "description": "Reactive power flow, from bus (p.u.) ",
                     "type": "number"
                 },
                 "qdc_to": {
                     "title": "qdc_to",
-                    "description": "Reactive power flow, to bus ",
+                    "description": "Reactive power flow, to bus (p.u.) ",
                     "type": "number"
                 }
             },
@@ -1100,32 +1084,32 @@
                 },
                 "REG_UP_vio_cost": {
                     "title": "REG_UP_vio_cost",
-                    "description": "Regulation reserve up violation cost ",
+                    "description": "Regulation reserve up violation cost (\\$/pu-hr) ",
                     "type": "number"
                 },
                 "REG_DOWN_vio_cost": {
                     "title": "REG_DOWN_vio_cost",
-                    "description": "Regulation reserve down violation cost ",
+                    "description": "Regulation reserve down violation cost (\\$/pu-hr) ",
                     "type": "number"
                 },
                 "SYN_vio_cost": {
                     "title": "SYN_vio_cost",
-                    "description": "Synchronized reserve violation cost ",
+                    "description": "Synchronized reserve violation cost (\\$/pu-hr) ",
                     "type": "number"
                 },
                 "NSYN_vio_cost": {
                     "title": "NSYN_vio_cost",
-                    "description": "Non-synchronized reserve violation cost ",
+                    "description": "Non-synchronized reserve violation cost (\\$/pu-hr) ",
                     "type": "number"
                 },
                 "RAMPING_RESERVE_UP_vio_cost": {
                     "title": "RAMPING_RESERVE_UP_vio_cost",
-                    "description": "Flexible-ramp up violation cost ",
+                    "description": "Flexible-ramp up violation cost (\\$/pu-hr) ",
                     "type": "number"
                 },
                 "RAMPING_RESERVE_DOWN_vio_cost": {
                     "title": "RAMPING_RESERVE_DOWN_vio_cost",
-                    "description": "Flexible-ramp down violation cost ",
+                    "description": "Flexible-ramp down violation cost (\\$/pu-hr) ",
                     "type": "number"
                 }
             },
@@ -1156,12 +1140,12 @@
                 },
                 "REACT_UP_vio_cost": {
                     "title": "REACT_UP_vio_cost",
-                    "description": "Reactive reserve power violation cost ",
+                    "description": "Reactive reserve power violation cost (\\$/pu-hr) ",
                     "type": "number"
                 },
                 "REACT_DOWN_vio_cost": {
                     "title": "REACT_DOWN_vio_cost",
-                    "description": "Reactive reserve power violation cost ",
+                    "description": "Reactive reserve power violation cost (\\$/pu-hr) ",
                     "type": "number"
                 }
             },

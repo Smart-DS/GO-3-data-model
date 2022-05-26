@@ -119,8 +119,8 @@ Global time attributes & Description (Type) & Req & Sec & Sym\\
   {\tt interval\_duration} & Time duration of the intervals, per time period in hours & Y & T & $d_t$ \\
                            & (Array of Float) &  &  & \\
                            \hline
-                           {\tt timestamp\_start} & Period beginning timestamp for the first interval with Timestamp format YYYY-MM-DDThh:mm at UTC (String) & N & S & \\
-                           {\tt timestamp\_stop} & Period beginning timestamp for the interval following the last interval with Timestamp format YYYY-MM-DDThh:mm at UTC (String) & N & S & \\
+                           {\tt timestamp\_start} & Period beginning timestamp for the first interval with Timestamp format YYYY-MM-DDThh:mm at UTC (Timestamp) & N & S & \\
+                           {\tt timestamp\_stop} & Period beginning timestamp for the interval following the last interval with Timestamp format YYYY-MM-DDThh:mm at UTC (Timestamp) & N & S & \\
 \hline
 Qualitative descriptors & Description (Type) & Req & Sec & Sym\\
 \hline
@@ -152,10 +152,10 @@ Global violation attributes & Description (Type) & Req & Sec & Sym\\
 \hline
 %  {\tt p\_vio\_cost} & System marginal costs for active power violation (\$/pu-h) & Y & S &$c^{p, sys}$ \\
 %  {\tt q\_vio\_cost} & System marginal costs for reactive power violation (\$/pu-h) & Y & S & $c^{q,sys}$\\
-  {\tt p\_bus\_vio\_cost} & Bus violation costs for active power violation (\$/pu-h)& Y & S & $c^{p}$\\
-  {\tt q\_bus\_vio\_cost} & Bus violation costs for reactive power violation  (\$/pu-h)& Y & S &$c^{q}$ \\
+{\tt p\_bus\_vio\_cost} & Bus violation costs for active power violation (\$/pu-h) (Float) & Y & S & $c^{p}$\\
+{\tt q\_bus\_vio\_cost} & Bus violation costs for reactive power violation  (\$/pu-h) (Float) & Y & S &$c^{q}$ \\
 %  {\tt v\_bus\_vio\_cost} & Bus marginal costs for voltage violation (\$/pu-h)& Y & S & $c^{v}$\\
-  {\tt s\_vio\_cost} & Branch violation costs for thermal violation (\$/pu-h)  & Y & S &$c^{s}$  \\
+{\tt s\_vio\_cost} & Branch violation costs for thermal violation (\$/pu-h) (Float) & Y & S &$c^{s}$  \\
 % \hline
 % Global tolerance attributes & Description (Type) & Req & Sec & Sym\\
 % \hline
@@ -183,9 +183,9 @@ Input attributes & Description (Type) & Req & Sec & Sym\\
   {\tt vm\_ub} & Voltage magnitude upper bound (Float, p.u.)& Y & S & $v^{max}$\\
   {\tt vm\_lb} & Voltage magnitude lower bound (Float, p.u.)& Y & S & $v^{min}$\\
   {\tt active\_reserve\_uids} & List of active reserve zones (uids) that the bus participating & Y & S & \\
-                     &  (Array of reserve zone uids) &  & & \\
+                     &  (Array of String) &  & & \\
   {\tt reactive\_reserve\_uids} & List of reactive reserve zones (uids) that the bus participating & Y & S & \\
-                     &  (Array of reserve zone uids) &  & & \\
+                     &  (Array of String) &  & & \\
   \hline
   Location information & Description (Type) & Req & Sec & Sym\\
   \hline
@@ -241,8 +241,8 @@ Input attributes & Description (Type) & Req & Sec & Sym\\
 \hline
   {\tt uid} & Shunt unique identifier (String) & Y & B &  \\
   {\tt bus} & Unique identifier for connecting bus (String)& Y & S &  \\
-  {\tt gs}  & Shunt conductance for one step (p.u.) & Y & S & $g^{sh}$ \\
-  {\tt bs}  & Shunt susceptance for one step (p.u.) & Y & S & $b^{sh}$ \\
+{\tt gs}  & Shunt conductance for one step (p.u.) (Float) & Y & S & $g^{sh}$ \\
+{\tt bs}  & Shunt susceptance for one step (p.u.) (Float) & Y & S & $b^{sh}$ \\
   {\tt step\_ub}      & Maximum step number (Int)  & Y & S & $u^{sh,max}$\\
   {\tt step\_lb}      & Minimum step number (Int)  & Y & S & $u^{sh,min}$\\
   {\tt initial\_status} & A JSON inner object storing data  & Y & S &  \\
@@ -250,7 +250,7 @@ Input attributes & Description (Type) & Req & Sec & Sym\\
   \hline
   Initial condition attributes & [Inner Attributes] Within {\tt initial\_status} & & & \\
   \hline
-  {\tt on\_status} & On-off status (Binary: 0/1) & Y & S & \\
+  {\tt on\_status} & On-off status (Binary) & Y & S & \\
   {\tt step}       & Number of step (Int)  & Y  & S &$u^{sh}$\\  
 \hline
 \end{tabular}
@@ -264,7 +264,7 @@ Input attributes & Description (Type) & Req & Sec & Sym\\
 Output attributes & Description (Type) & Req & Sec & Sym\\
 \hline
   {\tt uid} & Shunt unique identifier (String) & Y & B & \\
-  {\tt on\_status} & On-off status (Array of Binary: 0/1) & Y & T & \\
+  {\tt on\_status} & On-off status (Array of Binary) & Y & T & \\
   {\tt step}      & Number of step (Array of Int)  & Y  & T &$u^{sh}$\\
 \hline
 \end{tabular}
@@ -396,7 +396,7 @@ Device attributes & --- Time varying operational attributes &Req &Sec &Sym \\
 \begin{tabular}{ l | l | c | c | c |}
   Initial condition attributes &  [Inner Attributes] Within inner {\tt initial\_status} JSON object &  &  & \\
   \hline
-  {\tt on\_status} & On status indicator for initial time step (Binary: 0/1) & Y & S & $u^{on,0}$\\
+  {\tt on\_status} & On status indicator for initial time step (Binary) & Y & S & $u^{on,0}$\\
   {\tt p} & { (Case: producer) Active production for initial time step (Float, p.u.) }& Y & S & $p^0$ \\
           & { (Case: consumer) Active consumption for initial time step (Float, p.u.) }& Y & S & $p^0$ \\
   {\tt q} & { (Case: producer) Reactive production for initial time step (Float, p.u.) }& Y & S & $q^0$ \\
@@ -754,7 +754,7 @@ Input attributes & Description (Type)& Req & Sec & Sym\\
   {\tt disconnection\_cost} & AC line disconnection cost (Float) & Y & S & $c^{sd}$\\
   {\tt initial\_status} & A JSON inner object storing data  & Y & S &  \\
        & for initial time step (initial\_status) &  &  &  \\
-  {\tt additional\_shunt} & Branch has additional shunt components (Binary: 0/1)& Y & S & \\
+  {\tt additional\_shunt} & Branch has additional shunt components (Binary)& Y & S & \\
   \hline
   Additional shunt attributes & [Conditional Attributes] Exist if {\tt additional\_shunt} is 1 &  & & \\
   \hline
@@ -853,7 +853,7 @@ Input attributes & Description (Type) & Req & Sec & Sym\\
   {\tt disconnection\_cost} & Transformer disconnection cost (Float) & Y & S & $c^{sd}$\\
   {\tt initial\_status} & A JSON inner object storing data  & Y & S &  \\
        & for initial time step (initial\_status) &  &  &  \\
-  {\tt additional\_shunt} & Transformer has additional shunt components (Binary: 0/1)& Y & S & \\
+  {\tt additional\_shunt} & Transformer has additional shunt components (Binary)& Y & S & \\
   \hline
 \end{tabular}
 \end{center}
@@ -963,9 +963,9 @@ Input attributes & Description (Type) & Req & Sec & Sym\\
   Initial condition attributes & [Inner Attributes] Within {\tt initial\_status} & & & \\
   \hline
   {\tt on\_status} & Connection status (Binary) & Y & S & $u^{on}$ \\
-  {\tt pdc\_fr} & Active power flow, from bus (p.u., Float)& Y & S & $p^{dc}$ \\
-  {\tt qdc\_fr} & Reactive power flow, from bus (p.u., Float)& Y & S & $q^{dc}$ \\
-  {\tt qdc\_to} & Reactive power flow, to bus (p.u., Float)& Y & S & $q^{dc}$ \\
+  {\tt pdc\_fr} & Active power flow, from bus (p.u.) (Float)& Y & S & $p^{dc}$ \\
+  {\tt qdc\_fr} & Reactive power flow, from bus (p.u.) (Float)& Y & S & $q^{dc}$ \\
+  {\tt qdc\_to} & Reactive power flow, to bus (p.u.) (Float)& Y & S & $q^{dc}$ \\
   \hline
 \end{tabular}
 \end{center}
@@ -1005,21 +1005,21 @@ Input attributes & Description (Type) & Req & Sec & Sym\\
 % {\tt type} & Type of reserve  & Y & S & \\
 %  & (String: REG-UP, REG-DOWN, SPIN, NON-SPIN,    &  & & \\
 %  &  FLEXI-RAMP-UP, FLEXI-RAMP-DOWN ) &  & & \\
-  {\tt REG\_UP} & Regulation reserve up requirement (Fraction, Float) & Y & S & $\sigma^{rgu}$ \\
-  {\tt REG\_DOWN} & Regulation reserve down requirement (Fraction, Float) & Y & S & $\sigma^{rgd}$ \\
-  {\tt SYN} & Synchronized reserve requirement (Fraction, Float) & Y & S & { $\sigma^{scr}$} \\
-  {\tt NSYN} & Non-synchronized reserve requirement (Fraction, Float) & Y & S & { $\sigma^{nsc}$} \\
+  {\tt REG\_UP} & Regulation reserve up requirement (Float) & Y & S & $\sigma^{rgu}$ \\
+  {\tt REG\_DOWN} & Regulation reserve down requirement (Float) & Y & S & $\sigma^{rgd}$ \\
+  {\tt SYN} & Synchronized reserve requirement (Float) & Y & S & { $\sigma^{scr}$} \\
+  {\tt NSYN} & Non-synchronized reserve requirement (Float) & Y & S & { $\sigma^{nsc}$} \\
   {\tt RAMPING\_RESERVE\_UP} & Ramping reserve up requirement (Array of Float) & Y & T & $p^{rru,min}$ \\
   {\tt RAMPING\_RESERVE\_DOWN} & Ramping reserve down requirement (Array of Float) & Y & T & $p^{rrd,min}$ \\
   \hline
-  {\tt REG\_UP\_vio\_cost} & Regulation reserve up violation cost (\$/pu-hr, Float) & Y & S & $c^{rgu}$ \\
-  {\tt REG\_DOWN\_vio\_cost} & Regulation reserve down violation cost (\$/pu-hr, Float) & Y & S & $c^{rgd}$ \\
-  {\tt SYN\_vio\_cost} & Synchronized reserve violation cost (\$/pu-hr, Float) & Y & S & { $c^{scr}$} \\
-  {\tt NSYN\_vio\_cost} & Non-synchronized reserve violation cost (\$/pu-hr, Float) & Y & S & { $c^{nsc}$} \\
+  {\tt REG\_UP\_vio\_cost} & Regulation reserve up violation cost (\$/pu-hr) (Float) & Y & S & $c^{rgu}$ \\
+  {\tt REG\_DOWN\_vio\_cost} & Regulation reserve down violation cost (\$/pu-hr) (Float) & Y & S & $c^{rgd}$ \\
+  {\tt SYN\_vio\_cost} & Synchronized reserve violation cost (\$/pu-hr) (Float) & Y & S & { $c^{scr}$} \\
+  {\tt NSYN\_vio\_cost} & Non-synchronized reserve violation cost (\$/pu-hr) (Float) & Y & S & { $c^{nsc}$} \\
   {\tt RAMPING\_RESERVE\_UP\_vio\_cost} & Flexible-ramp up violation cost & Y & S & $c^{rru}$ \\
-  &(\$/pu-hr, Float) & && \\
+                                        &(\$/pu-hr) (Float) & && \\
   {\tt RAMPING\_RESERVE\_DOWN\_vio\_cost} & Flexible-ramp down violation cost & Y & S & $c^{rrd}$ \\
-    &(\$/pu-hr, Float) & && \\
+                                          &(\$/pu-hr) (Float) & && \\
    \hline
 \end{tabular}
 \end{center}
@@ -1046,8 +1046,8 @@ Input attributes & Description (Type) & Req & Sec & Sym\\
   {\tt REACT\_UP} & Reactive reserve power up requirement (Array of Float)& Y & T & $q^{qru,min}$ \\
   {\tt REACT\_DOWN} & Reactive reserve power down requirement (Array of Float)& Y & T & $q^{qrd,min}$ \\
   \hline
-  {\tt REACT\_UP\_vio\_cost} & Reactive reserve power violation cost (\$/pu-hr, Float) & Y & S & $c^{qru}$ \\
-  {\tt REACT\_DOWN\_vio\_cost} & Reactive reserve power violation cost (\$/pu-hr, Float) & Y & S & $c^{qrd}$ \\
+  {\tt REACT\_UP\_vio\_cost} & Reactive reserve power violation cost (\$/pu-hr) (Float) & Y & S & $c^{qru}$ \\
+  {\tt REACT\_DOWN\_vio\_cost} & Reactive reserve power violation cost (\$/pu-hr) (Float) & Y & S & $c^{qrd}$ \\
   \hline
 \end{tabular}
 \end{center}
