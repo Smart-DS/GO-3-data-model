@@ -214,14 +214,9 @@ def get_objects_from_table(object_name, astr):
 
 # Gets extended with internal json objects
 types_map = {
-    "uid": "str",
-    "uids": "List[str]",
     "Array of Int": "List[int]",
-    "Array of reserve zone uids": "List[str]",
-    "Array of cost blocks": "List[float]",
     "Array of Float": "List[float]",
     "Array of Binary": "List[bool]",
-    "Array of Binary: 0/1": "List[bool]",
     "Array of String": "List[str]",
     "Array of Array of Float Float": "List[List[Tuple[float,float]]]",
     "Array of Float Float Float": "List[Tuple[float,float,float]]",
@@ -229,14 +224,7 @@ types_map = {
     "String": "str",
     "Timestamp": "str",
     "Int": "int",
-    "Integer": "int",
     "Float": "float",
-    "Fraction": "float",
-    "\\$/p.u.": "float",
-    "\\$/pu-h": "float",
-    "\\$/pu-hr": "float",
-    "p.u.": "float",
-    "bool: true/false": "bool",
     "Binary": "bool"
 }
 
