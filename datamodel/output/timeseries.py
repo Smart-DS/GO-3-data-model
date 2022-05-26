@@ -31,16 +31,6 @@ class Bus(BidDSJsonBaseModel):
         description = "Voltage angle (radian) "
     )
 
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # 
-
-    # 
-
 
 class Shunt(BidDSJsonBaseModel):
 
@@ -60,14 +50,6 @@ class Shunt(BidDSJsonBaseModel):
         title = "step",
         description = "Number of step "
     )
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # 
 
 
 class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
@@ -144,50 +126,6 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
         description = "Reactive reserve down (p.u.) "
     )
 
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
 
 class ACTransmissionLine(BidDSJsonBaseModel):
 
@@ -202,10 +140,6 @@ class ACTransmissionLine(BidDSJsonBaseModel):
         title = "on_status",
         description = "Connection status "
     )
-
-    # \end{tabular}
-
-    # \end{center}
 
 
 class TwoWindingTransformer(BidDSJsonBaseModel):
@@ -231,20 +165,6 @@ class TwoWindingTransformer(BidDSJsonBaseModel):
         title = "on_status",
         description = "Connection status "
     )
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
-    # 
 
 
 class DCLine(BidDSJsonBaseModel):
@@ -275,11 +195,5 @@ class DCLine(BidDSJsonBaseModel):
         title = "qdc_to",
         description = "Reactive power flow, to bus (p.u.) "
     )
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
 
 
