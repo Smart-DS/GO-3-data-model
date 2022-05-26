@@ -178,8 +178,12 @@ def get_objects_from_table(object_name, astr):
             if ln.startswith("\\begin{tabular}"):
                 table_started = True
             continue
+        if ln.startswith("\\begin{tabular}"):
+            expect_meta = True
+            continue
         if ln.startswith("\\end{tabular}"):
-             expect_meta = False
+            expect_meta = False
+            continue
         if ln.strip().startswith("%"): # comment character
             continue
         if ln.strip() == "\\hline":

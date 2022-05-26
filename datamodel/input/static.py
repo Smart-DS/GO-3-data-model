@@ -399,7 +399,11 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
         description = "Device has additional reactive bounds "
     )
 
+    # Device attributes
+
     # 
+
+    # Reserve attributes
 
     p_reg_res_up_ub: float = Field(
         title = "p_reg_res_up_ub",
