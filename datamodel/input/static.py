@@ -81,12 +81,6 @@ class General(BidDSJsonBaseModel):
         description = "Base MVA normalization constant "
     )
 
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
 
 class ViolationCostsParameters(BidDSJsonBaseModel):
 
@@ -106,14 +100,6 @@ class ViolationCostsParameters(BidDSJsonBaseModel):
         title = "s_vio_cost",
         description = "Branch violation costs for thermal violation (\$/pu-h) "
     )
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # 
 
 
 class Bus_initial_status(BidDSJsonBaseModel):
@@ -221,10 +207,6 @@ class Bus(BidDSJsonBaseModel):
         description = "A JSON inner object storing data   for initial time step "
     )
 
-    # \end{tabular}
-
-    # \end{center}\textbf{}
-
 
 class Shunt_initial_status(BidDSJsonBaseModel):
 
@@ -275,12 +257,6 @@ class Shunt(BidDSJsonBaseModel):
         title = "initial_status",
         description = "A JSON inner object storing data   for initial time step "
     )
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
 
 
 class DispatchableDevices_SimpleProducingConsumingDevices_initial_status(BidDSJsonBaseModel):
@@ -423,35 +399,7 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
         description = "Device has additional reactive bounds "
     )
 
-    # \end{tabular}
-
-    # \end{center}
-
     # 
-
-    # \begin{center}
-
-    # \small
-
-    # \begin{tabular}{ l | l | c | c | c |}
-
-    # Device attributes
-
-    # 
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # \begin{center}
-
-    # \small
-
-    # \begin{tabular}{ l | l | c | c | c |}
-
-    # Reserve attributes
 
     p_reg_res_up_ub: float = Field(
         title = "p_reg_res_up_ub",
@@ -494,26 +442,6 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
     )
 
     # Time varying reserve attributes
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # \begin{center}
-
-    # \small
-
-    # \begin{tabular}{ l | l | c | c | c |}
-
-    # 
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
 
     # 
 
@@ -597,16 +525,6 @@ class ACTransmissionLine(BidDSJsonBaseModel):
         title = "additional_shunt",
         description = "Branch has additional shunt components "
     )
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # 
-
-    # 
 
 
 class TwoWindingTransformer_initial_status(BidDSJsonBaseModel):
@@ -721,34 +639,6 @@ class TwoWindingTransformer(BidDSJsonBaseModel):
         description = "Transformer has additional shunt components "
     )
 
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # 
-
-    # 
-
-    # \begin{center}
-
-    # \small
-
-    # \begin{tabular}{ l | l | c | c | c |}
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # 
-
-    # 
-
-    # 
-
 
 class DCLine_initial_status(BidDSJsonBaseModel):
 
@@ -840,12 +730,6 @@ class DCLine(BidDSJsonBaseModel):
         description = "A JSON inner object storing data   for initial time step "
     )
 
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
 
 class ActiveZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
 
@@ -906,12 +790,6 @@ class ActiveZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
         description = "Flexible-ramp down violation cost (\$/pu-hr) "
     )
 
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
 
 class ReactiveZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
 
@@ -931,17 +809,5 @@ class ReactiveZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
         title = "REACT_DOWN_vio_cost",
         description = "Reactive reserve power violation cost (\$/pu-hr) "
     )
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # 
-
-    # 
-
-    # 
 
 

@@ -28,12 +28,6 @@ class General(BidDSJsonBaseModel):
 
     # Normalization attributes
 
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
 
 class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
 
@@ -47,20 +41,6 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
     # 
 
     # Flags for extra parameters
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # \begin{center}
-
-    # \small
-
-    # \begin{tabular}{ l | l | c | c | c |}
-
-    # Device attributes
 
     on_status_ub: List[bool] = Field(
         title = "on_status_ub",
@@ -98,20 +78,6 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
         title = "cost",
         description = "Array of cost blocks, where   each cost block is an array with exactly two elements:     1) marginal  cost (\$/p.u.-hr), and 2) block size (p.u.) "
     )
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # \begin{center}
-
-    # \small
-
-    # \begin{tabular}{ l | l | c | c | c |}
-
-    # Reserve attributes
 
     # Time varying reserve attributes
 
@@ -165,26 +131,6 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
         description = "Costs for reactive reserve down (\$/pu-h) "
     )
 
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # \begin{center}
-
-    # \small
-
-    # \begin{tabular}{ l | l | c | c | c |}
-
-    # 
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
     # 
 
 
@@ -207,12 +153,6 @@ class ActiveZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
         description = "Ramping reserve down requirement "
     )
 
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
 
 class ReactiveZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
 
@@ -232,17 +172,5 @@ class ReactiveZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
         title = "REACT_DOWN",
         description = "Reactive reserve power down requirement "
     )
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # 
-
-    # 
-
-    # 
 
 
