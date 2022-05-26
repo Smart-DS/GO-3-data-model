@@ -69,9 +69,8 @@ In the data format, we will use arrays and inner JSON objects to represent time 
 This is particularly important for multi-stage periods that are ubiquitous in power systems, and essential
 to solve optimization problems over a finite time horizon.
 To further simplify the data format, the format uses binary (0 \& 1) values to indicate booleans (\texttt{false} \& \texttt{true}).
-{\color{red}
 In addition, the format uses \texttt{uid} strings to globally label and identify components and their elements, primarily for ease of parsing and avoiding ambiguity. 
-}
+
 
 \section{Naming Conventions}
 \label{sec:naming}
@@ -88,13 +87,13 @@ For the input data format, attributes will be marked with:
 \begin{itemize}
 \item S --- if it is a static parameter and is expected to be presented in the static network file section;
 \item T --- if it is a time series and is expected to be presented in the time series data file section, and;
-\item B --- if it is a {\color{red} globally unique identifier/common attribute} and it is necessary to be presented across both sections for identification/referencing purposes.
+\item B --- if it is a globally unique identifier/common attribute and it is necessary to be presented across both sections for identification/referencing purposes.
 \end{itemize}
 Similarly for the output data format, attribute will be marked with:
 \begin{itemize}
 \item S --- if it is a static parameter;
 \item T --- if it is a time series, and;
-\item B --- if it is a {\color{red} globally unique identifier}.
+\item B --- if it is a red globally unique identifier.
 \end{itemize}
 As a reminder, the attribute list could be modified in the future.
 Competitors should always refer to the latest announcement for any
@@ -120,8 +119,8 @@ Global time attributes & Description (Type) & Req & Sec & Sym\\
   {\tt interval\_duration} & Time duration of the intervals, per time period in hours & Y & T & $d_t$ \\
                            & (Array of Float) &  &  & \\
                            \hline
-  {\tt timestamp\_start} & Period beginning timestamp for the first interval {\color{red}(String: Timestamp, YYYY-MM-DDThh:mm at UTC)} & N & S & \\
-  {\tt timestamp\_stop} & Period beginning timestamp for the interval following the last interval {\color{red}(String: Timestamp, YYYY-MM-DDThh:mm at UTC)} & N & S & \\
+  {\tt timestamp\_start} & Period beginning timestamp for the first interval (String: Timestamp, YYYY-MM-DDThh:mm at UTC) & N & S & \\
+  {\tt timestamp\_stop} & Period beginning timestamp for the interval following the last interval (String: Timestamp, YYYY-MM-DDThh:mm at UTC) & N & S & \\
 \hline
 Qualitative descriptors & Description (Type) & Req & Sec & Sym\\
 \hline
@@ -136,7 +135,7 @@ Qualitative descriptors & Description (Type) & Req & Sec & Sym\\
 \hline
 Normalization attributes & Description (Type) & Req & Sec & Sym\\
 \hline
-{\tt base\_norm\_mva} & Base MVA normalization constant (Float)  & {\color{red} Y} & S &  \\
+{\tt base\_norm\_mva} & Base MVA normalization constant (Float)  &  Y & S &  \\
   \hline
 \end{tabular}
 \end{center}
@@ -202,7 +201,7 @@ Input attributes & Description (Type) & Req & Sec & Sym\\
     Operations information & Description (Type) & Req & Sec & Sym\\
   \hline
   {\tt con\_loss\_factor} & Contingency participation loss factor (Float) & N & S & $\alpha$\\
-  {\tt base\_nom\_volt} & Bus nominal voltage (Float) & {\color{red} Y} & S & \\
+  {\tt base\_nom\_volt} & Bus nominal voltage (Float) &  Y & S & \\
   {\tt type} & Bus type (String: PQ, PV, Slack, Not\_used) & N & S &\\
   {\tt initial\_status} & A JSON inner object storing data  & Y & S &  \\
        & for initial time step (initial\_status) &  &  &  \\
@@ -287,7 +286,7 @@ Device attributes & Description (Type) & Req & Sec & Sym\\
   {\tt description} & Detail description of the device  (String) & N & S & \\
       &e.g. fuel type description: wind/solar/coal/gas  &  &  & \\
   {\tt vm\_setpoint} & Voltage magnitude setpoint (Float, p.u.) & N & S & \\
-  {\tt\color{red} nameplate\_capacity} & Reference capacity (Float, p.u.) & N & S & \\
+  {\tt nameplate\_capacity} & Reference capacity (Float, p.u.) & N & S & \\
   {\tt startup\_cost} & Device start up cost (Float) & Y & S & $c^{su}$\\
   {\tt shutdown\_cost} & Device shut down cost (Float) & Y & S & $c^{sd}$\\
   {\tt startups\_ub} & Array of time interval startup data blocks, where each & Y & S & $u^{su,max}$\\
@@ -311,9 +310,9 @@ Device attributes & Description (Type) & Req & Sec & Sym\\
                             & {(Case: consumer) Max consumption ramp up when operating (Float, p.u./hr)} & Y & S & $p^{ru}$ \\
   {\tt p\_ramp\_down\_ub}   & {(Case: producer) Max production ramp down when operating (Float, pu/hr)} & Y & S & $p^{rd}$ \\
                             & {(Case: consumer) Max consumption ramp down when operating (Float, pu/hr)} & Y & S & $p^{rd}$ \\
-  {\tt\color{red} p\_startup\_ramp\_ub} & {(Case: producer) Max production ramp up when start up (Float, p.u./hr)} & Y & S & $p^{ru,su}$\\
+  {\tt p\_startup\_ramp\_ub} & {(Case: producer) Max production ramp up when start up (Float, p.u./hr)} & Y & S & $p^{ru,su}$\\
                              & {(Case: consumer) Max consumption ramp up when start up (Float, p.u./hr)} & Y & S & $p^{ru,su}$\\
-  {\tt\color{red} p\_shutdown\_ramp\_ub}& {(Case: producer) Max production ramp down when shut down (Float, pu/hr)} & Y & S & $p^{rd,sd}$\\
+  {\tt p\_shutdown\_ramp\_ub}& {(Case: producer) Max production ramp down when shut down (Float, pu/hr)} & Y & S & $p^{rd,sd}$\\
                              & {(Case: consumer) Max consumption ramp down when shut down (Float, pu/hr)} & Y & S & $p^{rd,sd}$\\
   \hline
   {\tt initial\_status} & A JSON inner object storing data for initial time step (initial\_status) & Y & S &  \\
