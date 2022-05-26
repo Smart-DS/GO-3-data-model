@@ -16,12 +16,12 @@ class General(BidDSJsonBaseModel):
 
     timestamp_start: Optional[str] = Field(
         title = "timestamp_start",
-        description = "Period beginning timestamp for the first interval "
+        description = "Period beginning timestamp for the first interval with Timestamp format YYYY-MM-DDThh:mm at UTC "
     )
 
     timestamp_stop: Optional[str] = Field(
         title = "timestamp_stop",
-        description = "Period beginning timestamp for the interval following the last interval "
+        description = "Period beginning timestamp for the interval following the last interval with Timestamp format YYYY-MM-DDThh:mm at UTC "
     )
 
     # Qualitative descriptors
@@ -29,63 +29,57 @@ class General(BidDSJsonBaseModel):
     season: Optional[str] = Field(
         title = "season",
         description = "Season of the year the problem lies within ",
-        options = ["Winter"]
+        options = ["Winter", "Spring", "Summer", "Fall"]
     )
 
     electricity_demand: Optional[str] = Field(
         title = "electricity_demand",
         description = "How demand compares to other times of the year/season ",
-        options = ["Peak"]
+        options = ["Peak", "High", "Average", "Low", "Minimum"]
     )
 
     vre_availability: Optional[str] = Field(
         title = "vre_availability",
         description = "How variable renewable energy availability compares to other times of the year/season ",
-        options = ["High"]
+        options = ["High", "Average", "Low"]
     )
 
     solar_availability: Optional[str] = Field(
         title = "solar_availability",
-        description = "How solar availablity compares to other times of the year/season ",
-        options = ["High"]
+        description = "How solar availability compares to other times of the year/season ",
+        options = ["High", "Average", "Low"]
     )
 
     wind_availability: Optional[str] = Field(
         title = "wind_availability",
-        description = "How solar availablity compares to other times of the year/season ",
-        options = ["High"]
+        description = "How wind availability compares to other times of the year/season ",
+        options = ["High", "Average", "Low"]
     )
 
     weather_temperature: Optional[str] = Field(
         title = "weather_temperature",
         description = "How outside temperature compares to other times of the year/season ",
-        options = ["Hottest"]
+        options = ["Hottest", "Warm", "Average", "Cool", "Cold"]
     )
 
     day_type: Optional[str] = Field(
         title = "day_type",
         description = "What kind of weekday is represented ",
-        options = ["Weekday"]
+        options = ["Weekday", "Weekend", "Holiday"]
     )
 
     net_load: Optional[str] = Field(
         title = "net_load",
         description = "How the net-load profile compares to other times of the year/season ",
-        options = ["Peak"]
+        options = ["Peak", "High", "Average", "Low", "Minimum", "High-Up-Ramp", "High-Down-Ramp"]
     )
 
     # Normalization attributes
 
-    base_norm_mva: Optional[float] = Field(
+    base_norm_mva: float = Field(
         title = "base_norm_mva",
         description = "Base MVA normalization constant "
     )
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
 
 
 class ViolationCostsParameters(BidDSJsonBaseModel):
@@ -94,26 +88,18 @@ class ViolationCostsParameters(BidDSJsonBaseModel):
 
     p_bus_vio_cost: float = Field(
         title = "p_bus_vio_cost",
-        description = "Bus violation costs for active power violation "
+        description = "Bus violation costs for active power violation (\$/pu-h) "
     )
 
     q_bus_vio_cost: float = Field(
         title = "q_bus_vio_cost",
-        description = "Bus violation costs for reactive power violation  "
+        description = "Bus violation costs for reactive power violation  (\$/pu-h) "
     )
 
     s_vio_cost: float = Field(
         title = "s_vio_cost",
-        description = "Branch violation costs for thermal violation "
+        description = "Branch violation costs for thermal violation (\$/pu-h) "
     )
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # 
 
 
 class Bus_initial_status(BidDSJsonBaseModel):
@@ -175,7 +161,7 @@ class Bus(BidDSJsonBaseModel):
 
     latitude: Optional[float] = Field(
         title = "latitude",
-        description = "Bus location - latitude "
+        description = "Bus location - latitude   "
     )
 
     city: Optional[str] = Field(
@@ -205,7 +191,7 @@ class Bus(BidDSJsonBaseModel):
         description = "Contingency participation loss factor "
     )
 
-    base_nom_volt: Optional[float] = Field(
+    base_nom_volt: float = Field(
         title = "base_nom_volt",
         description = "Bus nominal voltage "
     )
@@ -213,7 +199,7 @@ class Bus(BidDSJsonBaseModel):
     type: Optional[str] = Field(
         title = "type",
         description = "Bus type ",
-        options = ["PQ"]
+        options = ["PQ", "PV", "Slack", "Not_used"]
     )
 
     initial_status: Bus_initial_status = Field(
@@ -221,17 +207,12 @@ class Bus(BidDSJsonBaseModel):
         description = "A JSON inner object storing data   for initial time step "
     )
 
-    # \end{tabular}
-
-    # \end{center}
-
 
 class Shunt_initial_status(BidDSJsonBaseModel):
 
-    on_status: int = Field(
+    on_status: bool = Field(
         title = "on_status",
-        description = "On-off status ",
-        options = [0, 1]
+        description = "On-off status "
     )
 
     step: int = Field(
@@ -254,12 +235,12 @@ class Shunt(BidDSJsonBaseModel):
 
     gs: float = Field(
         title = "gs",
-        description = "Shunt conductance for one step "
+        description = "Shunt conductance for one step (p.u.) "
     )
 
     bs: float = Field(
         title = "bs",
-        description = "Shunt susceptance for one step "
+        description = "Shunt susceptance for one step (p.u.) "
     )
 
     step_ub: int = Field(
@@ -277,19 +258,12 @@ class Shunt(BidDSJsonBaseModel):
         description = "A JSON inner object storing data   for initial time step "
     )
 
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
 
 class DispatchableDevices_SimpleProducingConsumingDevices_initial_status(BidDSJsonBaseModel):
 
-    on_status: int = Field(
+    on_status: bool = Field(
         title = "on_status",
-        description = "On status indicator for initial time step ",
-        options = [0, 1]
+        description = "On status indicator for initial time step "
     )
 
     p: float = Field(
@@ -328,7 +302,7 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
     device_type: str = Field(
         title = "device_type",
         description = "Type of device ",
-        options = ["producer / consumer"]
+        options = ["producer", "consumer"]
     )
 
     description: Optional[str] = Field(
@@ -425,33 +399,9 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
         description = "Device has additional reactive bounds "
     )
 
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # \begin{center}
-
-    # \small
-
-    # \begin{tabular}{ l | l | c | c | c |}
-
     # Device attributes
 
     # 
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # \begin{center}
-
-    # \small
-
-    # \begin{tabular}{ l | l | c | c | c |}
 
     # Reserve attributes
 
@@ -496,26 +446,6 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
     )
 
     # Time varying reserve attributes
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # \begin{center}
-
-    # \small
-
-    # \begin{tabular}{ l | l | c | c | c |}
-
-    # 
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
 
     # 
 
@@ -595,21 +525,10 @@ class ACTransmissionLine(BidDSJsonBaseModel):
         description = "A JSON inner object storing data   for initial time step "
     )
 
-    additional_shunt: int = Field(
+    additional_shunt: bool = Field(
         title = "additional_shunt",
-        description = "Branch has additional shunt components ",
-        options = [0, 1]
+        description = "Branch has additional shunt components "
     )
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # 
-
-    # 
 
 
 class TwoWindingTransformer_initial_status(BidDSJsonBaseModel):
@@ -719,39 +638,10 @@ class TwoWindingTransformer(BidDSJsonBaseModel):
         description = "A JSON inner object storing data   for initial time step "
     )
 
-    additional_shunt: int = Field(
+    additional_shunt: bool = Field(
         title = "additional_shunt",
-        description = "Transformer has additional shunt components ",
-        options = [0, 1]
+        description = "Transformer has additional shunt components "
     )
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # 
-
-    # 
-
-    # \begin{center}
-
-    # \small
-
-    # \begin{tabular}{ l | l | c | c | c |}
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # 
-
-    # 
-
-    # 
 
 
 class DCLine_initial_status(BidDSJsonBaseModel):
@@ -763,17 +653,17 @@ class DCLine_initial_status(BidDSJsonBaseModel):
 
     pdc_fr: float = Field(
         title = "pdc_fr",
-        description = "Active power flow, from bus "
+        description = "Active power flow, from bus (p.u.) "
     )
 
     qdc_fr: float = Field(
         title = "qdc_fr",
-        description = "Reactive power flow, from bus "
+        description = "Reactive power flow, from bus (p.u.) "
     )
 
     qdc_to: float = Field(
         title = "qdc_to",
-        description = "Reactive power flow, to bus "
+        description = "Reactive power flow, to bus (p.u.) "
     )
 class DCLine(BidDSJsonBaseModel):
 
@@ -844,12 +734,6 @@ class DCLine(BidDSJsonBaseModel):
         description = "A JSON inner object storing data   for initial time step "
     )
 
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
 
 class ActiveZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
 
@@ -882,39 +766,33 @@ class ActiveZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
 
     REG_UP_vio_cost: float = Field(
         title = "REG_UP_vio_cost",
-        description = "Regulation reserve up violation cost "
+        description = "Regulation reserve up violation cost (\$/pu-hr) "
     )
 
     REG_DOWN_vio_cost: float = Field(
         title = "REG_DOWN_vio_cost",
-        description = "Regulation reserve down violation cost "
+        description = "Regulation reserve down violation cost (\$/pu-hr) "
     )
 
     SYN_vio_cost: float = Field(
         title = "SYN_vio_cost",
-        description = "Synchronized reserve violation cost "
+        description = "Synchronized reserve violation cost (\$/pu-hr) "
     )
 
     NSYN_vio_cost: float = Field(
         title = "NSYN_vio_cost",
-        description = "Non-synchronized reserve violation cost "
+        description = "Non-synchronized reserve violation cost (\$/pu-hr) "
     )
 
     RAMPING_RESERVE_UP_vio_cost: float = Field(
         title = "RAMPING_RESERVE_UP_vio_cost",
-        description = "Flexible-ramp up violation cost "
+        description = "Flexible-ramp up violation cost (\$/pu-hr) "
     )
 
     RAMPING_RESERVE_DOWN_vio_cost: float = Field(
         title = "RAMPING_RESERVE_DOWN_vio_cost",
-        description = "Flexible-ramp down violation cost "
+        description = "Flexible-ramp down violation cost (\$/pu-hr) "
     )
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
 
 
 class ReactiveZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
@@ -928,24 +806,12 @@ class ReactiveZonalReserveRequirementsViolationCosts(BidDSJsonBaseModel):
 
     REACT_UP_vio_cost: float = Field(
         title = "REACT_UP_vio_cost",
-        description = "Reactive reserve power violation cost "
+        description = "Reactive reserve power violation cost (\$/pu-hr) "
     )
 
     REACT_DOWN_vio_cost: float = Field(
         title = "REACT_DOWN_vio_cost",
-        description = "Reactive reserve power violation cost "
+        description = "Reactive reserve power violation cost (\$/pu-hr) "
     )
-
-    # \end{tabular}
-
-    # \end{center}
-
-    # 
-
-    # 
-
-    # 
-
-    # 
 
 

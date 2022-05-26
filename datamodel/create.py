@@ -178,8 +178,12 @@ def get_objects_from_table(object_name, astr):
             if ln.startswith("\\begin{tabular}"):
                 table_started = True
             continue
-        # if ln.startswith("\\end{tabular}"):
-        #     break
+        if ln.startswith("\\begin{tabular}"):
+            expect_meta = True
+            continue
+        if ln.startswith("\\end{tabular}"):
+            expect_meta = False
+            continue
         if ln.strip().startswith("%"): # comment character
             continue
         if ln.strip() == "\\hline":
@@ -214,14 +218,9 @@ def get_objects_from_table(object_name, astr):
 
 # Gets extended with internal json objects
 types_map = {
-    "uid": "str",
-    "uids": "List[str]",
     "Array of Int": "List[int]",
-    "Array of reserve zone uids": "List[str]",
-    "Array of cost blocks": "List[float]",
     "Array of Float": "List[float]",
     "Array of Binary": "List[bool]",
-    "Array of Binary: 0/1": "List[bool]",
     "Array of String": "List[str]",
     "Array of Array of Float Float": "List[List[Tuple[float,float]]]",
     "Array of Float Float Float": "List[Tuple[float,float,float]]",
@@ -229,14 +228,7 @@ types_map = {
     "String": "str",
     "Timestamp": "str",
     "Int": "int",
-    "Integer": "int",
     "Float": "float",
-    "Fraction": "float",
-    "\\$/p.u.": "float",
-    "\\$/pu-h": "float",
-    "\\$/pu-hr": "float",
-    "p.u.": "float",
-    "bool: true/false": "bool",
     "Binary": "bool"
 }
 
@@ -259,7 +251,8 @@ def parse_field(ln,object_name):
     desc = m.group(1); type_name = m.group(2)
 
     tmp = type_name.split(',')
-    type_name = tmp[0].strip().replace("\\_", "_")
+    if not tmp[0].strip().startswith('String:'):
+        type_name = tmp[0].strip().replace("\\_", "_")
     if len(tmp) > 1:
         # TODO: Put units somewhere in the Pydantic model
         units = ','.join(tmp[1:]).lstrip()
@@ -273,7 +266,7 @@ def parse_field(ln,object_name):
     else:
         if type_name.startswith("String:"):
             # choices list
-            choices = type_name.split(":")[1].strip().split(",")
+            choices = type_name.split(":")[1].strip().split(", ")
             choices = [choice.strip().replace("\\_","_") for choice in choices]
             # TODO: Consider turning choices into an Enum and then setting type_name 
             # to be that Enum
