@@ -28,7 +28,7 @@ python datamodel/create.py 20220128
 To use the created Pydantic model for reading and validating, do:
 
 ```
-from datamodel.input.dataderived import InputDataFile
+from datamodel.input.data import InputDataFile
 problem_data = InputDataFile.load(problem_data_file_name)
 ```
 
