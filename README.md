@@ -24,3 +24,12 @@ Then you'll want to add code to Bid-DS-data-model/datamodel/create.py and run it
 cd Bid-DS-data-model
 python datamodel/create.py 20220128
 ```
+
+To use the created Pydantic model for reading and validating, do:
+
+```
+from datamodel.input.dataderived import InputDataFile
+problem_data = InputDataFile.load(problem_data_file_name)
+```
+
+If no errors are raised, then validation succeeded and problem_data is a Pydantic model containing the problem data.
