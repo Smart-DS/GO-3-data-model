@@ -16,12 +16,12 @@ class General(BidDSJsonBaseModel):
 
     timestamp_start: Optional[str] = Field(
         title = "timestamp_start",
-        description = "Period beginning timestamp for the first interval "
+        description = "Period beginning timestamp for the first interval with Timestamp format YYYY-MM-DDThh:mm at UTC "
     )
 
     timestamp_stop: Optional[str] = Field(
         title = "timestamp_stop",
-        description = "Period beginning timestamp for the interval following the last interval "
+        description = "Period beginning timestamp for the interval following the last interval with Timestamp format YYYY-MM-DDThh:mm at UTC "
     )
 
     # Qualitative descriptors
@@ -46,13 +46,13 @@ class General(BidDSJsonBaseModel):
 
     solar_availability: Optional[str] = Field(
         title = "solar_availability",
-        description = "How solar availablity compares to other times of the year/season ",
+        description = "How solar availability compares to other times of the year/season ",
         options = ["High"]
     )
 
     wind_availability: Optional[str] = Field(
         title = "wind_availability",
-        description = "How solar availablity compares to other times of the year/season ",
+        description = "How wind availability compares to other times of the year/season ",
         options = ["High"]
     )
 
@@ -76,7 +76,7 @@ class General(BidDSJsonBaseModel):
 
     # Normalization attributes
 
-    base_norm_mva: Optional[float] = Field(
+    base_norm_mva: float = Field(
         title = "base_norm_mva",
         description = "Base MVA normalization constant "
     )
@@ -175,7 +175,7 @@ class Bus(BidDSJsonBaseModel):
 
     latitude: Optional[float] = Field(
         title = "latitude",
-        description = "Bus location - latitude "
+        description = "Bus location - latitude   "
     )
 
     city: Optional[str] = Field(
@@ -205,7 +205,7 @@ class Bus(BidDSJsonBaseModel):
         description = "Contingency participation loss factor "
     )
 
-    base_nom_volt: Optional[float] = Field(
+    base_nom_volt: float = Field(
         title = "base_nom_volt",
         description = "Bus nominal voltage "
     )
@@ -223,7 +223,7 @@ class Bus(BidDSJsonBaseModel):
 
     # \end{tabular}
 
-    # \end{center}
+    # \end{center}\textbf{}
 
 
 class Shunt_initial_status(BidDSJsonBaseModel):
@@ -328,7 +328,7 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
     device_type: str = Field(
         title = "device_type",
         description = "Type of device ",
-        options = ["producer / consumer"]
+        options = ["producer"]
     )
 
     description: Optional[str] = Field(

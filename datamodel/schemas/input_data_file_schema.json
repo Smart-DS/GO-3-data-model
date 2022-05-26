@@ -33,12 +33,12 @@
             "properties": {
                 "timestamp_start": {
                     "title": "timestamp_start",
-                    "description": "Period beginning timestamp for the first interval ",
+                    "description": "Period beginning timestamp for the first interval with Timestamp format YYYY-MM-DDThh:mm at UTC ",
                     "type": "string"
                 },
                 "timestamp_stop": {
                     "title": "timestamp_stop",
-                    "description": "Period beginning timestamp for the interval following the last interval ",
+                    "description": "Period beginning timestamp for the interval following the last interval with Timestamp format YYYY-MM-DDThh:mm at UTC ",
                     "type": "string"
                 },
                 "season": {
@@ -67,7 +67,7 @@
                 },
                 "solar_availability": {
                     "title": "solar_availability",
-                    "description": "How solar availablity compares to other times of the year/season ",
+                    "description": "How solar availability compares to other times of the year/season ",
                     "options": [
                         "High"
                     ],
@@ -75,7 +75,7 @@
                 },
                 "wind_availability": {
                     "title": "wind_availability",
-                    "description": "How solar availablity compares to other times of the year/season ",
+                    "description": "How wind availability compares to other times of the year/season ",
                     "options": [
                         "High"
                     ],
@@ -111,6 +111,9 @@
                     "type": "number"
                 }
             },
+            "required": [
+                "base_norm_mva"
+            ],
             "additionalProperties": false
         },
         "ViolationCostsParameters": {
@@ -216,7 +219,7 @@
                 },
                 "latitude": {
                     "title": "latitude",
-                    "description": "Bus location - latitude ",
+                    "description": "Bus location - latitude   ",
                     "type": "number"
                 },
                 "city": {
@@ -273,6 +276,7 @@
                 "vm_lb",
                 "active_reserve_uids",
                 "reactive_reserve_uids",
+                "base_nom_volt",
                 "initial_status"
             ],
             "additionalProperties": false
@@ -422,7 +426,7 @@
                     "title": "device_type",
                     "description": "Type of device ",
                     "options": [
-                        "producer / consumer"
+                        "producer"
                     ],
                     "type": "string"
                 },
@@ -457,6 +461,8 @@
                     "type": "array",
                     "items": {
                         "type": "array",
+                        "minItems": 3,
+                        "maxItems": 3,
                         "items": [
                             {
                                 "type": "number"
@@ -476,6 +482,8 @@
                     "type": "array",
                     "items": {
                         "type": "array",
+                        "minItems": 3,
+                        "maxItems": 3,
                         "items": [
                             {
                                 "type": "number"
@@ -495,6 +503,8 @@
                     "type": "array",
                     "items": {
                         "type": "array",
+                        "minItems": 3,
+                        "maxItems": 3,
                         "items": [
                             {
                                 "type": "number"
@@ -1316,6 +1326,8 @@
                         "type": "array",
                         "items": {
                             "type": "array",
+                            "minItems": 2,
+                            "maxItems": 2,
                             "items": [
                                 {
                                     "type": "number"
