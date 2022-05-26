@@ -45,7 +45,10 @@
                     "title": "season",
                     "description": "Season of the year the problem lies within ",
                     "options": [
-                        "Winter"
+                        "Winter",
+                        "Spring",
+                        "Summer",
+                        "Fall"
                     ],
                     "type": "string"
                 },
@@ -53,7 +56,11 @@
                     "title": "electricity_demand",
                     "description": "How demand compares to other times of the year/season ",
                     "options": [
-                        "Peak"
+                        "Peak",
+                        "High",
+                        "Average",
+                        "Low",
+                        "Minimum"
                     ],
                     "type": "string"
                 },
@@ -61,7 +68,9 @@
                     "title": "vre_availability",
                     "description": "How variable renewable energy availability compares to other times of the year/season ",
                     "options": [
-                        "High"
+                        "High",
+                        "Average",
+                        "Low"
                     ],
                     "type": "string"
                 },
@@ -69,7 +78,9 @@
                     "title": "solar_availability",
                     "description": "How solar availability compares to other times of the year/season ",
                     "options": [
-                        "High"
+                        "High",
+                        "Average",
+                        "Low"
                     ],
                     "type": "string"
                 },
@@ -77,7 +88,9 @@
                     "title": "wind_availability",
                     "description": "How wind availability compares to other times of the year/season ",
                     "options": [
-                        "High"
+                        "High",
+                        "Average",
+                        "Low"
                     ],
                     "type": "string"
                 },
@@ -85,7 +98,11 @@
                     "title": "weather_temperature",
                     "description": "How outside temperature compares to other times of the year/season ",
                     "options": [
-                        "Hottest"
+                        "Hottest",
+                        "Warm",
+                        "Average",
+                        "Cool",
+                        "Cold"
                     ],
                     "type": "string"
                 },
@@ -93,7 +110,9 @@
                     "title": "day_type",
                     "description": "What kind of weekday is represented ",
                     "options": [
-                        "Weekday"
+                        "Weekday",
+                        "Weekend",
+                        "Holiday"
                     ],
                     "type": "string"
                 },
@@ -101,7 +120,13 @@
                     "title": "net_load",
                     "description": "How the net-load profile compares to other times of the year/season ",
                     "options": [
-                        "Peak"
+                        "Peak",
+                        "High",
+                        "Average",
+                        "Low",
+                        "Minimum",
+                        "High-Up-Ramp",
+                        "High-Down-Ramp"
                     ],
                     "type": "string"
                 },
@@ -256,7 +281,10 @@
                     "title": "type",
                     "description": "Bus type ",
                     "options": [
-                        "PQ"
+                        "PQ",
+                        "PV",
+                        "Slack",
+                        "Not_used"
                     ],
                     "type": "string"
                 },
@@ -426,7 +454,8 @@
                     "title": "device_type",
                     "description": "Type of device ",
                     "options": [
-                        "producer"
+                        "producer",
+                        "consumer"
                     ],
                     "type": "string"
                 },

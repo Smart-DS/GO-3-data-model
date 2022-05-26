@@ -119,8 +119,8 @@ Global time attributes & Description (Type) & Req & Sec & Sym\\
   {\tt interval\_duration} & Time duration of the intervals, per time period in hours & Y & T & $d_t$ \\
                            & (Array of Float) &  &  & \\
                            \hline
-  {\tt timestamp\_start} & Period beginning timestamp for the first interval (String: Timestamp, YYYY-MM-DDThh:mm at UTC) & N & S & \\
-  {\tt timestamp\_stop} & Period beginning timestamp for the interval following the last interval (String: Timestamp, YYYY-MM-DDThh:mm at UTC) & N & S & \\
+                           {\tt timestamp\_start} & Period beginning timestamp for the first interval with Timestamp format YYYY-MM-DDThh:mm at UTC (String) & N & S & \\
+                           {\tt timestamp\_stop} & Period beginning timestamp for the interval following the last interval with Timestamp format YYYY-MM-DDThh:mm at UTC (String) & N & S & \\
 \hline
 Qualitative descriptors & Description (Type) & Req & Sec & Sym\\
 \hline
@@ -282,7 +282,7 @@ Device attributes & Description (Type) & Req & Sec & Sym\\
 \hline
   {\tt uid} & Producing device unique identifier (String) & Y & B &  \\
   {\tt bus} & Unique identifier for connecting bus (String)& Y & S & \\
-  {\tt device\_type} & Type of device (String: producer / consumer) & Y & S & \\
+  {\tt device\_type} & Type of device (String: producer, consumer) & Y & S & \\
   {\tt description} & Detail description of the device  (String) & N & S & \\
       &e.g. fuel type description: wind/solar/coal/gas  &  &  & \\
   {\tt vm\_setpoint} & Voltage magnitude setpoint (Float, p.u.) & N & S & \\

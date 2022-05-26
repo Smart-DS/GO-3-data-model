@@ -259,7 +259,8 @@ def parse_field(ln,object_name):
     desc = m.group(1); type_name = m.group(2)
 
     tmp = type_name.split(',')
-    type_name = tmp[0].strip().replace("\\_", "_")
+    if not tmp[0].strip().startswith('String:'):
+        type_name = tmp[0].strip().replace("\\_", "_")
     if len(tmp) > 1:
         # TODO: Put units somewhere in the Pydantic model
         units = ','.join(tmp[1:]).lstrip()
@@ -273,7 +274,7 @@ def parse_field(ln,object_name):
     else:
         if type_name.startswith("String:"):
             # choices list
-            choices = type_name.split(":")[1].strip().split(",")
+            choices = type_name.split(":")[1].strip().split(", ")
             choices = [choice.strip().replace("\\_","_") for choice in choices]
             # TODO: Consider turning choices into an Enum and then setting type_name 
             # to be that Enum

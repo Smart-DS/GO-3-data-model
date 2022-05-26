@@ -29,49 +29,49 @@ class General(BidDSJsonBaseModel):
     season: Optional[str] = Field(
         title = "season",
         description = "Season of the year the problem lies within ",
-        options = ["Winter"]
+        options = ["Winter", "Spring", "Summer", "Fall"]
     )
 
     electricity_demand: Optional[str] = Field(
         title = "electricity_demand",
         description = "How demand compares to other times of the year/season ",
-        options = ["Peak"]
+        options = ["Peak", "High", "Average", "Low", "Minimum"]
     )
 
     vre_availability: Optional[str] = Field(
         title = "vre_availability",
         description = "How variable renewable energy availability compares to other times of the year/season ",
-        options = ["High"]
+        options = ["High", "Average", "Low"]
     )
 
     solar_availability: Optional[str] = Field(
         title = "solar_availability",
         description = "How solar availability compares to other times of the year/season ",
-        options = ["High"]
+        options = ["High", "Average", "Low"]
     )
 
     wind_availability: Optional[str] = Field(
         title = "wind_availability",
         description = "How wind availability compares to other times of the year/season ",
-        options = ["High"]
+        options = ["High", "Average", "Low"]
     )
 
     weather_temperature: Optional[str] = Field(
         title = "weather_temperature",
         description = "How outside temperature compares to other times of the year/season ",
-        options = ["Hottest"]
+        options = ["Hottest", "Warm", "Average", "Cool", "Cold"]
     )
 
     day_type: Optional[str] = Field(
         title = "day_type",
         description = "What kind of weekday is represented ",
-        options = ["Weekday"]
+        options = ["Weekday", "Weekend", "Holiday"]
     )
 
     net_load: Optional[str] = Field(
         title = "net_load",
         description = "How the net-load profile compares to other times of the year/season ",
-        options = ["Peak"]
+        options = ["Peak", "High", "Average", "Low", "Minimum", "High-Up-Ramp", "High-Down-Ramp"]
     )
 
     # Normalization attributes
@@ -213,7 +213,7 @@ class Bus(BidDSJsonBaseModel):
     type: Optional[str] = Field(
         title = "type",
         description = "Bus type ",
-        options = ["PQ"]
+        options = ["PQ", "PV", "Slack", "Not_used"]
     )
 
     initial_status: Bus_initial_status = Field(
@@ -328,7 +328,7 @@ class DispatchableDevices_SimpleProducingConsumingDevices(BidDSJsonBaseModel):
     device_type: str = Field(
         title = "device_type",
         description = "Type of device ",
-        options = ["producer"]
+        options = ["producer", "consumer"]
     )
 
     description: Optional[str] = Field(
