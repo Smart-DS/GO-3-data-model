@@ -29,11 +29,15 @@ models = {
 def create_objects(format_docs_dir):
     input_objects = {
         "static": {},
-        "timeseries": {}
+        "staticinner": {},
+        "timeseries": {},
+        "timeseriesinner": {}
     }
     output_objects = {
         "static": {},
-        "timeseries": {}
+        "staticinner": {},
+        "timeseries": {},
+        "timeseriesinner": {}
     }
     with open(format_docs_dir / "main.tex", encoding="utf8") as f:
         main_file = f.read()
@@ -53,28 +57,42 @@ def create_objects(format_docs_dir):
         if "Input Attributes" in tmp:
             logger.info(f"Processing {candidate} input attributes")
             # process input attribute table
-            static_obj, timeseries_obj = get_objects_from_table(candidate, tmp["Input Attributes"])
+            static_obj, timeseries_obj, static_inner_objs, timeseries_inner_objs = \
+                get_objects_from_table(candidate, tmp["Input Attributes"])
             if (static_obj is None) and (timeseries_obj is None):
                 logger.info(f"Unable to extract input attributes for {candidate}")
             else:
                 if static_obj:
                     input_objects["static"][candidate] = static_obj
+                if static_inner_objs:
+                    for inner_obj, inner_obj_str in static_inner_objs.items():
+                        input_objects["staticinner"][inner_obj] = inner_obj_str
                 if timeseries_obj:
                     input_objects["timeseries"][candidate] = timeseries_obj
+                if timeseries_inner_objs:
+                    for inner_obj, inner_obj_str in timeseries_inner_objs.items():
+                        input_objects["timeseriesinner"][inner_obj] = inner_obj_str
         else:
             logger.info(f"No input attributes for {candidate}")
         
         if "Output Attributes" in tmp:
             logger.info(f"Processing {candidate} output attributes")
             # process output attribute table
-            static_obj, timeseries_obj = get_objects_from_table(candidate, tmp["Output Attributes"])
+            static_obj, timeseries_obj, static_inner_objs, timeseries_inner_objs = \
+                get_objects_from_table(candidate, tmp["Output Attributes"])
             if (static_obj is None) and (timeseries_obj is None):
                 logger.info(f"Unable to extract output attributes for {candidate}")
             else:
                 if static_obj:
                     output_objects["static"][candidate] = static_obj
+                if static_inner_objs:
+                    for inner_obj, inner_obj_str in static_inner_objs.items():
+                        output_objects["staticinner"][inner_obj] = inner_obj_str
                 if timeseries_obj:
                     output_objects["timeseries"][candidate] = timeseries_obj
+                if timeseries_inner_objs:
+                    for inner_obj, inner_obj_str in timeseries_inner_objs.items():
+                        output_objects["timeseriesinner"][inner_obj] = inner_obj_str
         else:
             logger.info(f"No output attributes for {candidate}")
 
@@ -84,6 +102,8 @@ def create_objects(format_docs_dir):
 def get_objects_from_table(object_name, astr):
     static_result = ""
     timeseries_result = ""
+    static_inner_objects = {}
+    timeseries_inner_objects = {}
 
     # Some descriptions in the table overflow onto the following line. 
     # This bit of code joins those lines together.
@@ -117,11 +137,12 @@ def get_objects_from_table(object_name, astr):
                 continue
             inner_attribute = m.group(1).replace("\\_", "_")
             inner_attribute_formatted = object_name+'_'+inner_attribute
+            inner_attribute_class = object_name+inner_attribute.replace("_"," ").title().replace(" ","")
             inner_attribute_array = object_name+'_'+'Array of '+inner_attribute
 
-            types_map[inner_attribute_formatted] = inner_attribute_formatted
-            types_map[inner_attribute_array] = "List["+inner_attribute_formatted+"]"
-            internal_result = f"class {inner_attribute_formatted}(BidDSJsonBaseModel):\n"
+            types_map[inner_attribute_formatted] = inner_attribute_class
+            types_map[inner_attribute_array] = "List["+inner_attribute_class+"]"
+            internal_result = f"class {inner_attribute_class}Base(BidDSJsonBaseModel):\n"
             ln_cnt +=2 # skip the new line
             while True: #This is bad practice...
                 ln = all_lines[ln_cnt]
@@ -135,9 +156,9 @@ def get_objects_from_table(object_name, astr):
                 ln_cnt+=1
 
             if sec == 'S' or sec == 'B':
-                static_result += internal_result
+                static_inner_objects[inner_attribute_class] = internal_result
             if sec == 'T' or sec == 'B':
-                timeseries_result += internal_result
+                timeseries_inner_objects = internal_result
 
         elif 'Conditional Attributes]' in ln:
             m = re.match(".*\{\\\\tt\S* (.+)\}.*",ln)
@@ -168,8 +189,8 @@ def get_objects_from_table(object_name, astr):
 
         ln_cnt+=1
 
-    static_result += f"class {object_name}(BidDSJsonBaseModel):\n"
-    timeseries_result += f"class {object_name}(BidDSJsonBaseModel):\n"
+    static_result += f"class {object_name}Base(BidDSJsonBaseModel):\n"
+    timeseries_result += f"class {object_name}Base(BidDSJsonBaseModel):\n"
     has_static = False; has_timeseries = False
 
     table_started = False; expect_meta = True
@@ -210,10 +231,14 @@ def get_objects_from_table(object_name, astr):
 
     if not has_static:
         static_result = None
+        static_inner_objects = None
     if not has_timeseries:
         timeseries_result = None
+        timeseries_inner_objects = None
 
-    return (static_result, timeseries_result) if table_started else (None, None)
+    if table_started:
+        return (static_result, timeseries_result, static_inner_objects, timeseries_inner_objects) 
+    return (None, None, None, None)
 
 
 # Gets extended with internal json objects
@@ -356,6 +381,12 @@ def create_models(format_docs_dir, input_objects, output_objects):
                     continue
                 object_store[object_name] = obj
             else:
+                # write out sections as their own file
+                sections_names = list(names[:-1]) + ["sections"]
+                write_file(datamodel_path, sections_names, object_store, imports=imports)
+                object_store = {}
+
+                # now compose the overall file
                 orig_name = f"{names[0].title()} Data File"
                 if not orig_name in subsections:
                     logger.warning(f"Unable to find subsection {orig_name}")
@@ -374,11 +405,12 @@ def create_models(format_docs_dir, input_objects, output_objects):
                     continue
                 object_store[object_name] = obj
 
-        write_file(datamodel_path, names, object_store, imports=imports)            
+        # write out the overall file
+        write_file(datamodel_path, names, object_store, imports=[f"from datamodel.{'.'.join(sections_names)} import *"])
 
 
 def get_object_from_subsection(object_name, astr, object_ref, object_preamble, is_schema=False):
-    result = f"class {object_name}(BidDSJsonBaseModel):\n"
+    result = f"class {object_name}Base(BidDSJsonBaseModel):\n"
 
     if is_schema:
         result += f"""
@@ -499,15 +531,17 @@ def get_object_from_subsection(object_name, astr, object_ref, object_preamble, i
 def write_file(datamodel_path, names, objects, imports = []):
     n = len(names)
     p = datamodel_path
+    prefix = ".".join(names)
     for i, name in enumerate(names):
         if i == n-1:
-            p = p / f"{name}.py"
+            p = p / f"{name}base.py"
             break
         p = p / name
         if not p.exists():
             p.mkdir()
             (p / "__init__.py").touch()
     
+    # write the base models
     with open(p, "w") as f:
         f.write(
 """import logging
@@ -522,11 +556,26 @@ from typing import Dict, List, Optional, Union, Tuple
 
 from datamodel.base import BidDSJsonBaseModel\n""")
         for to_import in imports:
-            f.write(f"import {to_import}\n")
+            if " " in to_import:
+                f.write(f"{to_import}\n")
+            else:
+                f.write(f"import {to_import}\n")
 
         f.write("\n")
         for name, obj in objects.items():
             f.write(obj + "\n\n")
+
+    # write template for derived models
+    pp = p.parent / f"__{p.stem[:-4]}.py"
+    with open(pp, "w") as f:
+        f.write(
+f"""import logging
+
+from datamodel.{prefix}base import *\n""")
+        f.write("\n")
+        for name in objects.keys():
+            f.write(f"class {name}({name}Base): pass" + "\n\n")
+
     return
 
 
@@ -544,13 +593,18 @@ if __name__ == "__main__":
 
     input_objects, output_objects = create_objects(format_docs_dir)
     object_files = {
-        ("input", "static"): input_objects["static"],
-        ("input", "timeseries"): input_objects["timeseries"],
-        ("output", "static"): output_objects["static"],
-        ("output", "timeseries"): output_objects["timeseries"],
+        ("input", "static"): (input_objects["static"], ["from datamodel.input.staticinner import *"]),
+        ("input", "staticinner"): (input_objects["staticinner"], []),
+        ("input", "timeseries"): (input_objects["timeseries"], ["from datamodel.input.timeseriesinner import *"]),
+        ("input", "timeseriesinner"): (input_objects["timeseriesinner"], []),
+        ("output", "static"): (output_objects["static"], ["from datamodel.output.staticinner import *"]),
+        ("output", "staticinner"): (output_objects["staticinner"], []),
+        ("output", "timeseries"): (output_objects["timeseries"], ["from datamodel.output.timeseriesinner import *"]),
+        ("output", "timeseriesinner"): (output_objects["timeseriesinner"], []),
     }
-    for dirs, objs in object_files.items():
-        write_file(datamodel_path, dirs, objs)
+    for dirs, data in object_files.items():
+        objs, imports = data
+        write_file(datamodel_path, dirs, objs, imports=imports)
 
     create_models(format_docs_dir, input_objects, output_objects)
 
