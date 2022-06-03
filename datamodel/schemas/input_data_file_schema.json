@@ -169,7 +169,7 @@
             ],
             "additionalProperties": false
         },
-        "Bus_initial_status": {
+        "BusInitialStatus": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -293,7 +293,7 @@
                     "description": "A JSON inner object storing data   for initial time step ",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/Bus_initial_status"
+                            "$ref": "#/definitions/BusInitialStatus"
                         }
                     ]
                 }
@@ -309,7 +309,7 @@
             ],
             "additionalProperties": false
         },
-        "Shunt_initial_status": {
+        "ShuntInitialStatus": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -371,7 +371,7 @@
                     "description": "A JSON inner object storing data   for initial time step ",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/Shunt_initial_status"
+                            "$ref": "#/definitions/ShuntInitialStatus"
                         }
                     ]
                 }
@@ -387,7 +387,7 @@
             ],
             "additionalProperties": false
         },
-        "DispatchableDevices_SimpleProducingConsumingDevices_initial_status": {
+        "DispatchableDevices_SimpleProducingConsumingDevicesInitialStatus": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -579,7 +579,7 @@
                     "description": "A JSON inner object storing data for initial time step ",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/DispatchableDevices_SimpleProducingConsumingDevices_initial_status"
+                            "$ref": "#/definitions/DispatchableDevices_SimpleProducingConsumingDevicesInitialStatus"
                         }
                     ]
                 },
@@ -664,7 +664,7 @@
             ],
             "additionalProperties": false
         },
-        "ACTransmissionLine_initial_status": {
+        "ACTransmissionLineInitialStatus": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -750,7 +750,7 @@
                     "description": "A JSON inner object storing data   for initial time step ",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/ACTransmissionLine_initial_status"
+                            "$ref": "#/definitions/ACTransmissionLineInitialStatus"
                         }
                     ]
                 },
@@ -777,7 +777,7 @@
             ],
             "additionalProperties": false
         },
-        "TwoWindingTransformer_initial_status": {
+        "TwoWindingTransformerInitialStatus": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -895,7 +895,7 @@
                     "description": "A JSON inner object storing data   for initial time step ",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/TwoWindingTransformer_initial_status"
+                            "$ref": "#/definitions/TwoWindingTransformerInitialStatus"
                         }
                     ]
                 },
@@ -926,7 +926,7 @@
             ],
             "additionalProperties": false
         },
-        "DCLine_initial_status": {
+        "DCLineInitialStatus": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -1030,7 +1030,7 @@
                     "description": "A JSON inner object storing data   for initial time step ",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/DCLine_initial_status"
+                            "$ref": "#/definitions/DCLineInitialStatus"
                         }
                     ]
                 }
