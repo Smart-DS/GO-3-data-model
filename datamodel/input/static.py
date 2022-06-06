@@ -15,8 +15,6 @@ class General(GeneralBase):
             raise ValueError(msg)
         return data
 
-    pass
-
 class ViolationCostsParameters(ViolationCostsParametersBase): pass
 
 class Bus(BusBase): pass
@@ -25,7 +23,18 @@ class Shunt(ShuntBase): pass
 
 class DispatchableDevices_SimpleProducingConsumingDevices(DispatchableDevices_SimpleProducingConsumingDevicesBase): pass
 
-class ACTransmissionLine(ACTransmissionLineBase): pass
+class ACTransmissionLine(ACTransmissionLineBase):
+    
+    @root_validator
+    def mva_ub_nom_le_em(cls, data):
+
+        nom = data.get("mva_ub_nom")
+        em = data.get("mva_ub_em")
+        if (nom is not None) and (em is not None) and not (nom <= em):
+            msg = "fails {} <= {}. {}: {}, {}: {}".format(
+                "mva_ub_nom", "mva_ub_em", "mva_ub_nom", nom, "mva_ub_em", em)
+            raise ValueError(msg)
+        return data
 
 class TwoWindingTransformer(TwoWindingTransformerBase): pass
 
