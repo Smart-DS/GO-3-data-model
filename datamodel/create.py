@@ -589,7 +589,10 @@ if __name__ == "__main__":
 
     format_docs_dir = input_path / args.format_version
     if not format_docs_dir.exists():
-        raise ValueError(f"{format_docs_dir} does not exist")
+        format_docs_dir = Path(args.format_version).resolve()
+        if not format_docs_dir.exists():
+            raise ValueError(f"format_docs_dir: {format_docs_dir} does not exist")
+    #print("format_docs_dir: {}".format(format_docs_dir))
 
     input_objects, output_objects = create_objects(format_docs_dir)
     object_files = {
