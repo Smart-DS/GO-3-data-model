@@ -17,7 +17,19 @@ class General(GeneralBase):
 
 class ViolationCostsParameters(ViolationCostsParametersBase): pass
 
-class Bus(BusBase): pass
+class Bus(BusBase):
+    
+    @root_validator
+    def vm_lb_le_ub(cls, data):
+
+        lb = data.get("vm_lb")
+        ub = data.get("vm_ub")
+        if (lb is not None) and (ub is not None) and not (lb <= ub):
+            msg = "fails {} <= {}. {}: {}, {}: {}".format(
+                "lb", "ub", "vm_lb", lb, "vm_ub", ub)
+            raise ValueError(msg)
+        return data
+    pass
 
 class Shunt(ShuntBase): pass
 
