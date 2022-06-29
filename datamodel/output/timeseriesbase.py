@@ -67,8 +67,8 @@ class DispatchableDevices_SimpleProducingConsumingDevicesBase(BidDSJsonBaseModel
         description = "Connection status "
     )
 
-    p: List[float] = Field(
-        title = "p",
+    p_on: List[float] = Field(
+        title = "p_on",
         description = "{ (Case: producer) Active production (p.u.) (Array of Float) }  { (Case: consumer) Active consumption (p.u.) "
     )
 
@@ -177,14 +177,9 @@ class DCLineBase(BidDSJsonBaseModel):
         description = "DC line unique identifier "
     )
 
-    on_status: List[bool] = Field(
-        title = "on_status",
-        description = "Connection status "
-    )
-
-    pdc_fr: List[float] = Field(
-        title = "pdc_fr",
-        description = "Active power flow, from bus (p.u.) "
+    pdc: List[float] = Field(
+        title = "pdc",
+        description = "Active power flow (p.u.) "
     )
 
     qdc_fr: List[float] = Field(

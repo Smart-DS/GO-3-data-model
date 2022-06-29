@@ -17,12 +17,12 @@ class GeneralBase(BidDSJsonBaseModel):
 
     timestamp_start: Optional[str] = Field(
         title = "timestamp_start",
-        description = "Period beginning timestamp for the first interval with Timestamp format YYYY-MM-DDThh:mm at UTC "
+        description = "Period beginning timestamp for the first interval as string: YYYY-MM-DDThh:mm at UTC "
     )
 
     timestamp_stop: Optional[str] = Field(
         title = "timestamp_stop",
-        description = "Period beginning timestamp for the interval following the last interval with Timestamp format YYYY-MM-DDThh:mm at UTC "
+        description = "Period beginning timestamp for the interval following the last interval as string: YYYY-MM-DDThh:mm at UTC) "
     )
 
     # Qualitative descriptors
@@ -278,6 +278,11 @@ class DispatchableDevices_SimpleProducingConsumingDevicesBase(BidDSJsonBaseModel
         description = "Device start up cost "
     )
 
+    startup_states: List[Tuple[float,float]] = Field(
+        title = "startup_states",
+        description = "Array of downtime dependent start up states, where each states  is an array with exactly two elements: 1) start up cost adjustments (Float, \$), 2) maximum down time (Float, hr)  "
+    )
+
     shutdown_cost: float = Field(
         title = "shutdown_cost",
         description = "Device shut down cost "
@@ -452,11 +457,6 @@ class ACTransmissionLineBase(BidDSJsonBaseModel):
         description = "MVA limit, emergency rating "
     )
 
-    standby_cost: float = Field(
-        title = "standby_cost",
-        description = "Line fixed standby cost "
-    )
-
     connection_cost: float = Field(
         title = "connection_cost",
         description = "AC Line connection cost "
@@ -547,13 +547,6 @@ class TwoWindingTransformerBase(BidDSJsonBaseModel):
         description = "MVA limit, emergency rating "
     )
 
-    # 
-
-    standby_cost: float = Field(
-        title = "standby_cost",
-        description = "Transformer fixed standby cost "
-    )
-
     connection_cost: float = Field(
         title = "connection_cost",
         description = "Transformer connection cost "
@@ -594,14 +587,9 @@ class DCLineBase(BidDSJsonBaseModel):
         description = "Unique identifier for connecting to bus "
     )
 
-    pdc_fr_ub: float = Field(
-        title = "pdc_fr_ub",
-        description = "Maximum active power, from bus "
-    )
-
-    pdc_fr_lb: float = Field(
-        title = "pdc_fr_lb",
-        description = "Minimum active power, from bus "
+    pdc_ub: float = Field(
+        title = "pdc_ub",
+        description = "Maximum active power "
     )
 
     qdc_fr_ub: float = Field(
@@ -624,21 +612,6 @@ class DCLineBase(BidDSJsonBaseModel):
         description = "Minimum reactive power, to bus "
     )
 
-    standby_cost: float = Field(
-        title = "standby_cost",
-        description = "{DC line fixed standby cost "
-    )
-
-    connection_cost: float = Field(
-        title = "connection_cost",
-        description = "{DC line connection cost "
-    )
-
-    disconnection_cost: float = Field(
-        title = "disconnection_cost",
-        description = "{DC line disconnection cost "
-    )
-
     initial_status: DCLineInitialStatus = Field(
         title = "initial_status",
         description = "A JSON inner object storing data   for initial time step "
@@ -656,22 +629,22 @@ class ActiveZonalReserveRequirementsViolationCostsBase(BidDSJsonBaseModel):
 
     REG_UP: float = Field(
         title = "REG_UP",
-        description = "Regulation reserve up requirement "
+        description = "Regulation reserve up requirement fraction "
     )
 
     REG_DOWN: float = Field(
         title = "REG_DOWN",
-        description = "Regulation reserve down requirement "
+        description = "Regulation reserve down requirement faction "
     )
 
     SYN: float = Field(
         title = "SYN",
-        description = "Synchronized reserve requirement "
+        description = "Synchronized reserve requirement fraction "
     )
 
     NSYN: float = Field(
         title = "NSYN",
-        description = "Non-synchronized reserve requirement "
+        description = "Non-synchronized reserve requirement fraction "
     )
 
     REG_UP_vio_cost: float = Field(

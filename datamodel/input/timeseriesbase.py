@@ -22,7 +22,7 @@ class GeneralBase(BidDSJsonBaseModel):
 
     interval_duration: List[float] = Field(
         title = "interval_duration",
-        description = "Time duration of the intervals, per time period in hours  "
+        description = "Time duration of the intervals, per time period in hours "
     )
 
     # Qualitative descriptors
