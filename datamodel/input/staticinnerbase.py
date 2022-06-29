@@ -25,11 +25,6 @@ class BusInitialStatusBase(BidDSJsonBaseModel):
 
 class ShuntInitialStatusBase(BidDSJsonBaseModel):
 
-    on_status: bool = Field(
-        title = "on_status",
-        description = "On-off status "
-    )
-
     step: int = Field(
         title = "step",
         description = "Number of step "
@@ -38,9 +33,10 @@ class ShuntInitialStatusBase(BidDSJsonBaseModel):
 
 class DispatchableDevices_SimpleProducingConsumingDevicesInitialStatusBase(BidDSJsonBaseModel):
 
-    on_status: bool = Field(
+    on_status: int = Field(
         title = "on_status",
-        description = "On status indicator for initial time step "
+        description = "On status indicator for initial time step ",
+        options = [0, 1]
     )
 
     p: float = Field(
@@ -91,25 +87,5 @@ class TwoWindingTransformerInitialStatusBase(BidDSJsonBaseModel):
 
 
 class DCLineInitialStatusBase(BidDSJsonBaseModel):
-
-    on_status: bool = Field(
-        title = "on_status",
-        description = "Connection status "
-    )
-
-    pdc_fr: float = Field(
-        title = "pdc_fr",
-        description = "Active power flow, from bus (p.u.) "
-    )
-
-    qdc_fr: float = Field(
-        title = "qdc_fr",
-        description = "Reactive power flow, from bus (p.u.) "
-    )
-
-    qdc_to: float = Field(
-        title = "qdc_to",
-        description = "Reactive power flow, to bus (p.u.) "
-    )
 
 
