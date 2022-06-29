@@ -33,10 +33,9 @@ class ShuntInitialStatusBase(BidDSJsonBaseModel):
 
 class DispatchableDevices_SimpleProducingConsumingDevicesInitialStatusBase(BidDSJsonBaseModel):
 
-    on_status: int = Field(
+    on_status: bool = Field(
         title = "on_status",
-        description = "On status indicator for initial time step ",
-        options = [0, 1]
+        description = "On status indicator for initial time step "
     )
 
     p: float = Field(

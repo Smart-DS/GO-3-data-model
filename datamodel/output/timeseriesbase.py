@@ -42,6 +42,11 @@ class ShuntBase(BidDSJsonBaseModel):
         description = "Shunt unique identifier "
     )
 
+    on_status: List[bool] = Field(
+        title = "on_status",
+        description = "On-off status "
+    )
+
     step: List[int] = Field(
         title = "step",
         description = "Number of step "

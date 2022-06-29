@@ -83,6 +83,26 @@ class GeneralBase(BidDSJsonBaseModel):
     )
 
 
+class ViolationCostsParametersBase(BidDSJsonBaseModel):
+
+    # Global violation attributes
+
+    p_bus_vio_cost: float = Field(
+        title = "p_bus_vio_cost",
+        description = "Bus violation costs for active power violation (\$/pu-h) "
+    )
+
+    q_bus_vio_cost: float = Field(
+        title = "q_bus_vio_cost",
+        description = "Bus violation costs for reactive power violation  (\$/pu-h) "
+    )
+
+    s_vio_cost: float = Field(
+        title = "s_vio_cost",
+        description = "Branch violation costs for thermal violation (\$/pu-h) "
+    )
+
+
 class BusBase(BidDSJsonBaseModel):
 
     # Input attributes
@@ -100,6 +120,16 @@ class BusBase(BidDSJsonBaseModel):
     vm_lb: float = Field(
         title = "vm_lb",
         description = "Voltage magnitude lower bound "
+    )
+
+    active_reserve_uids: List[str] = Field(
+        title = "active_reserve_uids",
+        description = "List of active reserve zones (uids) that the bus participating   "
+    )
+
+    reactive_reserve_uids: List[str] = Field(
+        title = "reactive_reserve_uids",
+        description = "List of reactive reserve zones (uids) that the bus participating   "
     )
 
     # Location information
@@ -182,6 +212,16 @@ class ShuntBase(BidDSJsonBaseModel):
         description = "Unique identifier for connecting bus "
     )
 
+    gs: float = Field(
+        title = "gs",
+        description = "Shunt conductance for one step (p.u.) "
+    )
+
+    bs: float = Field(
+        title = "bs",
+        description = "Shunt susceptance for one step (p.u.) "
+    )
+
     step_ub: int = Field(
         title = "step_ub",
         description = "Maximum step number "
@@ -215,7 +255,7 @@ class DispatchableDevices_SimpleProducingConsumingDevicesBase(BidDSJsonBaseModel
     device_type: str = Field(
         title = "device_type",
         description = "Type of device ",
-        options = ["producer / consumer"]
+        options = ["producer", "consumer"]
     )
 
     description: Optional[str] = Field(
@@ -432,10 +472,9 @@ class ACTransmissionLineBase(BidDSJsonBaseModel):
         description = "A JSON inner object storing data   for initial time step "
     )
 
-    additional_shunt: int = Field(
+    additional_shunt: bool = Field(
         title = "additional_shunt",
-        description = "Branch has additional shunt components ",
-        options = [0, 1]
+        description = "Branch has additional shunt components "
     )
 
 
@@ -523,10 +562,9 @@ class TwoWindingTransformerBase(BidDSJsonBaseModel):
         description = "A JSON inner object storing data   for initial time step "
     )
 
-    additional_shunt: int = Field(
+    additional_shunt: bool = Field(
         title = "additional_shunt",
-        description = "Transformer has additional shunt components ",
-        options = [0, 1]
+        description = "Transformer has additional shunt components "
     )
 
 
