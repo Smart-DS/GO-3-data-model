@@ -247,6 +247,7 @@ types_map = {
     "Array of Float": "List[float]",
     "Array of Binary": "List[bool]",
     "Array of String": "List[str]",
+    "Array of Float Float": "List[Tuple[float,float]]",
     "Array of Array of Float Float": "List[List[Tuple[float,float]]]",
     "Array of Float Float Float": "List[Tuple[float,float,float]]",
     "Array of Float Float Int": "List[Tuple[float,float,int]]",

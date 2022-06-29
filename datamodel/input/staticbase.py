@@ -17,14 +17,12 @@ class GeneralBase(BidDSJsonBaseModel):
 
     timestamp_start: Optional[str] = Field(
         title = "timestamp_start",
-        description = "Period beginning timestamp for the first interval ",
-        options = ["Timestamp", "YYYY-MM-DDThh"]
+        description = "Period beginning timestamp for the first interval as string: YYYY-MM-DDThh:mm at UTC "
     )
 
     timestamp_stop: Optional[str] = Field(
         title = "timestamp_stop",
-        description = "Period beginning timestamp for the interval following the last interval ",
-        options = ["Timestamp", "YYYY-MM-DDThh"]
+        description = "Period beginning timestamp for the interval following the last interval as string: YYYY-MM-DDThh:mm at UTC) "
     )
 
     # Qualitative descriptors
@@ -238,6 +236,11 @@ class DispatchableDevices_SimpleProducingConsumingDevicesBase(BidDSJsonBaseModel
     startup_cost: float = Field(
         title = "startup_cost",
         description = "Device start up cost "
+    )
+
+    startup_states: List[Tuple[float,float]] = Field(
+        title = "startup_states",
+        description = "Array of downtime dependent start up states, where each states  is an array with exactly two elements: 1) start up cost adjustments (Float, \$), 2) maximum down time (Float, hr)  "
     )
 
     shutdown_cost: float = Field(
@@ -574,6 +577,86 @@ class DCLineBase(BidDSJsonBaseModel):
     initial_status: DCLineInitialStatus = Field(
         title = "initial_status",
         description = "A JSON inner object storing data   for initial time step "
+    )
+
+
+class ActiveZonalReserveRequirementsViolationCostsBase(BidDSJsonBaseModel):
+
+    # Input attributes
+
+    uid: str = Field(
+        title = "uid",
+        description = "Zone reserve unique identifier "
+    )
+
+    REG_UP: float = Field(
+        title = "REG_UP",
+        description = "Regulation reserve up requirement fraction "
+    )
+
+    REG_DOWN: float = Field(
+        title = "REG_DOWN",
+        description = "Regulation reserve down requirement faction "
+    )
+
+    SYN: float = Field(
+        title = "SYN",
+        description = "Synchronized reserve requirement fraction "
+    )
+
+    NSYN: float = Field(
+        title = "NSYN",
+        description = "Non-synchronized reserve requirement fraction "
+    )
+
+    REG_UP_vio_cost: float = Field(
+        title = "REG_UP_vio_cost",
+        description = "Regulation reserve up violation cost (\$/pu-hr) "
+    )
+
+    REG_DOWN_vio_cost: float = Field(
+        title = "REG_DOWN_vio_cost",
+        description = "Regulation reserve down violation cost (\$/pu-hr) "
+    )
+
+    SYN_vio_cost: float = Field(
+        title = "SYN_vio_cost",
+        description = "Synchronized reserve violation cost (\$/pu-hr) "
+    )
+
+    NSYN_vio_cost: float = Field(
+        title = "NSYN_vio_cost",
+        description = "Non-synchronized reserve violation cost (\$/pu-hr) "
+    )
+
+    RAMPING_RESERVE_UP_vio_cost: float = Field(
+        title = "RAMPING_RESERVE_UP_vio_cost",
+        description = "Flexible-ramp up violation cost (\$/pu-hr) "
+    )
+
+    RAMPING_RESERVE_DOWN_vio_cost: float = Field(
+        title = "RAMPING_RESERVE_DOWN_vio_cost",
+        description = "Flexible-ramp down violation cost (\$/pu-hr) "
+    )
+
+
+class ReactiveZonalReserveRequirementsViolationCostsBase(BidDSJsonBaseModel):
+
+    # Input attributes
+
+    uid: str = Field(
+        title = "uid",
+        description = "Region reserve unique identifier "
+    )
+
+    REACT_UP_vio_cost: float = Field(
+        title = "REACT_UP_vio_cost",
+        description = "Reactive reserve power violation cost (\$/pu-hr) "
+    )
+
+    REACT_DOWN_vio_cost: float = Field(
+        title = "REACT_DOWN_vio_cost",
+        description = "Reactive reserve power violation cost (\$/pu-hr) "
     )
 
 

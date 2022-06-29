@@ -33,12 +33,12 @@
             "properties": {
                 "timestamp_start": {
                     "title": "timestamp_start",
-                    "description": "Period beginning timestamp for the first interval with Timestamp format YYYY-MM-DDThh:mm at UTC ",
+                    "description": "Period beginning timestamp for the first interval as string: YYYY-MM-DDThh:mm at UTC ",
                     "type": "string"
                 },
                 "timestamp_stop": {
                     "title": "timestamp_stop",
-                    "description": "Period beginning timestamp for the interval following the last interval with Timestamp format YYYY-MM-DDThh:mm at UTC ",
+                    "description": "Period beginning timestamp for the interval following the last interval as string: YYYY-MM-DDThh:mm at UTC) ",
                     "type": "string"
                 },
                 "season": {
@@ -314,11 +314,6 @@
             "description": "Base data model for all dsgrid data models",
             "type": "object",
             "properties": {
-                "on_status": {
-                    "title": "on_status",
-                    "description": "On-off status ",
-                    "type": "boolean"
-                },
                 "step": {
                     "title": "step",
                     "description": "Number of step ",
@@ -326,7 +321,6 @@
                 }
             },
             "required": [
-                "on_status",
                 "step"
             ],
             "additionalProperties": false
@@ -470,6 +464,24 @@
                     "title": "startup_cost",
                     "description": "Device start up cost ",
                     "type": "number"
+                },
+                "startup_states": {
+                    "title": "startup_states",
+                    "description": "Array of downtime dependent start up states, where each states  is an array with exactly two elements: 1) start up cost adjustments (Float, \\$), 2) maximum down time (Float, hr)  ",
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "minItems": 2,
+                        "maxItems": 2,
+                        "items": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "number"
+                            }
+                        ]
+                    }
                 },
                 "shutdown_cost": {
                     "title": "shutdown_cost",
@@ -639,6 +651,7 @@
                 "bus",
                 "device_type",
                 "startup_cost",
+                "startup_states",
                 "shutdown_cost",
                 "startups_ub",
                 "energy_req_ub",
@@ -730,11 +743,6 @@
                     "description": "MVA limit, emergency rating ",
                     "type": "number"
                 },
-                "standby_cost": {
-                    "title": "standby_cost",
-                    "description": "Line fixed standby cost ",
-                    "type": "number"
-                },
                 "connection_cost": {
                     "title": "connection_cost",
                     "description": "AC Line connection cost ",
@@ -769,7 +777,6 @@
                 "b",
                 "mva_ub_nom",
                 "mva_ub_em",
-                "standby_cost",
                 "connection_cost",
                 "disconnection_cost",
                 "initial_status",
@@ -875,11 +882,6 @@
                     "description": "MVA limit, emergency rating ",
                     "type": "number"
                 },
-                "standby_cost": {
-                    "title": "standby_cost",
-                    "description": "Transformer fixed standby cost ",
-                    "type": "number"
-                },
                 "connection_cost": {
                     "title": "connection_cost",
                     "description": "Transformer connection cost ",
@@ -918,7 +920,6 @@
                 "ta_lb",
                 "mva_ub_nom",
                 "mva_ub_em",
-                "standby_cost",
                 "connection_cost",
                 "disconnection_cost",
                 "initial_status",
@@ -931,30 +932,24 @@
             "description": "Base data model for all dsgrid data models",
             "type": "object",
             "properties": {
-                "on_status": {
-                    "title": "on_status",
-                    "description": "Connection status ",
-                    "type": "boolean"
-                },
-                "pdc_fr": {
-                    "title": "pdc_fr",
-                    "description": "Active power flow, from bus (p.u.) ",
+                "pdc": {
+                    "title": "pdc",
+                    "description": "Active power flow ",
                     "type": "number"
                 },
                 "qdc_fr": {
                     "title": "qdc_fr",
-                    "description": "Reactive power flow, from bus (p.u.) ",
+                    "description": "Reactive power flow, from bus ",
                     "type": "number"
                 },
                 "qdc_to": {
                     "title": "qdc_to",
-                    "description": "Reactive power flow, to bus (p.u.) ",
+                    "description": "Reactive power flow, to bus ",
                     "type": "number"
                 }
             },
             "required": [
-                "on_status",
-                "pdc_fr",
+                "pdc",
                 "qdc_fr",
                 "qdc_to"
             ],
@@ -980,14 +975,9 @@
                     "description": "Unique identifier for connecting to bus ",
                     "type": "string"
                 },
-                "pdc_fr_ub": {
-                    "title": "pdc_fr_ub",
-                    "description": "Maximum active power, from bus ",
-                    "type": "number"
-                },
-                "pdc_fr_lb": {
-                    "title": "pdc_fr_lb",
-                    "description": "Minimum active power, from bus ",
+                "pdc_ub": {
+                    "title": "pdc_ub",
+                    "description": "Maximum active power ",
                     "type": "number"
                 },
                 "qdc_fr_ub": {
@@ -1010,21 +1000,6 @@
                     "description": "Minimum reactive power, to bus ",
                     "type": "number"
                 },
-                "standby_cost": {
-                    "title": "standby_cost",
-                    "description": "{DC line fixed standby cost ",
-                    "type": "number"
-                },
-                "connection_cost": {
-                    "title": "connection_cost",
-                    "description": "{DC line connection cost ",
-                    "type": "number"
-                },
-                "disconnection_cost": {
-                    "title": "disconnection_cost",
-                    "description": "{DC line disconnection cost ",
-                    "type": "number"
-                },
                 "initial_status": {
                     "title": "initial_status",
                     "description": "A JSON inner object storing data   for initial time step ",
@@ -1039,15 +1014,11 @@
                 "uid",
                 "fr_bus",
                 "to_bus",
-                "pdc_fr_ub",
-                "pdc_fr_lb",
+                "pdc_ub",
                 "qdc_fr_ub",
                 "qdc_fr_lb",
                 "qdc_to_ub",
                 "qdc_to_lb",
-                "standby_cost",
-                "connection_cost",
-                "disconnection_cost",
                 "initial_status"
             ],
             "additionalProperties": false
@@ -1064,22 +1035,22 @@
                 },
                 "REG_UP": {
                     "title": "REG_UP",
-                    "description": "Regulation reserve up requirement ",
+                    "description": "Regulation reserve up requirement fraction ",
                     "type": "number"
                 },
                 "REG_DOWN": {
                     "title": "REG_DOWN",
-                    "description": "Regulation reserve down requirement ",
+                    "description": "Regulation reserve down requirement faction ",
                     "type": "number"
                 },
                 "SYN": {
                     "title": "SYN",
-                    "description": "Synchronized reserve requirement ",
+                    "description": "Synchronized reserve requirement fraction ",
                     "type": "number"
                 },
                 "NSYN": {
                     "title": "NSYN",
-                    "description": "Non-synchronized reserve requirement ",
+                    "description": "Non-synchronized reserve requirement fraction ",
                     "type": "number"
                 },
                 "REG_UP_vio_cost": {
@@ -1260,7 +1231,7 @@
                 },
                 "interval_duration": {
                     "title": "interval_duration",
-                    "description": "Time duration of the intervals, per time period in hours  ",
+                    "description": "Time duration of the intervals, per time period in hours ",
                     "type": "array",
                     "items": {
                         "type": "number"
