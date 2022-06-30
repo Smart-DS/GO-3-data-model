@@ -2,15 +2,15 @@ import logging
 
 from datamodel.input.staticinnerbase import *
 
-class BusInitialStatus(BusInitialStatusBase): pass
+class BusInitialStatusBase(BusInitialStatusBaseBase): pass
 
-class ShuntInitialStatus(ShuntInitialStatusBase): pass
+class ShuntInitialStatusBase(ShuntInitialStatusBaseBase): pass
 
-class DispatchableDevices_SimpleProducingConsumingDevicesInitialStatus(DispatchableDevices_SimpleProducingConsumingDevicesInitialStatusBase): pass
+class DispatchableDevices_SimpleProducingConsumingDevicesInitialStatusBase(DispatchableDevices_SimpleProducingConsumingDevicesInitialStatusBaseBase): pass
 
-class ACTransmissionLineInitialStatus(ACTransmissionLineInitialStatusBase): pass
+class ACTransmissionLineInitialStatusBase(ACTransmissionLineInitialStatusBaseBase): pass
 
-class TwoWindingTransformerInitialStatus(TwoWindingTransformerInitialStatusBase): pass
+class TwoWindingTransformerInitialStatusBase(TwoWindingTransformerInitialStatusBaseBase): pass
 
-class DCLineInitialStatus(DCLineInitialStatusBase): pass
+class DCLineInitialStatusBase(DCLineInitialStatusBaseBase): pass
 

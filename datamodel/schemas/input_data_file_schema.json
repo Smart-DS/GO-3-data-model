@@ -7,26 +7,35 @@
             "title": "network",
             "allOf": [
                 {
-                    "$ref": "#/definitions/Network"
+                    "$ref": "#/definitions/NetworkBase"
                 }
             ]
         },
-        "time_series_input": {
-            "title": "time_series_input",
+        "timeseriesinput": {
+            "title": "timeseriesinput",
             "allOf": [
                 {
-                    "$ref": "#/definitions/TimeSeriesInput"
+                    "$ref": "#/definitions/TimeSeriesInputBase"
+                }
+            ]
+        },
+        "contingency": {
+            "title": "contingency",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/datamodel__input__sections__ContingencyBase"
                 }
             ]
         }
     },
     "required": [
         "network",
-        "time_series_input"
+        "timeseriesinput",
+        "contingency"
     ],
     "additionalProperties": false,
     "definitions": {
-        "datamodel__input__static__General": {
+        "datamodel__input__staticbase__GeneralBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -141,7 +150,7 @@
             ],
             "additionalProperties": false
         },
-        "ViolationCostsParameters": {
+        "ViolationCostsParametersBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -169,7 +178,7 @@
             ],
             "additionalProperties": false
         },
-        "BusInitialStatus": {
+        "BusInitialStatusBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -191,7 +200,7 @@
             ],
             "additionalProperties": false
         },
-        "Bus": {
+        "BusBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -293,7 +302,7 @@
                     "description": "A JSON inner object storing data   for initial time step ",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/BusInitialStatus"
+                            "$ref": "#/definitions/BusInitialStatusBase"
                         }
                     ]
                 }
@@ -309,7 +318,7 @@
             ],
             "additionalProperties": false
         },
-        "ShuntInitialStatus": {
+        "ShuntInitialStatusBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -325,7 +334,7 @@
             ],
             "additionalProperties": false
         },
-        "Shunt": {
+        "ShuntBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -365,7 +374,7 @@
                     "description": "A JSON inner object storing data   for initial time step ",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/ShuntInitialStatus"
+                            "$ref": "#/definitions/ShuntInitialStatusBase"
                         }
                     ]
                 }
@@ -381,7 +390,7 @@
             ],
             "additionalProperties": false
         },
-        "DispatchableDevices_SimpleProducingConsumingDevicesInitialStatus": {
+        "DispatchableDevices_SimpleProducingConsumingDevicesInitialStatusBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -421,7 +430,7 @@
             ],
             "additionalProperties": false
         },
-        "datamodel__input__static__DispatchableDevices_SimpleProducingConsumingDevices": {
+        "datamodel__input__staticbase__DispatchableDevices_SimpleProducingConsumingDevicesBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -591,7 +600,7 @@
                     "description": "A JSON inner object storing data for initial time step ",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/DispatchableDevices_SimpleProducingConsumingDevicesInitialStatus"
+                            "$ref": "#/definitions/DispatchableDevices_SimpleProducingConsumingDevicesInitialStatusBase"
                         }
                     ]
                 },
@@ -677,7 +686,7 @@
             ],
             "additionalProperties": false
         },
-        "ACTransmissionLineInitialStatus": {
+        "ACTransmissionLineInitialStatusBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -693,7 +702,7 @@
             ],
             "additionalProperties": false
         },
-        "ACTransmissionLine": {
+        "ACTransmissionLineBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -758,7 +767,7 @@
                     "description": "A JSON inner object storing data   for initial time step ",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/ACTransmissionLineInitialStatus"
+                            "$ref": "#/definitions/ACTransmissionLineInitialStatusBase"
                         }
                     ]
                 },
@@ -784,7 +793,7 @@
             ],
             "additionalProperties": false
         },
-        "TwoWindingTransformerInitialStatus": {
+        "TwoWindingTransformerInitialStatusBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -812,7 +821,7 @@
             ],
             "additionalProperties": false
         },
-        "TwoWindingTransformer": {
+        "TwoWindingTransformerBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -897,7 +906,7 @@
                     "description": "A JSON inner object storing data   for initial time step ",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/TwoWindingTransformerInitialStatus"
+                            "$ref": "#/definitions/TwoWindingTransformerInitialStatusBase"
                         }
                     ]
                 },
@@ -927,7 +936,7 @@
             ],
             "additionalProperties": false
         },
-        "DCLineInitialStatus": {
+        "DCLineInitialStatusBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -955,7 +964,7 @@
             ],
             "additionalProperties": false
         },
-        "DCLine": {
+        "DCLineBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -1005,7 +1014,7 @@
                     "description": "A JSON inner object storing data   for initial time step ",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/DCLineInitialStatus"
+                            "$ref": "#/definitions/DCLineInitialStatusBase"
                         }
                     ]
                 }
@@ -1023,7 +1032,7 @@
             ],
             "additionalProperties": false
         },
-        "datamodel__input__static__ActiveZonalReserveRequirementsViolationCosts": {
+        "datamodel__input__staticbase__ActiveZonalReserveRequirementsViolationCostsBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -1099,7 +1108,7 @@
             ],
             "additionalProperties": false
         },
-        "datamodel__input__static__ReactiveZonalReserveRequirementsViolationCosts": {
+        "datamodel__input__staticbase__ReactiveZonalReserveRequirementsViolationCostsBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -1127,7 +1136,7 @@
             ],
             "additionalProperties": false
         },
-        "Network": {
+        "NetworkBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -1136,7 +1145,7 @@
                     "title": "general",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/datamodel__input__static__General"
+                            "$ref": "#/definitions/datamodel__input__staticbase__GeneralBase"
                         }
                     ]
                 },
@@ -1144,7 +1153,7 @@
                     "title": "violation_cost",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/ViolationCostsParameters"
+                            "$ref": "#/definitions/ViolationCostsParametersBase"
                         }
                     ]
                 },
@@ -1152,56 +1161,56 @@
                     "title": "bus",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/Bus"
+                        "$ref": "#/definitions/BusBase"
                     }
                 },
                 "shunt": {
                     "title": "shunt",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/Shunt"
+                        "$ref": "#/definitions/ShuntBase"
                     }
                 },
                 "simple_dispatchable_device": {
                     "title": "simple_dispatchable_device",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/datamodel__input__static__DispatchableDevices_SimpleProducingConsumingDevices"
+                        "$ref": "#/definitions/datamodel__input__staticbase__DispatchableDevices_SimpleProducingConsumingDevicesBase"
                     }
                 },
                 "ac_line": {
                     "title": "ac_line",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/ACTransmissionLine"
+                        "$ref": "#/definitions/ACTransmissionLineBase"
                     }
                 },
                 "two_winding_transformer": {
                     "title": "two_winding_transformer",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/TwoWindingTransformer"
+                        "$ref": "#/definitions/TwoWindingTransformerBase"
                     }
                 },
                 "dc_line": {
                     "title": "dc_line",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/DCLine"
+                        "$ref": "#/definitions/DCLineBase"
                     }
                 },
                 "active_zonal_reserve": {
                     "title": "active_zonal_reserve",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/datamodel__input__static__ActiveZonalReserveRequirementsViolationCosts"
+                        "$ref": "#/definitions/datamodel__input__staticbase__ActiveZonalReserveRequirementsViolationCostsBase"
                     }
                 },
                 "reactive_zonal_reserve": {
                     "title": "reactive_zonal_reserve",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/datamodel__input__static__ReactiveZonalReserveRequirementsViolationCosts"
+                        "$ref": "#/definitions/datamodel__input__staticbase__ReactiveZonalReserveRequirementsViolationCostsBase"
                     }
                 }
             },
@@ -1219,7 +1228,7 @@
             ],
             "additionalProperties": false
         },
-        "datamodel__input__timeseries__General": {
+        "datamodel__input__timeseriesbase__GeneralBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -1244,7 +1253,7 @@
             ],
             "additionalProperties": false
         },
-        "datamodel__input__timeseries__DispatchableDevices_SimpleProducingConsumingDevices": {
+        "datamodel__input__timeseriesbase__DispatchableDevices_SimpleProducingConsumingDevicesBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -1426,7 +1435,7 @@
             ],
             "additionalProperties": false
         },
-        "datamodel__input__timeseries__ActiveZonalReserveRequirementsViolationCosts": {
+        "datamodel__input__timeseriesbase__ActiveZonalReserveRequirementsViolationCostsBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -1460,7 +1469,7 @@
             ],
             "additionalProperties": false
         },
-        "datamodel__input__timeseries__ReactiveZonalReserveRequirementsViolationCosts": {
+        "datamodel__input__timeseriesbase__ReactiveZonalReserveRequirementsViolationCostsBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -1494,7 +1503,7 @@
             ],
             "additionalProperties": false
         },
-        "TimeSeriesInput": {
+        "TimeSeriesInputBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -1503,7 +1512,7 @@
                     "title": "general",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/datamodel__input__timeseries__General"
+                            "$ref": "#/definitions/datamodel__input__timeseriesbase__GeneralBase"
                         }
                     ]
                 },
@@ -1511,21 +1520,21 @@
                     "title": "simple_dispatchable_device",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/datamodel__input__timeseries__DispatchableDevices_SimpleProducingConsumingDevices"
+                        "$ref": "#/definitions/datamodel__input__timeseriesbase__DispatchableDevices_SimpleProducingConsumingDevicesBase"
                     }
                 },
                 "active_zonal_reserve": {
                     "title": "active_zonal_reserve",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/datamodel__input__timeseries__ActiveZonalReserveRequirementsViolationCosts"
+                        "$ref": "#/definitions/datamodel__input__timeseriesbase__ActiveZonalReserveRequirementsViolationCostsBase"
                     }
                 },
                 "reactive_zonal_reserve": {
                     "title": "reactive_zonal_reserve",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/datamodel__input__timeseries__ReactiveZonalReserveRequirementsViolationCosts"
+                        "$ref": "#/definitions/datamodel__input__timeseriesbase__ReactiveZonalReserveRequirementsViolationCostsBase"
                     }
                 }
             },
@@ -1534,6 +1543,50 @@
                 "simple_dispatchable_device",
                 "active_zonal_reserve",
                 "reactive_zonal_reserve"
+            ],
+            "additionalProperties": false
+        },
+        "datamodel__input__contingencybase__ContingencyBase": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "Contingency unique identifier ",
+                    "type": "string"
+                },
+                "components": {
+                    "title": "components",
+                    "description": "A JSON array, where each element is an unique identifier (string) for the contingency component ",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "uid",
+                "components"
+            ],
+            "additionalProperties": false
+        },
+        "datamodel__input__sections__ContingencyBase": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "contingency": {
+                    "title": "contingency",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/datamodel__input__contingencybase__ContingencyBase"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "contingency"
             ],
             "additionalProperties": false
         }

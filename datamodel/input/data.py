@@ -1,9 +1,38 @@
 import logging
-from pydantic import validator
+from datetime import datetime, timedelta
+import json
+import os
+from pathlib import Path
 
-from datamodel.input.database import *
+from pydantic import BaseModel, Field, ValidationError, validator
+from pydantic.json import isoformat, timedelta_isoformat
+from typing import Dict, List, Optional, Union, Tuple
 
-class InputDataFile(InputDataFileBase):
+from datamodel.base import BidDSJsonBaseModel
+from datamodel.input.sections import *
+
+class InputDataFile(BidDSJsonBaseModel):
+
+    class Config:
+        title = "InputDataFile"
+        
+    network: NetworkBase = Field(
+        title = "network"
+    )
+
+    timeseriesinput: TimeSeriesInputBase = Field(
+        title = "timeseriesinput"
+    )
+
+    contingency: ContingencyBase = Field(
+        title = "contingency"
+    )
+
+
+#<<<<<<< HEAD
+#class InputDataFile(InputDataFileBase):
+#=======
+#>>>>>>> te/latex_fixes
 
     # @validator("network")
     # def network_general_stop_is_after_start(cls, network):
