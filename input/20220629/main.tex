@@ -85,12 +85,14 @@ For ease of reference and convenience for describing the data formats, we also
 mark the nature of the attributes in the `Section' (Sec) column. The corresponding symbol used in the formulation for each data item is contained in the 'Symbol' (Sym) column.
 For the input data format, attributes will be marked with:
 \begin{itemize}
+\item C --- if it is a contingency parameter used in the contingency file section;
 \item S --- if it is a static parameter and is expected to be presented in the static network file section;
 \item T --- if it is a time series and is expected to be presented in the time series data file section, and;
-\item B --- if it is a globally unique identifier/common attribute and it is necessary to be presented across both sections for identification/referencing purposes.
+\item B --- if it is a globally unique identifier/common attribute and it is necessary to be presented across both static and timeseries sections for identification/referencing purposes.
 \end{itemize}
 Similarly for the output data format, attribute will be marked with:
 \begin{itemize}
+\item C --- if it is a contingency parameter;
 \item S --- if it is a static parameter;
 \item T --- if it is a time series, and;
 \item B --- if it is a globally unique identifier.
@@ -678,6 +680,24 @@ Input attributes & Description (Type) & Req & Sec & Sym\\
 \end{tabular}
 \end{center}
 
+\subsection{Contingency}
+\label{nom:contingency}
+
+\paragraph{Input Attributes}
+The attributes for each of the contingency data JSON object
+are listed below.
+
+\begin{center}
+\small
+\begin{tabular}{ l | l | c | c | c |}
+    Contingency attributes & Description (Type) & Req & Sec & Sym\\
+\hline
+    {\tt uid} & Contingency unique identifier (String) & Y & C & \\
+    {\tt components} & A JSON array, where each element is an unique identifier (string) for the contingency component (Array of String)& Y & C & \\
+  \hline
+\end{tabular}
+\end{center}
+
 
 \section{Static Electrical Parameter}
 \label{sec:format_spec}
@@ -687,42 +707,9 @@ Input attributes & Description (Type) & Req & Sec & Sym\\
 \section{Time series input data}
 \input{time_series}
 
-\section{Contingencies}
-\label{sec:contingency}
-This section presents the latest data format in JSON for the contingencies input data.
-The JSON format for contingencies consists of a JSON array,
-where each JSON object within the array contains data for each contingency.
+\section{Contingency Parameters}
+\input{congingency}
 
-% Each contingency JSON object will have two types of objects:
-% \begin{enumerate}
-%     \item A ``uid'' string object \\
-%     The value of the object contains the unique identifier (string) of the contingency.
-%     \item A ``components'' array \\
-%     The value of the object is a JSON array storing the the unique identifier (string) of the contingency component.
-% \end{enumerate}
-
-\paragraph{Input Attributes}
-The attributes for each of the contingency data JSON object
-are listed below.
-
-\begin{center}
-\small
-\begin{tabular}{ l | p{3.5in} | c | c | c }
-Contingency attributes & Description (Type) & Req \\
-\hline
-  {\tt uid} & Contingency unique identifier (String) & Y \\
-  {\tt components} & A JSON array, where each element is an unique identifier (string) for the contingency component (Array of String)& Y \\
-  \hline
-\end{tabular}
-\end{center}
-Below shows a schematic example on the contingency input data parameters in the JSON data format.
-\begin{verbatim}
-"contingency”: [
-    {"uid" : "CONT1", "components" : [ "IDAC0001" ]},
-    {"uid" : "CONT2", "components" : [ "IDAC0003" ]},
-    {"uid" : "CONT3", "components" : [ "ID2T0001" ]}
-]
-\end{verbatim}
 Competitors are reminded that the format above may be more general than
 what is required for the competition.
 Competitors should always
