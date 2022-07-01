@@ -19,11 +19,11 @@
                 }
             ]
         },
-        "contingency": {
-            "title": "contingency",
+        "contingencyinput": {
+            "title": "contingencyinput",
             "allOf": [
                 {
-                    "$ref": "#/definitions/datamodel__input__sections__ContingencyBase"
+                    "$ref": "#/definitions/ContingencyInputBase"
                 }
             ]
         }
@@ -31,7 +31,7 @@
     "required": [
         "network",
         "timeseriesinput",
-        "contingency"
+        "contingencyinput"
     ],
     "additionalProperties": false,
     "definitions": {
@@ -1546,7 +1546,7 @@
             ],
             "additionalProperties": false
         },
-        "datamodel__input__contingencybase__ContingencyBase": {
+        "ContingencyBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -1571,18 +1571,17 @@
             ],
             "additionalProperties": false
         },
-        "datamodel__input__sections__ContingencyBase": {
+        "ContingencyInputBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
             "properties": {
                 "contingency": {
                     "title": "contingency",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/datamodel__input__contingencybase__ContingencyBase"
-                        }
-                    ]
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ContingencyBase"
+                    }
                 }
             },
             "required": [

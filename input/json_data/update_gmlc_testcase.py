@@ -8,6 +8,8 @@ data_name = 'PSY_RTS_GMLC_data_fixed_load_20220415'
 data_name = 'PSY_RTS_GMLC_data_flex_load_20220415'
 data_name = 'PSY_RTS_GMLC_data_flex_load_20220501'
 data_name = 'PSY_RTS_GMLC_data_flex_load_20220502'
+data_name = 'PSY_RTS_GMLC_data_flex_load_20220525'
+data_name = 'PSY_RTS_GMLC_data_flex_load_20220624'
 data_path = data_name+'.json'
 
 output_path = data_name+'_output.json'
@@ -129,7 +131,7 @@ with open(schema_path) as schema_fp:
     schema = json.load(schema_fp)
     with open(data_path) as data_fp:
         data = json.load(data_fp)
-        element_list = [('Network','network'),('TimeSeriesInput','time_series_input')]
+        element_list = [('NetworkBase','network'),('TimeSeriesInputBase','time_series_input'),('ContingencyInputBase','contingency')]
         validate_elements(element_list,schema, data,True)
         with open(output_path,'w') as output_fp:
             json.dump(data,output_fp,indent=4)
