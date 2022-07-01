@@ -1578,11 +1578,10 @@
             "properties": {
                 "contingency": {
                     "title": "contingency",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/ContingencyBase"
-                        }
-                    ]
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ContingencyBase"
+                    }
                 }
             },
             "required": [

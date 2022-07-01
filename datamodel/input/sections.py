@@ -9,9 +9,9 @@ from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
 from datamodel.base import BidDSJsonBaseModel
+import datamodel.input.staticbase
 import datamodel.input.timeseriesbase
 import datamodel.input.contingencybase
-import datamodel.input.staticbase
 
 class NetworkBase(BidDSJsonBaseModel):
 
@@ -77,7 +77,7 @@ class TimeSeriesInputBase(BidDSJsonBaseModel):
 
 class ContingencyInputBase(BidDSJsonBaseModel):
 
-    contingency: datamodel.input.contingencybase.ContingencyBase = Field(
+    contingency: List[datamodel.input.contingencybase.ContingencyBase] = Field(
         title = "contingency"
     )
 
