@@ -6,5 +6,5 @@ class Network(NetworkBase): pass
 
 class TimeSeriesInput(TimeSeriesInputBase): pass
 
-class ContingencyInput(ContingencyInputBase): pass
+class Contingency(ContingencyBase): pass
 

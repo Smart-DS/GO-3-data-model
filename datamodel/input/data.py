@@ -24,8 +24,8 @@ class InputDataFile(BidDSJsonBaseModel):
         title = "timeseriesinput"
     )
 
-    contingencyinput: ContingencyInputBase = Field(
-        title = "contingencyinput"
+    contingency: ContingencyBase = Field(
+        title = "contingency"
     )
 
 

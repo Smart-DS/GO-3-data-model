@@ -19,11 +19,11 @@
                 }
             ]
         },
-        "contingencyinput": {
-            "title": "contingencyinput",
+        "contingency": {
+            "title": "contingency",
             "allOf": [
                 {
-                    "$ref": "#/definitions/ContingencyInputBase"
+                    "$ref": "#/definitions/datamodel__input__sections__ContingencyBase"
                 }
             ]
         }
@@ -31,7 +31,7 @@
     "required": [
         "network",
         "timeseriesinput",
-        "contingencyinput"
+        "contingency"
     ],
     "additionalProperties": false,
     "definitions": {
@@ -941,8 +941,8 @@
             "description": "Base data model for all dsgrid data models",
             "type": "object",
             "properties": {
-                "pdc": {
-                    "title": "pdc",
+                "pdc_fr": {
+                    "title": "pdc_fr",
                     "description": "Active power flow ",
                     "type": "number"
                 },
@@ -958,7 +958,7 @@
                 }
             },
             "required": [
-                "pdc",
+                "pdc_fr",
                 "qdc_fr",
                 "qdc_to"
             ],
@@ -1546,7 +1546,7 @@
             ],
             "additionalProperties": false
         },
-        "ContingencyBase": {
+        "datamodel__input__contingencybase__ContingencyBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
@@ -1571,17 +1571,18 @@
             ],
             "additionalProperties": false
         },
-        "ContingencyInputBase": {
+        "datamodel__input__sections__ContingencyBase": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
             "properties": {
                 "contingency": {
                     "title": "contingency",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ContingencyBase"
-                    }
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/datamodel__input__contingencybase__ContingencyBase"
+                        }
+                    ]
                 }
             },
             "required": [
