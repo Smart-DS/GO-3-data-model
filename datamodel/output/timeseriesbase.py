@@ -24,12 +24,12 @@ class BusBase(BidDSJsonBaseModel):
 
     vm: List[float] = Field(
         title = "vm",
-        description = "Voltage magnitude (p.u.) "
+        description = "Voltage magnitude in p.u. "
     )
 
     va: List[float] = Field(
         title = "va",
-        description = "Voltage angle (radian) "
+        description = "Voltage angle in radian "
     )
 
 
@@ -40,11 +40,6 @@ class ShuntBase(BidDSJsonBaseModel):
     uid: str = Field(
         title = "uid",
         description = "Shunt unique identifier "
-    )
-
-    on_status: List[bool] = Field(
-        title = "on_status",
-        description = "On-off status "
     )
 
     step: List[int] = Field(
@@ -69,62 +64,62 @@ class DispatchableDevices_SimpleProducingConsumingDevicesBase(BidDSJsonBaseModel
 
     p_on: List[float] = Field(
         title = "p_on",
-        description = "{ (Case: producer) Active production (p.u.) (Array of Float) }  { (Case: consumer) Active consumption (p.u.) "
+        description = "{ (Case: producer) Active production in p.u. (Array of Float) }  { (Case: consumer) Active consumption in p.u. "
     )
 
     q: List[float] = Field(
         title = "q",
-        description = "{ (Case: producer) Reactive production (p.u.) (Array of Float)} { (Case: consumer) Reactive consumption (p.u.) "
+        description = "{ (Case: producer) Reactive production in p.u. (Array of Float)} { (Case: consumer) Reactive consumption in p.u. "
     )
 
     p_reg_res_up: List[float] = Field(
         title = "p_reg_res_up",
-        description = "Regulation up reserve (p.u.) "
+        description = "Regulation up reserve in p.u. "
     )
 
     p_reg_res_down: List[float] = Field(
         title = "p_reg_res_down",
-        description = "Regulation down reserve (p.u.) "
+        description = "Regulation down reserve in p.u. "
     )
 
     p_syn_res: List[float] = Field(
         title = "p_syn_res",
-        description = "Synchronized reserve (p.u.) "
+        description = "Synchronized reserve in p.u. "
     )
 
     p_nsyn_res: List[float] = Field(
         title = "p_nsyn_res",
-        description = "Non-synchronized reserve (p.u.) "
+        description = "Non-synchronized reserve in p.u. "
     )
 
     p_ramp_res_up_online: List[float] = Field(
         title = "p_ramp_res_up_online",
-        description = "Ramp up reserve when online (p.u.) "
+        description = "Ramp up reserve when online in p.u. "
     )
 
     p_ramp_res_down_online: List[float] = Field(
         title = "p_ramp_res_down_online",
-        description = "Ramp down reserve when online (p.u.) "
+        description = "Ramp down reserve when online in p.u. "
     )
 
     p_ramp_res_up_offline: List[float] = Field(
         title = "p_ramp_res_up_offline",
-        description = "Ramp up reserve when offline (p.u.) "
+        description = "Ramp up reserve when offline in p.u. "
     )
 
     p_ramp_res_down_offline: List[float] = Field(
         title = "p_ramp_res_down_offline",
-        description = "Ramp down reserve when offline (p.u.) "
+        description = "Ramp down reserve when offline in p.u. "
     )
 
     q_res_up: List[float] = Field(
         title = "q_res_up",
-        description = "Reactive reserve up (p.u.) "
+        description = "Reactive reserve up in p.u. "
     )
 
     q_res_down: List[float] = Field(
         title = "q_res_down",
-        description = "Reactive reserve down (p.u.) "
+        description = "Reactive reserve down in p.u. "
     )
 
 
@@ -154,12 +149,12 @@ class TwoWindingTransformerBase(BidDSJsonBaseModel):
 
     tm: List[float] = Field(
         title = "tm",
-        description = "Off-nominal taps ratio (p.u.) "
+        description = "Off-nominal taps ratio in p.u. "
     )
 
     ta: List[float] = Field(
         title = "ta",
-        description = "Phase shifting angle (radian) "
+        description = "Phase shifting angle in radian "
     )
 
     on_status: List[bool] = Field(
@@ -177,19 +172,19 @@ class DCLineBase(BidDSJsonBaseModel):
         description = "DC line unique identifier "
     )
 
-    pdc: List[float] = Field(
-        title = "pdc",
-        description = "Active power flow (p.u.) "
+    pdc_fr: List[float] = Field(
+        title = "pdc_fr",
+        description = "Active power flow in p.u. "
     )
 
     qdc_fr: List[float] = Field(
         title = "qdc_fr",
-        description = "Reactive power flow, from bus (p.u.) "
+        description = "Reactive power flow, from bus in p.u. "
     )
 
     qdc_to: List[float] = Field(
         title = "qdc_to",
-        description = "Reactive power flow, to bus (p.u.) "
+        description = "Reactive power flow, to bus in p.u. "
     )
 
 
