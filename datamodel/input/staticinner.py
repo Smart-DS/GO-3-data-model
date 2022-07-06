@@ -87,8 +87,8 @@ class TwoWindingTransformerInitialStatusBase(BidDSJsonBaseModel):
 
 class DCLineInitialStatusBase(BidDSJsonBaseModel):
 
-    pdc_fr: float = Field(
-        title = "pdc_fr",
+    pdc: float = Field(
+        title = "pdc",
         description = "Active power flow "
     )
 
