@@ -11,16 +11,16 @@
                 }
             ]
         },
-        "timeseriesinput": {
-            "title": "timeseriesinput",
+        "time_series_input": {
+            "title": "time_series_input",
             "allOf": [
                 {
                     "$ref": "#/definitions/TimeSeriesInputBase"
                 }
             ]
         },
-        "contingencyinput": {
-            "title": "contingencyinput",
+        "contingency": {
+            "title": "contingency",
             "allOf": [
                 {
                     "$ref": "#/definitions/ContingencyInputBase"
@@ -30,8 +30,8 @@
     },
     "required": [
         "network",
-        "timeseriesinput",
-        "contingencyinput"
+        "time_series_input",
+        "contingency"
     ],
     "additionalProperties": false,
     "definitions": {
@@ -653,6 +653,36 @@
                     "title": "p_ramp_res_down_offline_ub",
                     "description": "Maximum ramp down reserve when offline ",
                     "type": "number"
+                },
+                "q_0": {
+                    "title": "q_0",
+                    "description": "{ (Case: producer) Reactive production at zero active production (Float, p.u.) } { (Case: consumer) Reactive consumption at zero active consumption ",
+                    "type": "number"
+                },
+                "beta": {
+                    "title": "beta",
+                    "description": "Slope of active-reactive capability curve ",
+                    "type": "number"
+                },
+                "q_0_ub": {
+                    "title": "q_0_ub",
+                    "description": "{ (Case: producer) Max reactive production at zero active production (Float, p.u.)}  { (Case: consumer) Max reactive consumption at zero active consumption ",
+                    "type": "number"
+                },
+                "q_0_lb": {
+                    "title": "q_0_lb",
+                    "description": "{ (Case: producer) Min reactive production at zero active production (Float, p.u.)}  { (Case: consumer) Min reactive consumption at zero active consumption ",
+                    "type": "number"
+                },
+                "beta_ub": {
+                    "title": "beta_ub",
+                    "description": "Upper bound for slope of active-reactive capability curve ",
+                    "type": "number"
+                },
+                "beta_lb": {
+                    "title": "beta_lb",
+                    "description": "Lower bound for slope of active-reactive capability curve ",
+                    "type": "number"
                 }
             },
             "required": [
@@ -775,6 +805,26 @@
                     "title": "additional_shunt",
                     "description": "Branch has additional shunt components ",
                     "type": "boolean"
+                },
+                "g_fr": {
+                    "title": "g_fr",
+                    "description": "Conductance for shunt component at from bus ",
+                    "type": "number"
+                },
+                "b_fr": {
+                    "title": "b_fr",
+                    "description": "Susceptance for shunt component at from bus ",
+                    "type": "number"
+                },
+                "g_to": {
+                    "title": "g_to",
+                    "description": "Conductance for shunt component at to bus ",
+                    "type": "number"
+                },
+                "b_to": {
+                    "title": "b_to",
+                    "description": "Susceptance for shunt component at to bus ",
+                    "type": "number"
                 }
             },
             "required": [
@@ -914,6 +964,26 @@
                     "title": "additional_shunt",
                     "description": "Transformer has additional shunt components ",
                     "type": "boolean"
+                },
+                "g_fr": {
+                    "title": "g_fr",
+                    "description": "Conductance for shunt component at from bus ",
+                    "type": "number"
+                },
+                "b_fr": {
+                    "title": "b_fr",
+                    "description": "Susceptance for shunt component at from bus ",
+                    "type": "number"
+                },
+                "g_to": {
+                    "title": "g_to",
+                    "description": "Conductance for shunt component at to bus ",
+                    "type": "number"
+                },
+                "b_to": {
+                    "title": "b_to",
+                    "description": "Susceptance for shunt component at to bus ",
+                    "type": "number"
                 }
             },
             "required": [

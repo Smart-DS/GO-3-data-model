@@ -115,11 +115,15 @@ def create_objects(format_docs_dir):
 
 def get_objects_from_table(object_name, astr):
     static_result = ""
+    static_conditinal_result = ""
     timeseries_result = ""
+    timeseries_conditional_result = ""
     contingency_result = ""
     static_inner_objects = {}
     timeseries_inner_objects = {}
     contingency_inner_objects = {}
+    static_conditional_elements = {}
+    timeseries_conditional_elements = {}
 
     # Some descriptions in the table overflow onto the following line. 
     # This bit of code joins those lines together.
@@ -192,8 +196,15 @@ def get_objects_from_table(object_name, astr):
                 ln = all_lines[ln_cnt]
                 if '\hline' in ln:
                     break
-                sec,field = parse_field(ln,object_name)
+                sec,field = parse_field(ln,object_name,is_conditional= True)
                 if field:
+                    field_name = field.strip().split(':')[0]
+                    if sec == 'S' or sec == 'B':
+                        static_conditional_elements[field_name] = conditional_attribute
+                        static_conditinal_result += field
+                    if sec == 'T' or sec == 'B':
+                        timeseries_conditional_elements[field_name] = conditional_attribute
+                        timeseries_conditional_result += field
                     if False: #TODO: Find a way to manage the conditional elements based on the conditional_attribute
                         timeseries_result += conditional_result
                         static_result += conditional_result
@@ -252,12 +263,25 @@ def get_objects_from_table(object_name, astr):
             timeseries_result += f"\n    # {meta}\n"
             continue
 
+    static_result += static_conditinal_result
+    timeseries_result += timeseries_conditional_result
+
     if not has_static:
         static_result = None
         static_inner_objects = None
+    else:
+        if len(static_conditional_elements) > 0:
+            for conditional_element, dependency in static_conditional_elements.items():
+                static_result+= f"""\n    @root_validator(pre=False)\n    def check_conditional_{conditional_element}(cls, values):\n        if values["{dependency}"] == 1 and values["{conditional_element}"] is None:\n             raise ValueError("Conditional element {conditional_element} is missing when {dependency} is 1")\n        if values["{dependency}"] != 1 and values["{conditional_element}"] is not None:\n             raise ValueError("Conditional element {conditional_element} is present when {dependency} is not 1")\n        return values"""
+                             
     if not has_timeseries:
         timeseries_result = None
         timeseries_inner_objects = None
+    else:
+        if len(timeseries_conditional_elements) > 0:
+            for conditional_element, dependency in timeseries_conditional_elements.items():
+                static_result+= f"""\n    @root_validator(pre=False)\n    def check_conditional_{conditional_element}(cls, values):\n        if values["{dependency}"] == 1 and values["{conditional_element}"] is None:\n             raise ValueError("Conditional element {conditional_element} is missing when {dependency} is 1")\n        if values["{dependency}"] != 1 and values["{conditional_element}"] is not None:\n             raise ValueError("Conditional element {conditional_element} is present when {dependency} is not 1")\n        return values"""
+
     if not has_contingency:
         contingency_result = None
         contingency_inner_objects = None
@@ -284,7 +308,7 @@ types_map = {
     "Binary": "bool"
 }
 
-def parse_field(ln,object_name):
+def parse_field(ln,object_name,is_conditional=False):
     name, desc, req, sec, sym = ln.split("&")
     sec = sec.strip()
     
@@ -330,7 +354,7 @@ def parse_field(ln,object_name):
             logger.warning(f"Unable to extract type_name from {type_name!r}")
             return sec, ""
     
-    if req.lower().strip() == "n":
+    if req.lower().strip() == "n" or is_conditional:
         type_name = f"Optional[{type_name}]"
 
     sep = "," if choices else ""
@@ -437,6 +461,9 @@ def create_models(format_docs_dir, input_objects, output_objects):
                 object_store[object_name] = obj
 
         # write out the overall file
+        if 'InputDataFile' in object_store:
+            object_store['InputDataFile'] = object_store['InputDataFile'].replace('timeseriesinput','time_series_input')
+            object_store['InputDataFile'] = object_store['InputDataFile'].replace('contingencyinput','contingency')
         write_file(datamodel_path, names, object_store, is_base=False, imports=[f"from datamodel.{'.'.join(sections_names)} import *"])
 
 
@@ -590,7 +617,7 @@ import json
 import os
 from pathlib import Path
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, Field, root_validator
 from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
