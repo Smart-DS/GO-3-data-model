@@ -1,5 +1,4 @@
 import logging
-
 from datamodel.output.timeseriesbase import *
 
 class Bus(BusBase): pass

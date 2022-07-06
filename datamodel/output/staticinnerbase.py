@@ -9,5 +9,4 @@ from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
 from datamodel.base import BidDSJsonBaseModel
-from datamodel.output.staticinner import *
 
