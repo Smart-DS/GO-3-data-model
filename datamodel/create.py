@@ -404,13 +404,13 @@ def create_models(format_docs_dir, input_objects, output_objects):
             object_preamble = f"datamodel.{names[0]}"
             if file.startswith("static"):
                 object_ref = object_refs["static"]
-                object_preamble += ".staticbase"
+                object_preamble += ".static"
             elif file.startswith("time_series"):
                 object_ref = object_refs["timeseries"]
-                object_preamble += ".timeseriesbase"
+                object_preamble += ".timeseries"
             elif file.startswith("contingency"):
                 object_ref = object_refs["contingency"]
-                object_preamble += ".contingencybase"
+                object_preamble += ".contingency"
             elif file.startswith("parsing_mapping"):
                 object_ref = object_store
                 object_preamble = ""
@@ -437,7 +437,7 @@ def create_models(format_docs_dir, input_objects, output_objects):
             else:
                 # write out sections as their own file
                 sections_names = list(names[:-1]) + ["sections"]
-                write_file(datamodel_path, sections_names, object_store, is_base=False, imports=imports)
+                write_file(datamodel_path, sections_names, object_store, is_base=True, imports=imports)
                 object_store = {}
 
                 # now compose the overall file
@@ -634,17 +634,14 @@ from datamodel.base import BidDSJsonBaseModel\n""")
 
     # write template for derived models
     if is_base:
-        pp = p.parent / f"__{p.stem[:-4]}.py"
-    else:
-        pp = p.parent / f"__{p.stem}.py"
-    with open(pp, "w") as f:
-        f.write(
+        pp = p.parent / f"{p.stem[:-4]}.py"
+        with open(pp, "w") as f:
+            f.write(
 f"""import logging
-
 from datamodel.{prefix}base import *\n""")
-        f.write("\n")
-        for name in objects.keys():
-            f.write(f"class {name}({name}Base): pass" + "\n\n")
+            f.write("\n")
+            for name in objects.keys():
+                f.write(f"class {name}({name}Base): pass" + "\n\n")
 
     return
 
@@ -680,7 +677,9 @@ if __name__ == "__main__":
         objs, imports = data
         is_base = True
         if 'inner' in dirs[1]:
-            is_base = False
+            is_base = True
+            for key in list(objs.keys()):
+                objs[key.replace('Base','')] = objs.pop(key)
         write_file(datamodel_path, dirs, objs, is_base, imports=imports)
 
     create_models(format_docs_dir, input_objects, output_objects)
