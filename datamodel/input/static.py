@@ -3,7 +3,6 @@ from pydantic import root_validator, validator
 
 from datamodel.input.staticbase import *
 
-#class General(GeneralBase): pass
 class General(GeneralBase):
 
     @root_validator
@@ -18,7 +17,6 @@ class General(GeneralBase):
 
 class ViolationCostsParameters(ViolationCostsParametersBase): pass
 
-#class Bus(BusBase): pass
 class Bus(BusBase):
     
     @root_validator
@@ -37,7 +35,6 @@ class Shunt(ShuntBase): pass
 
 class DispatchableDevices_SimpleProducingConsumingDevices(DispatchableDevices_SimpleProducingConsumingDevicesBase): pass
 
-#class ACTransmissionLine(ACTransmissionLineBase): pass
 class ACTransmissionLine(ACTransmissionLineBase):
 
     @validator("mva_ub_nom")
