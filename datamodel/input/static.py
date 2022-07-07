@@ -9,9 +9,11 @@ class General(GeneralBase):
 
     @root_validator
     def stop_is_after_start(cls, data):
+        print('hello world 5')
         start = data.get("timestamp_start")
         stop = data.get("timestamp_stop")
         print('hello world 2')
+        raise ValueError('hello world 6')
         if (start is not None) and (stop is not None) and not (start < stop):
             msg = "fails {} < {}. {}: {}, {}: {}".format(
                 "timestamp_start", "timestamp_stop", "timestamp_start", start, "timestamp_stop", stop)
