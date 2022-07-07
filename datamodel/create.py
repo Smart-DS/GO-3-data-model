@@ -157,12 +157,12 @@ def get_objects_from_table(object_name, astr):
                 continue
             inner_attribute = m.group(1).replace("\\_", "_")
             inner_attribute_formatted = object_name+'_'+inner_attribute
-            inner_attribute_class = object_name+inner_attribute.replace("_"," ").title().replace(" ","")+'Base'
+            inner_attribute_class = object_name+inner_attribute.replace("_"," ").title().replace(" ","")
             inner_attribute_array = object_name+'_'+'Array of '+inner_attribute
 
             types_map[inner_attribute_formatted] = inner_attribute_class
             types_map[inner_attribute_array] = "List["+inner_attribute_class+"]"
-            internal_result = f"class {inner_attribute_class}(BidDSJsonBaseModel):\n"
+            internal_result = f"class {inner_attribute_class}Base(BidDSJsonBaseModel):\n"
             ln_cnt +=2 # skip the new line
             while True: #This is bad practice...
                 ln = all_lines[ln_cnt]
