@@ -5,10 +5,13 @@ from datamodel.input.staticbase import *
 
 class General(GeneralBase):
 
+    print('hello world 1')
+
     @root_validator
     def stop_is_after_start(cls, data):
         start = data.get("timestamp_start")
         stop = data.get("timestamp_stop")
+        print('hello world 2')
         if (start is not None) and (stop is not None) and not (start < stop):
             msg = "fails {} < {}. {}: {}, {}: {}".format(
                 "timestamp_start", "timestamp_stop", "timestamp_start", start, "timestamp_stop", stop)
@@ -19,11 +22,14 @@ class ViolationCostsParameters(ViolationCostsParametersBase): pass
 
 class Bus(BusBase):
     
+    print('hello world 3')
+
     @root_validator
     def vm_lb_le_ub(cls, data):
 
         lb = data.get("vm_lb")
         ub = data.get("vm_ub")
+        print('hello world 4')
         if (lb is not None) and (ub is not None) and not (lb <= ub):
             msg = "fails {} <= {}. {}: {}, {}: {}".format(
                 "lb", "ub", "vm_lb", lb, "vm_ub", ub)
