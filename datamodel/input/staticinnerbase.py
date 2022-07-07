@@ -14,12 +14,12 @@ class BusInitialStatusBase(BidDSJsonBaseModel):
 
     vm: float = Field(
         title = "vm",
-        description = "Bus voltage magnitude "
+        description = "Bus voltage magnitude in p.u. "
     )
 
     va: float = Field(
         title = "va",
-        description = "Bus voltage angle     "
+        description = "Bus voltage angle     in radian "
     )
 
 
@@ -40,22 +40,22 @@ class DispatchableDevices_SimpleProducingConsumingDevicesInitialStatusBase(BidDS
 
     p: float = Field(
         title = "p",
-        description = "{ (Case: producer) Active production for initial time step (Float, p.u.) } { (Case: consumer) Active consumption for initial time step "
+        description = "{ (Case: producer) Active production for initial time step in p.u. (Float) } { (Case: consumer) Active consumption for initial time step in p.u. "
     )
 
     q: float = Field(
         title = "q",
-        description = "{ (Case: producer) Reactive production for initial time step (Float, p.u.) } { (Case: consumer) Reactive consumption for initial time step "
+        description = "{ (Case: producer) Reactive production for initial time step in p.u. (Float) } { (Case: consumer) Reactive consumption for initial time step in p.u. "
     )
 
     accu_down_time: float = Field(
         title = "accu_down_time",
-        description = "Accumulated down time "
+        description = "Accumulated down time in hr "
     )
 
     accu_up_time: float = Field(
         title = "accu_up_time",
-        description = "Accumulated up time "
+        description = "Accumulated up time in hr "
     )
 
 
@@ -76,30 +76,30 @@ class TwoWindingTransformerInitialStatusBase(BidDSJsonBaseModel):
 
     tm: float = Field(
         title = "tm",
-        description = "Off-nominal tap ratio (p.u.) "
+        description = "Off-nominal tap ratio in p.u. "
     )
 
     ta: float = Field(
         title = "ta",
-        description = "Phase shifting angle (radian) "
+        description = "Phase shifting angle in radian "
     )
 
 
 class DCLineInitialStatusBase(BidDSJsonBaseModel):
 
-    pdc: float = Field(
-        title = "pdc",
-        description = "Active power flow "
+    pdc_fr: float = Field(
+        title = "pdc_fr",
+        description = "Active power flow in p.u. "
     )
 
     qdc_fr: float = Field(
         title = "qdc_fr",
-        description = "Reactive power flow, from bus "
+        description = "Reactive power flow, from bus in p.u. "
     )
 
     qdc_to: float = Field(
         title = "qdc_to",
-        description = "Reactive power flow, to bus "
+        description = "Reactive power flow, to bus in p.u. "
     )
 
 

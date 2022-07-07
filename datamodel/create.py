@@ -634,7 +634,7 @@ from datamodel.base import BidDSJsonBaseModel\n""")
 
     # write template for derived models
     if is_base:
-        pp = p.parent / f"{p.stem[:-4]}.py"
+        pp = p.parent / f"__{p.stem[:-4]}.py"
         with open(pp, "w") as f:
             f.write(
 f"""import logging
