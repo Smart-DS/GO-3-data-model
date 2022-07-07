@@ -452,7 +452,7 @@ def create_models(format_docs_dir, input_objects, output_objects):
                     subsections[orig_name], 
                     object_ref, 
                     object_preamble, 
-                    is_base=False,
+                    is_base=True,
                     is_schema=True) if object_ref else None
                 if obj is None:
                     logger.warning(f"Unable to parse {object_name} from first "
@@ -464,7 +464,7 @@ def create_models(format_docs_dir, input_objects, output_objects):
         if 'InputDataFile' in object_store:
             object_store['InputDataFile'] = object_store['InputDataFile'].replace('timeseriesinput','time_series_input')
             object_store['InputDataFile'] = object_store['InputDataFile'].replace('contingencyinput','contingency')
-        write_file(datamodel_path, names, object_store, is_base=False, imports=[f"from datamodel.{'.'.join(sections_names)} import *"])
+        write_file(datamodel_path, names, object_store, is_base=True, imports=[f"from datamodel.{'.'.join(sections_names)} import *"])
 
 
 def get_object_from_subsection(object_name, astr, object_ref, object_preamble, is_base=True, is_schema=False):
@@ -541,7 +541,7 @@ def get_object_from_subsection(object_name, astr, object_ref, object_preamble, i
         if found_object:
             name = found_object[0]
             object_type = found_object[2]
-            type = f"{object_preamble}{found_object[1]}Base"
+            type = f"{object_preamble}{found_object[1]}"
             #if "array" in ln.strip():
             if object_type == 'array':
                 #name += "es" if name.endswith("s") else "s"

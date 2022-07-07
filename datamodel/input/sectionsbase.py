@@ -9,75 +9,75 @@ from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
 from datamodel.base import BidDSJsonBaseModel
-import datamodel.input.contingency
 import datamodel.input.timeseries
+import datamodel.input.contingency
 import datamodel.input.static
 
 class NetworkBase(BidDSJsonBaseModel):
 
-    general: datamodel.input.static.GeneralBase = Field(
+    general: datamodel.input.static.General = Field(
         title = "general"
     )
 
-    violation_cost: datamodel.input.static.ViolationCostsParametersBase = Field(
+    violation_cost: datamodel.input.static.ViolationCostsParameters = Field(
         title = "violation_cost"
     )
 
-    bus: List[datamodel.input.static.BusBase] = Field(
+    bus: List[datamodel.input.static.Bus] = Field(
         title = "bus"
     )
 
-    shunt: List[datamodel.input.static.ShuntBase] = Field(
+    shunt: List[datamodel.input.static.Shunt] = Field(
         title = "shunt"
     )
 
-    simple_dispatchable_device: List[datamodel.input.static.DispatchableDevices_SimpleProducingConsumingDevicesBase] = Field(
+    simple_dispatchable_device: List[datamodel.input.static.DispatchableDevices_SimpleProducingConsumingDevices] = Field(
         title = "simple_dispatchable_device"
     )
 
-    ac_line: List[datamodel.input.static.ACTransmissionLineBase] = Field(
+    ac_line: List[datamodel.input.static.ACTransmissionLine] = Field(
         title = "ac_line"
     )
 
-    two_winding_transformer: List[datamodel.input.static.TwoWindingTransformerBase] = Field(
+    two_winding_transformer: List[datamodel.input.static.TwoWindingTransformer] = Field(
         title = "two_winding_transformer"
     )
 
-    dc_line: List[datamodel.input.static.DCLineBase] = Field(
+    dc_line: List[datamodel.input.static.DCLine] = Field(
         title = "dc_line"
     )
 
-    active_zonal_reserve: List[datamodel.input.static.ActiveZonalReserveRequirementsViolationCostsBase] = Field(
+    active_zonal_reserve: List[datamodel.input.static.ActiveZonalReserveRequirementsViolationCosts] = Field(
         title = "active_zonal_reserve"
     )
 
-    reactive_zonal_reserve: List[datamodel.input.static.ReactiveZonalReserveRequirementsViolationCostsBase] = Field(
+    reactive_zonal_reserve: List[datamodel.input.static.ReactiveZonalReserveRequirementsViolationCosts] = Field(
         title = "reactive_zonal_reserve"
     )
 
 
 class TimeSeriesInputBase(BidDSJsonBaseModel):
 
-    general: datamodel.input.timeseries.GeneralBase = Field(
+    general: datamodel.input.timeseries.General = Field(
         title = "general"
     )
 
-    simple_dispatchable_device: List[datamodel.input.timeseries.DispatchableDevices_SimpleProducingConsumingDevicesBase] = Field(
+    simple_dispatchable_device: List[datamodel.input.timeseries.DispatchableDevices_SimpleProducingConsumingDevices] = Field(
         title = "simple_dispatchable_device"
     )
 
-    active_zonal_reserve: List[datamodel.input.timeseries.ActiveZonalReserveRequirementsViolationCostsBase] = Field(
+    active_zonal_reserve: List[datamodel.input.timeseries.ActiveZonalReserveRequirementsViolationCosts] = Field(
         title = "active_zonal_reserve"
     )
 
-    reactive_zonal_reserve: List[datamodel.input.timeseries.ReactiveZonalReserveRequirementsViolationCostsBase] = Field(
+    reactive_zonal_reserve: List[datamodel.input.timeseries.ReactiveZonalReserveRequirementsViolationCosts] = Field(
         title = "reactive_zonal_reserve"
     )
 
 
 class ContingencyInputBase(BidDSJsonBaseModel):
 
-    contingency: List[datamodel.input.contingency.ContingencyBase] = Field(
+    contingency: List[datamodel.input.contingency.Contingency] = Field(
         title = "contingency"
     )
 
