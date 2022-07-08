@@ -192,7 +192,7 @@ class BusBase(BidDSJsonBaseModel):
         options = ["PQ", "PV", "Slack", "Not_used"]
     )
 
-    initial_status: BusInitialStatusBase = Field(
+    initial_status: BusInitialStatus = Field(
         title = "initial_status",
         description = "A JSON inner object storing data   for initial time step "
     )
@@ -232,7 +232,7 @@ class ShuntBase(BidDSJsonBaseModel):
         description = "Minimum step number "
     )
 
-    initial_status: ShuntInitialStatusBase = Field(
+    initial_status: ShuntInitialStatus = Field(
         title = "initial_status",
         description = "A JSON inner object storing data   for initial time step "
     )
@@ -340,7 +340,7 @@ class DispatchableDevices_SimpleProducingConsumingDevicesBase(BidDSJsonBaseModel
         description = "{(Case: producer) Max production ramp down when shut down in p.u./hr (Float)}  {(Case: consumer) Max consumption ramp down when shut down in p.u./hr "
     )
 
-    initial_status: DispatchableDevices_SimpleProducingConsumingDevicesInitialStatusBase = Field(
+    initial_status: DispatchableDevices_SimpleProducingConsumingDevicesInitialStatus = Field(
         title = "initial_status",
         description = "A JSON inner object storing data for initial time step "
     )
@@ -539,7 +539,7 @@ class ACTransmissionLineBase(BidDSJsonBaseModel):
         description = "AC line disconnection cost in \$ "
     )
 
-    initial_status: ACTransmissionLineInitialStatusBase = Field(
+    initial_status: ACTransmissionLineInitialStatus = Field(
         title = "initial_status",
         description = "A JSON inner object storing data   for initial time step "
     )
@@ -677,7 +677,7 @@ class TwoWindingTransformerBase(BidDSJsonBaseModel):
         description = "Transformer disconnection cost in \$ "
     )
 
-    initial_status: TwoWindingTransformerInitialStatusBase = Field(
+    initial_status: TwoWindingTransformerInitialStatus = Field(
         title = "initial_status",
         description = "A JSON inner object storing data   for initial time step "
     )
@@ -780,7 +780,7 @@ class DCLineBase(BidDSJsonBaseModel):
         description = "Minimum reactive power, to bus in p.u. "
     )
 
-    initial_status: DCLineInitialStatusBase = Field(
+    initial_status: DCLineInitialStatus = Field(
         title = "initial_status",
         description = "A JSON inner object storing data   for initial time step "
     )
