@@ -3,14 +3,13 @@ extracting data and storing the solutions
 for the Challenge 3 competition.
 
 \subsection{Input Data File}
-Each input/problem data file is a JSON object that will include
+Each input/problem data file is a JSON object that will include:
 \begin{itemize}
-    \item the \texttt{network} data object (Section~\ref{sec:format_spec})\\
-        The object containing static network information
-    \item the \texttt{timeseriesinput} data object (Section~\ref{sec:time_series})\\
-        The object containing timeseries data
-    \item the \texttt{reliabilityinput} object(Section~\ref{sec:reliability}).
-        The object containing contingenecies
+    \item the \texttt{network} data object (Section~\ref{sec:format_spec});
+        %The object containing static network information
+    \item the \texttt{time\_series\_input} data object (Section~\ref{sec:time_series});
+        %The object containing timeseries data
+    \item the \texttt{reliability} data object (Section~\ref{sec:contingency})        
 \end{itemize}
 in JSON format. Below shows a high-level schematic structure for the input/problem data file:
 \begin{verbatim}
@@ -22,7 +21,7 @@ in JSON format. Below shows a high-level schematic structure for the input/probl
     ...
     },
     "reliability": {
-    ... 
+        ...
     }
 }
 \end{verbatim}
@@ -66,7 +65,7 @@ when reading non-integer values from JSON inputs.
 %   $I$ & The set of bus JSON objects\\
 %   $J$ & The set of generator, load, shunt, storage, \\
 %       & AC line, transformer, switch, and DC line JSON objects\\
-%   $K$ & The set of reliability JSON objects \\
+%   $K$ & The set of contingency JSON objects \\
 %   $M$ & {\color{red} Not yet handled} \\
 %   $N$ & The set of reserve region JSON objects\\
 %   $T$ & \{1, 2, 3, ..., $\lvert T \rvert$\}: $\lvert T \rvert$ is the value of the \texttt{time\_periods} field\\
