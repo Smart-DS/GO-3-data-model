@@ -1,5 +1,5 @@
 import logging
-from datamodel.input.contingencybase import *
+from datamodel.input.reliabilitybase import *
 
 class Contingency(ContingencyBase): pass
 

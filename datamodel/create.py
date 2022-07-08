@@ -15,7 +15,7 @@ models = {
     ("input", "data"): [
         "static_json",
         "time_series",
-        "contingency",
+        "reliability",
         "parsing_mapping"
     ],
     ("output", "data"): [
@@ -31,16 +31,16 @@ def create_objects(format_docs_dir):
         "staticinner": {},
         "timeseries": {},
         "timeseriesinner": {},
-        "contingency": {},
-        "contingencyinner": {}
+        "reliability": {},
+        "reliabilityinner": {}
     }
     output_objects = {
         "static": {},
         "staticinner": {},
         "timeseries": {},
         "timeseriesinner": {},
-        "contingency": {},
-        "contingencyinner": {}
+        "reliability": {},
+        "reliabilityinner": {}
     }
     with open(format_docs_dir / "main.tex", encoding="utf8") as f:
         main_file = f.read()
@@ -60,9 +60,9 @@ def create_objects(format_docs_dir):
         if "Input Attributes" in tmp:
             logger.info(f"Processing {candidate} input attributes")
             # process input attribute table
-            static_obj, timeseries_obj, contingency_obj, static_inner_objs, timeseries_inner_objs, contingency_inner_objs = \
+            static_obj, timeseries_obj, reliability_obj, static_inner_objs, timeseries_inner_objs, reliability_inner_objs = \
                 get_objects_from_table(candidate, tmp["Input Attributes"])
-            if (static_obj is None) and (timeseries_obj is None) and (contingency_obj is None):
+            if (static_obj is None) and (timeseries_obj is None) and (reliability_obj is None):
                 logger.info(f"Unable to extract input attributes for {candidate}")
             else:
                 if static_obj:
@@ -75,20 +75,20 @@ def create_objects(format_docs_dir):
                 if timeseries_inner_objs:
                     for inner_obj, inner_obj_str in timeseries_inner_objs.items():
                         input_objects["timeseriesinner"][inner_obj] = inner_obj_str
-                if contingency_obj:
-                    input_objects["contingency"][candidate] = contingency_obj
-                if contingency_inner_objs:
-                    for inner_obj, inner_obj_str in contingency_inner_objs.items():
-                        input_objects["contingencyinner"][inner_obj] = inner_obj_str
+                if reliability_obj:
+                    input_objects["reliability"][candidate] = reliability_obj
+                if reliability_inner_objs:
+                    for inner_obj, inner_obj_str in reliability_inner_objs.items():
+                        input_objects["reliabilityinner"][inner_obj] = inner_obj_str
         else:
             logger.info(f"No input attributes for {candidate}")
         
         if "Output Attributes" in tmp:
             logger.info(f"Processing {candidate} output attributes")
             # process output attribute table
-            static_obj, timeseries_obj, contingency_obj, static_inner_objs, timeseries_inner_objs, contingency_inner_objs = \
+            static_obj, timeseries_obj, reliability_obj, static_inner_objs, timeseries_inner_objs, reliability_inner_objs = \
                 get_objects_from_table(candidate, tmp["Output Attributes"])
-            if (static_obj is None) and (timeseries_obj is None) and (contingency_obj is None):
+            if (static_obj is None) and (timeseries_obj is None) and (reliability_obj is None):
                 logger.info(f"Unable to extract output attributes for {candidate}")
             else:
                 if static_obj:
@@ -101,11 +101,11 @@ def create_objects(format_docs_dir):
                 if timeseries_inner_objs:
                     for inner_obj, inner_obj_str in timeseries_inner_objs.items():
                         output_objects["timeseriesinner"][inner_obj] = inner_obj_str
-                if contingency_obj:
-                    output_objects["contingency"][candidate] = contingency_obj
-                if contingency_inner_objs:
-                    for inner_obj, inner_obj_str in contingency_inner_objs.items():
-                        output_objects["contingencyinner"][inner_obj] = inner_obj_str
+                if reliability_obj:
+                    output_objects["reliability"][candidate] = reliability_obj
+                if reliability_inner_objs:
+                    for inner_obj, inner_obj_str in reliability_inner_objs.items():
+                        output_objects["reliabilityinner"][inner_obj] = inner_obj_str
 
         else:
             logger.info(f"No output attributes for {candidate}")
@@ -118,10 +118,10 @@ def get_objects_from_table(object_name, astr):
     static_conditinal_result = ""
     timeseries_result = ""
     timeseries_conditional_result = ""
-    contingency_result = ""
+    reliability_result = ""
     static_inner_objects = {}
     timeseries_inner_objects = {}
-    contingency_inner_objects = {}
+    reliability_inner_objects = {}
     static_conditional_elements = {}
     timeseries_conditional_elements = {}
 
@@ -180,7 +180,7 @@ def get_objects_from_table(object_name, astr):
             if sec == 'T' or sec == 'B':
                 timeseries_inner_objects = internal_result
             if sec == 'C':
-                contingency_inner_objects = internal_result
+                reliability_inner_objects = internal_result
 
         elif 'Conditional Attributes]' in ln:
             m = re.match(".*\{\\\\tt\S* (.+)\}.*",ln)
@@ -208,7 +208,7 @@ def get_objects_from_table(object_name, astr):
                     if False: #TODO: Find a way to manage the conditional elements based on the conditional_attribute
                         timeseries_result += conditional_result
                         static_result += conditional_result
-                        # no conditional contingency results
+                        # no conditional reliability results
                 else:
                     logger.warning(f"unable to parse line {ln!r}")
                 ln_cnt+=1
@@ -221,8 +221,8 @@ def get_objects_from_table(object_name, astr):
 
     static_result += f"class {object_name}Base(BidDSJsonBaseModel):\n"
     timeseries_result += f"class {object_name}Base(BidDSJsonBaseModel):\n"
-    contingency_result += f"class {object_name}Base(BidDSJsonBaseModel):\n"
-    has_static = False; has_timeseries = False; has_contingency = False
+    reliability_result += f"class {object_name}Base(BidDSJsonBaseModel):\n"
+    has_static = False; has_timeseries = False; has_reliability = False
 
     table_started = False; expect_meta = True
     for ln in all_lines_new:
@@ -243,6 +243,7 @@ def get_objects_from_table(object_name, astr):
             continue
         if ln.strip().startswith("{\\tt"):
             sec, field = parse_field(ln,object_name)
+            print(field,sec)
             if field:
                 if sec == "S":
                     static_result += field
@@ -251,8 +252,8 @@ def get_objects_from_table(object_name, astr):
                     timeseries_result += field
                     has_timeseries = True
                 elif sec == "C":
-                    contingency_result += field
-                    has_contingency = True
+                    reliability_result += field
+                    has_reliability = True
                 else:
                     assert sec == "B", repr(sec)
                     static_result += field
@@ -282,12 +283,12 @@ def get_objects_from_table(object_name, astr):
             for conditional_element, dependency in timeseries_conditional_elements.items():
                 static_result+= f"""\n    @root_validator(pre=False)\n    def check_conditional_{conditional_element}(cls, values):\n        if values["{dependency}"] == 1 and values["{conditional_element}"] is None:\n             raise ValueError("Conditional element {conditional_element} is missing when {dependency} is 1")\n        if values["{dependency}"] != 1 and values["{conditional_element}"] is not None:\n             raise ValueError("Conditional element {conditional_element} is present when {dependency} is not 1")\n        return values"""
 
-    if not has_contingency:
-        contingency_result = None
-        contingency_inner_objects = None
+    if not has_reliability:
+        reliability_result = None
+        reliability_inner_objects = None
 
     if table_started:
-        return (static_result, timeseries_result, contingency_result, static_inner_objects, timeseries_inner_objects, contingency_inner_objects) 
+        return (static_result, timeseries_result, reliability_result, static_inner_objects, timeseries_inner_objects, reliability_inner_objects) 
     return (None, None, None, None, None, None)
 
 
@@ -408,9 +409,9 @@ def create_models(format_docs_dir, input_objects, output_objects):
             elif file.startswith("time_series"):
                 object_ref = object_refs["timeseries"]
                 object_preamble += ".timeseries"
-            elif file.startswith("contingency"):
-                object_ref = object_refs["contingency"]
-                object_preamble += ".contingency"
+            elif file.startswith("reliability"):
+                object_ref = object_refs["reliability"]
+                object_preamble += ".reliability"
             elif file.startswith("parsing_mapping"):
                 object_ref = object_store
                 object_preamble = ""
@@ -463,7 +464,7 @@ def create_models(format_docs_dir, input_objects, output_objects):
         # write out the overall file
         if 'InputDataFile' in object_store:
             object_store['InputDataFile'] = object_store['InputDataFile'].replace('timeseriesinput','time_series_input')
-            object_store['InputDataFile'] = object_store['InputDataFile'].replace('contingencyinput','contingency')
+            object_store['InputDataFile'] = object_store['InputDataFile'].replace('reliabilityinput','reliability')
         write_file(datamodel_path, names, object_store, is_base=True, imports=[f"from datamodel.{'.'.join(sections_names)} import *"])
 
 
@@ -664,14 +665,14 @@ if __name__ == "__main__":
         ("input", "staticinner"): (input_objects["staticinner"], []),
         ("input", "timeseries"): (input_objects["timeseries"], ["from datamodel.input.timeseriesinner import *"]),
         ("input", "timeseriesinner"): (input_objects["timeseriesinner"], []),
-        ("input", "contingency"): (input_objects["contingency"], ["from datamodel.input.contingencyinner import *"]),
-        ("input", "contingencyinner"): (input_objects["contingencyinner"], []),
+        ("input", "reliability"): (input_objects["reliability"], ["from datamodel.input.reliabilityinner import *"]),
+        ("input", "reliabilityinner"): (input_objects["reliabilityinner"], []),
         ("output", "static"): (output_objects["static"], ["from datamodel.output.staticinner import *"]),
         ("output", "staticinner"): (output_objects["staticinner"], []),
         ("output", "timeseries"): (output_objects["timeseries"], ["from datamodel.output.timeseriesinner import *"]),
         ("output", "timeseriesinner"): (output_objects["timeseriesinner"], []),
-        ("output", "contingency"): (output_objects["contingency"], ["from datamodel.output.contingencyinner import *"]),
-        ("output", "contingencyinner"): (output_objects["contingencyinner"], []),
+        ("output", "reliability"): (output_objects["reliability"], ["from datamodel.output.reliabilityinner import *"]),
+        ("output", "reliabilityinner"): (output_objects["reliabilityinner"], []),
     }
     for dirs, data in object_files.items():
         objs, imports = data

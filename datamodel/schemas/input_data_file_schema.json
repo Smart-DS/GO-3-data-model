@@ -19,11 +19,11 @@
                 }
             ]
         },
-        "contingency": {
-            "title": "contingency",
+        "reliability": {
+            "title": "reliability",
             "allOf": [
                 {
-                    "$ref": "#/definitions/ContingencyInput"
+                    "$ref": "#/definitions/ReliabilityInput"
                 }
             ]
         }
@@ -31,7 +31,7 @@
     "required": [
         "network",
         "time_series_input",
-        "contingency"
+        "reliability"
     ],
     "additionalProperties": false,
     "definitions": {
@@ -1641,7 +1641,7 @@
             ],
             "additionalProperties": false
         },
-        "ContingencyInput": {
+        "ReliabilityInput": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",
