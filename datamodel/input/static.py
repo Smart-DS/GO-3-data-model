@@ -20,26 +20,128 @@ class General(GeneralBase):
             raise ValueError(msg)
         return data
 
-class ViolationCostsParameters(ViolationCostsParametersBase): pass
+class ViolationCostsParameters(ViolationCostsParametersBase):
+
+    @validator("p_bus_vio_cost")
+    def p_bus_vio_cost_ge_0(cls, data):
+
+        if not (data >= 0):
+            msg = "fails {} >= 0. {}: {}".format(
+                "p_bus_vio_cost", "p_bus_vio_cost", data)
+            raise ValueError(msg)
+        return data            
+
+    @validator("q_bus_vio_cost")
+    def q_bus_vio_cost_ge_0(cls, data):
+
+        if not (data >= 0):
+            msg = "fails {} >= 0. {}: {}".format(
+                "q_bus_vio_cost", "q_bus_vio_cost", data)
+            raise ValueError(msg)
+        return data            
+
+    @validator("s_vio_cost")
+    def s_vio_cost_ge_0(cls, data):
+
+        if not (data >= 0):
+            msg = "fails {} >= 0. {}: {}".format(
+                "s_vio_cost", "s_vio_cost", data)
+            raise ValueError(msg)
+        return data            
 
 class Bus(BusBase):
     
-    #print('hello world 3')
+    @validator("vm_lb")
+    def vm_lb_gt_0(cls, data):
+
+        if not (data > 0):
+            msg = "fails {} > 0. {}: {}".format(
+                "vm_lb", "vm_lb", data)
+            raise ValueError(msg)
+        return data            
 
     @root_validator
-    def vm_lb_le_ub(cls, data):
+    def vm_lb_le_init(cls, data):
 
         lb = data.get("vm_lb")
+        init = data.get("initial_status")
+        if (lb is not None) and (init is not None):
+            #v0 = init.get("vm") # why does data.get() work but init.get() does not work?
+            v0 = init.vm
+            #if (v0 is not None) and not (lb <= v0):
+            if not (lb <= v0):
+                msg = "fails {} <= {}. {}: {}, {}: {}".format(
+                    "vm_lb", "(initial_status -> vm)", "vm_lb", lb, "(initial_status -> vm)", v0)
+                raise ValueError(msg)
+        return data
+
+    @root_validator
+    def vm_init_le_ub(cls, data):
+
         ub = data.get("vm_ub")
-        #print('hello world 4')
-        if (lb is not None) and (ub is not None) and not (lb <= ub):
-            msg = "fails {} <= {}. {}: {}, {}: {}".format(
-                "lb", "ub", "vm_lb", lb, "vm_ub", ub)
+        init = data.get("initial_status")
+        if (ub is not None) and (init is not None):
+            v0 = init.vm
+            if not (v0 <= ub):
+                msg = "fails {} <= {}. {}: {}, {}: {}".format(
+                    "(initial_status -> vm)", "vm_ub", "(initial_status -> vm)", v0, "vm_ub", ub)
+                raise ValueError(msg)
+        return data
+
+class Shunt(ShuntBase):
+        # "step_ub": 2,
+        # "step_lb": 0.5,
+        # "initial_status": {
+        #   "step": 1
+        # }
+
+    # todo: note this does not work. Parsing converts non-int float to int before validator is called
+    # perhaps we could type the step_ub field as pydantic.StrictInt instead of as int in datamodel.input.staticbase
+    # if we do that then we do not need this validator anyway
+    @validator("step_ub")
+    def step_ub_int(cls, data):
+
+        if not (data == round(data)):
+            msg = "fails {} integer. {}: {}".format(
+                "step_ub", "step_ub", data)
+            raise ValueError(msg)
+        #raise ValueError('hello world shunt. data: {}'.format(data))
+        return data
+
+    @validator("step_lb")
+    def step_lb_ge_0(cls, data):
+
+        if not (data >= 0):
+            msg = "fails {} >=0. {}: {}".format(
+                "step_lb", "step_lb", data)
             raise ValueError(msg)
         return data
-    pass
 
-class Shunt(ShuntBase): pass
+    @root_validator
+    def step_lb_le_init(cls, data):
+
+        lb = data.get("step_lb")
+        init = data.get("initial_status")
+        if (lb is not None) and (init is not None):
+            u0 = init.step
+            if not (lb <= u0):
+                msg = "fails {} <= {}. {}: {}, {}: {}".format(
+                    "step_lb", "(initial_status -> step)", "step_lb", lb, "(initial_status -> step)", u0)
+                raise ValueError(msg)
+        return data
+
+    @root_validator
+    def step_init_le_ub(cls, data):
+
+        ub = data.get("step_ub")
+        init = data.get("initial_status")
+        if (ub is not None) and (init is not None):
+            u0 = init.step
+            if not (u0 <= ub):
+                msg = "fails {} <= {}. {}: {}, {}: {}".format(
+                    "(initial_status -> step)", "step_ub", "(initial_status -> step)", u0, "step_ub", ub)
+                raise ValueError(msg)
+        return data
 
 class DispatchableDevices_SimpleProducingConsumingDevices(DispatchableDevices_SimpleProducingConsumingDevicesBase): pass
 
