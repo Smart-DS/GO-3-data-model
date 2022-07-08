@@ -9,7 +9,7 @@ Each input/problem data file is a JSON object that will include
         The object containing static network information
     \item the \texttt{timeseriesinput} data object (Section~\ref{sec:time_series})\\
         The object containing timeseries data
-    \item the \texttt{contingencyinput} object(Section~\ref{sec:contingency}).
+    \item the \texttt{reliabilityinput} object(Section~\ref{sec:reliability}).
         The object containing contingenecies
 \end{itemize}
 in JSON format. Below shows a high-level schematic structure for the input/problem data file:
@@ -21,7 +21,7 @@ in JSON format. Below shows a high-level schematic structure for the input/probl
     "time_series_input": {
     ...
     },
-    "contingency": [ ... ]
+    "reliability": [ ... ]
 }
 \end{verbatim}
 
@@ -64,7 +64,7 @@ when reading non-integer values from JSON inputs.
 %   $I$ & The set of bus JSON objects\\
 %   $J$ & The set of generator, load, shunt, storage, \\
 %       & AC line, transformer, switch, and DC line JSON objects\\
-%   $K$ & The set of contingency JSON objects \\
+%   $K$ & The set of reliability JSON objects \\
 %   $M$ & {\color{red} Not yet handled} \\
 %   $N$ & The set of reserve region JSON objects\\
 %   $T$ & \{1, 2, 3, ..., $\lvert T \rvert$\}: $\lvert T \rvert$ is the value of the \texttt{time\_periods} field\\
