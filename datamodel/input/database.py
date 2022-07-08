@@ -16,4 +16,16 @@ class InputDataFileBase(BidDSJsonBaseModel):
     class Config:
         title = "InputDataFile"
         
+    network: Network = Field(
+        title = "network"
+    )
+
+    time_series_input: TimeSeriesInput = Field(
+        title = "time_series_input"
+    )
+
+    reliability: Reliability = Field(
+        title = "reliability"
+    )
+
 
