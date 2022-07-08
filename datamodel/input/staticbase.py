@@ -17,12 +17,12 @@ class GeneralBase(BidDSJsonBaseModel):
 
     timestamp_start: Optional[str] = Field(
         title = "timestamp_start",
-        description = "Period beginning timestamp for the first interval as string: YYYY-MM-DDThh:mm at UTC "
+        description = "Period beginning timestamp for the first interval as string: YYYY-MM-DDThh:mm:ss at UTC "
     )
 
     timestamp_stop: Optional[str] = Field(
         title = "timestamp_stop",
-        description = "Period beginning timestamp for the interval following the last interval as string: YYYY-MM-DDThh:mm at UTC "
+        description = "Period beginning timestamp for the interval following the last interval as string: YYYY-MM-DDThh:mm:ss at UTC "
     )
 
     # Qualitative descriptors

@@ -5,5 +5,5 @@ class Network(NetworkBase): pass
 
 class TimeSeriesInput(TimeSeriesInputBase): pass
 
-class ReliabilityInput(ReliabilityInputBase): pass
+class Reliability(ReliabilityBase): pass
 
