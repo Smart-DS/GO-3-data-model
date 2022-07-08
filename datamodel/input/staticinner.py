@@ -1,5 +1,4 @@
 import logging
-
 from datamodel.input.staticinnerbase import *
 
 class BusInitialStatus(BusInitialStatusBase): pass

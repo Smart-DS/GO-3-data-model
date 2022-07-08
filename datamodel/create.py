@@ -15,8 +15,7 @@ models = {
     ("input", "data"): [
         "static_json",
         "time_series",
-        # ("main", "Contingencies"), # contingencies are currently in the main 
-        # file and poorly defined from a parsing perspective
+        "reliability",
         "parsing_mapping"
     ],
     ("output", "data"): [
@@ -31,13 +30,17 @@ def create_objects(format_docs_dir):
         "static": {},
         "staticinner": {},
         "timeseries": {},
-        "timeseriesinner": {}
+        "timeseriesinner": {},
+        "reliability": {},
+        "reliabilityinner": {}
     }
     output_objects = {
         "static": {},
         "staticinner": {},
         "timeseries": {},
-        "timeseriesinner": {}
+        "timeseriesinner": {},
+        "reliability": {},
+        "reliabilityinner": {}
     }
     with open(format_docs_dir / "main.tex", encoding="utf8") as f:
         main_file = f.read()
@@ -57,9 +60,9 @@ def create_objects(format_docs_dir):
         if "Input Attributes" in tmp:
             logger.info(f"Processing {candidate} input attributes")
             # process input attribute table
-            static_obj, timeseries_obj, static_inner_objs, timeseries_inner_objs = \
+            static_obj, timeseries_obj, reliability_obj, static_inner_objs, timeseries_inner_objs, reliability_inner_objs = \
                 get_objects_from_table(candidate, tmp["Input Attributes"])
-            if (static_obj is None) and (timeseries_obj is None):
+            if (static_obj is None) and (timeseries_obj is None) and (reliability_obj is None):
                 logger.info(f"Unable to extract input attributes for {candidate}")
             else:
                 if static_obj:
@@ -72,15 +75,20 @@ def create_objects(format_docs_dir):
                 if timeseries_inner_objs:
                     for inner_obj, inner_obj_str in timeseries_inner_objs.items():
                         input_objects["timeseriesinner"][inner_obj] = inner_obj_str
+                if reliability_obj:
+                    input_objects["reliability"][candidate] = reliability_obj
+                if reliability_inner_objs:
+                    for inner_obj, inner_obj_str in reliability_inner_objs.items():
+                        input_objects["reliabilityinner"][inner_obj] = inner_obj_str
         else:
             logger.info(f"No input attributes for {candidate}")
         
         if "Output Attributes" in tmp:
             logger.info(f"Processing {candidate} output attributes")
             # process output attribute table
-            static_obj, timeseries_obj, static_inner_objs, timeseries_inner_objs = \
+            static_obj, timeseries_obj, reliability_obj, static_inner_objs, timeseries_inner_objs, reliability_inner_objs = \
                 get_objects_from_table(candidate, tmp["Output Attributes"])
-            if (static_obj is None) and (timeseries_obj is None):
+            if (static_obj is None) and (timeseries_obj is None) and (reliability_obj is None):
                 logger.info(f"Unable to extract output attributes for {candidate}")
             else:
                 if static_obj:
@@ -93,6 +101,12 @@ def create_objects(format_docs_dir):
                 if timeseries_inner_objs:
                     for inner_obj, inner_obj_str in timeseries_inner_objs.items():
                         output_objects["timeseriesinner"][inner_obj] = inner_obj_str
+                if reliability_obj:
+                    output_objects["reliability"][candidate] = reliability_obj
+                if reliability_inner_objs:
+                    for inner_obj, inner_obj_str in reliability_inner_objs.items():
+                        output_objects["reliabilityinner"][inner_obj] = inner_obj_str
+
         else:
             logger.info(f"No output attributes for {candidate}")
 
@@ -101,9 +115,15 @@ def create_objects(format_docs_dir):
 
 def get_objects_from_table(object_name, astr):
     static_result = ""
+    static_conditinal_result = ""
     timeseries_result = ""
+    timeseries_conditional_result = ""
+    reliability_result = ""
     static_inner_objects = {}
     timeseries_inner_objects = {}
+    reliability_inner_objects = {}
+    static_conditional_elements = {}
+    timeseries_conditional_elements = {}
 
     # Some descriptions in the table overflow onto the following line. 
     # This bit of code joins those lines together.
@@ -159,6 +179,8 @@ def get_objects_from_table(object_name, astr):
                 static_inner_objects[inner_attribute_class] = internal_result
             if sec == 'T' or sec == 'B':
                 timeseries_inner_objects = internal_result
+            if sec == 'C':
+                reliability_inner_objects = internal_result
 
         elif 'Conditional Attributes]' in ln:
             m = re.match(".*\{\\\\tt\S* (.+)\}.*",ln)
@@ -174,11 +196,19 @@ def get_objects_from_table(object_name, astr):
                 ln = all_lines[ln_cnt]
                 if '\hline' in ln:
                     break
-                sec,field = parse_field(ln,object_name)
+                sec,field = parse_field(ln,object_name,is_conditional= True)
                 if field:
+                    field_name = field.strip().split(':')[0]
+                    if sec == 'S' or sec == 'B':
+                        static_conditional_elements[field_name] = conditional_attribute
+                        static_conditinal_result += field
+                    if sec == 'T' or sec == 'B':
+                        timeseries_conditional_elements[field_name] = conditional_attribute
+                        timeseries_conditional_result += field
                     if False: #TODO: Find a way to manage the conditional elements based on the conditional_attribute
                         timeseries_result += conditional_result
                         static_result += conditional_result
+                        # no conditional reliability results
                 else:
                     logger.warning(f"unable to parse line {ln!r}")
                 ln_cnt+=1
@@ -191,7 +221,8 @@ def get_objects_from_table(object_name, astr):
 
     static_result += f"class {object_name}Base(BidDSJsonBaseModel):\n"
     timeseries_result += f"class {object_name}Base(BidDSJsonBaseModel):\n"
-    has_static = False; has_timeseries = False
+    reliability_result += f"class {object_name}Base(BidDSJsonBaseModel):\n"
+    has_static = False; has_timeseries = False; has_reliability = False
 
     table_started = False; expect_meta = True
     for ln in all_lines_new:
@@ -219,6 +250,9 @@ def get_objects_from_table(object_name, astr):
                 elif sec == "T":
                     timeseries_result += field
                     has_timeseries = True
+                elif sec == "C":
+                    reliability_result += field
+                    has_reliability = True
                 else:
                     assert sec == "B", repr(sec)
                     static_result += field
@@ -229,16 +263,32 @@ def get_objects_from_table(object_name, astr):
             timeseries_result += f"\n    # {meta}\n"
             continue
 
+    static_result += static_conditinal_result
+    timeseries_result += timeseries_conditional_result
+
     if not has_static:
         static_result = None
         static_inner_objects = None
+    else:
+        if len(static_conditional_elements) > 0:
+            for conditional_element, dependency in static_conditional_elements.items():
+                static_result+= f"""\n    @root_validator(pre=False)\n    def check_conditional_{conditional_element}(cls, values):\n        if values["{dependency}"] == 1 and values["{conditional_element}"] is None:\n             raise ValueError("Conditional element {conditional_element} is missing when {dependency} is 1")\n        if values["{dependency}"] != 1 and values["{conditional_element}"] is not None:\n             raise ValueError("Conditional element {conditional_element} is present when {dependency} is not 1")\n        return values"""
+                             
     if not has_timeseries:
         timeseries_result = None
         timeseries_inner_objects = None
+    else:
+        if len(timeseries_conditional_elements) > 0:
+            for conditional_element, dependency in timeseries_conditional_elements.items():
+                static_result+= f"""\n    @root_validator(pre=False)\n    def check_conditional_{conditional_element}(cls, values):\n        if values["{dependency}"] == 1 and values["{conditional_element}"] is None:\n             raise ValueError("Conditional element {conditional_element} is missing when {dependency} is 1")\n        if values["{dependency}"] != 1 and values["{conditional_element}"] is not None:\n             raise ValueError("Conditional element {conditional_element} is present when {dependency} is not 1")\n        return values"""
+
+    if not has_reliability:
+        reliability_result = None
+        reliability_inner_objects = None
 
     if table_started:
-        return (static_result, timeseries_result, static_inner_objects, timeseries_inner_objects) 
-    return (None, None, None, None)
+        return (static_result, timeseries_result, reliability_result, static_inner_objects, timeseries_inner_objects, reliability_inner_objects) 
+    return (None, None, None, None, None, None)
 
 
 # Gets extended with internal json objects
@@ -247,6 +297,7 @@ types_map = {
     "Array of Float": "List[float]",
     "Array of Binary": "List[bool]",
     "Array of String": "List[str]",
+    "Array of Float Float": "List[Tuple[float,float]]",
     "Array of Array of Float Float": "List[List[Tuple[float,float]]]",
     "Array of Float Float Float": "List[Tuple[float,float,float]]",
     "Array of Float Float Int": "List[Tuple[float,float,int]]",
@@ -257,7 +308,7 @@ types_map = {
     "Binary": "bool"
 }
 
-def parse_field(ln,object_name):
+def parse_field(ln,object_name,is_conditional=False):
     name, desc, req, sec, sym = ln.split("&")
     sec = sec.strip()
     
@@ -303,7 +354,7 @@ def parse_field(ln,object_name):
             logger.warning(f"Unable to extract type_name from {type_name!r}")
             return sec, ""
     
-    if req.lower().strip() == "n":
+    if req.lower().strip() == "n" or is_conditional:
         type_name = f"Optional[{type_name}]"
 
     sep = "," if choices else ""
@@ -357,6 +408,9 @@ def create_models(format_docs_dir, input_objects, output_objects):
             elif file.startswith("time_series"):
                 object_ref = object_refs["timeseries"]
                 object_preamble += ".timeseries"
+            elif file.startswith("reliability"):
+                object_ref = object_refs["reliability"]
+                object_preamble += ".reliability"
             elif file.startswith("parsing_mapping"):
                 object_ref = object_store
                 object_preamble = ""
@@ -383,7 +437,7 @@ def create_models(format_docs_dir, input_objects, output_objects):
             else:
                 # write out sections as their own file
                 sections_names = list(names[:-1]) + ["sections"]
-                write_file(datamodel_path, sections_names, object_store, imports=imports)
+                write_file(datamodel_path, sections_names, object_store, is_base=True, imports=imports)
                 object_store = {}
 
                 # now compose the overall file
@@ -398,6 +452,7 @@ def create_models(format_docs_dir, input_objects, output_objects):
                     subsections[orig_name], 
                     object_ref, 
                     object_preamble, 
+                    is_base=True,
                     is_schema=True) if object_ref else None
                 if obj is None:
                     logger.warning(f"Unable to parse {object_name} from first "
@@ -406,11 +461,17 @@ def create_models(format_docs_dir, input_objects, output_objects):
                 object_store[object_name] = obj
 
         # write out the overall file
-        write_file(datamodel_path, names, object_store, imports=[f"from datamodel.{'.'.join(sections_names)} import *"])
+        write_file(datamodel_path, names, object_store, is_base=True, imports=[f"from datamodel.{'.'.join(sections_names)} import *"])
 
 
-def get_object_from_subsection(object_name, astr, object_ref, object_preamble, is_schema=False):
-    result = f"class {object_name}Base(BidDSJsonBaseModel):\n"
+def get_object_from_subsection(object_name, astr, object_ref, object_preamble, is_base=True, is_schema=False):
+    if is_base:
+        base = 'Base'
+    else:
+        base = ''
+    if object_preamble !='':
+        object_preamble+='.'
+    result = f"class {object_name}{base}(BidDSJsonBaseModel):\n"
 
     if is_schema:
         result += f"""
@@ -477,7 +538,7 @@ def get_object_from_subsection(object_name, astr, object_ref, object_preamble, i
         if found_object:
             name = found_object[0]
             object_type = found_object[2]
-            type = f"{object_preamble}.{found_object[1]}"
+            type = f"{object_preamble}{found_object[1]}"
             #if "array" in ln.strip():
             if object_type == 'array':
                 #name += "es" if name.endswith("s") else "s"
@@ -513,9 +574,9 @@ def get_object_from_subsection(object_name, astr, object_ref, object_preamble, i
                     f"{get_dict_str(obj_ref_map)}")
         if found_object:
             name = found_object[0]
-            type = found_object[1]
+            type = found_object[1]+'Base'
             if object_preamble:
-                type = f"{object_preamble}.{type}"
+                type = f"{object_preamble}{type}"
             result += f"""
     {name}: {type} = Field(
         title = "{name}"
@@ -528,13 +589,16 @@ def get_object_from_subsection(object_name, astr, object_ref, object_preamble, i
     return None
 
 
-def write_file(datamodel_path, names, objects, imports = []):
+def write_file(datamodel_path, names, objects, is_base = True, imports = []):
     n = len(names)
     p = datamodel_path
     prefix = ".".join(names)
     for i, name in enumerate(names):
         if i == n-1:
-            p = p / f"{name}base.py"
+            if is_base:
+                p = p / f"{name}base.py"
+            else:
+                p = p / f"{name}.py"
             break
         p = p / name
         if not p.exists():
@@ -550,7 +614,7 @@ import json
 import os
 from pathlib import Path
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, Field, root_validator
 from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
@@ -566,15 +630,15 @@ from datamodel.base import BidDSJsonBaseModel\n""")
             f.write(obj + "\n\n")
 
     # write template for derived models
-    pp = p.parent / f"__{p.stem[:-4]}.py"
-    with open(pp, "w") as f:
-        f.write(
+    if is_base:
+        pp = p.parent / f"__{p.stem[:-4]}.py"
+        with open(pp, "w") as f:
+            f.write(
 f"""import logging
-
 from datamodel.{prefix}base import *\n""")
-        f.write("\n")
-        for name in objects.keys():
-            f.write(f"class {name}({name}Base): pass" + "\n\n")
+            f.write("\n")
+            for name in objects.keys():
+                f.write(f"class {name}({name}Base): pass" + "\n\n")
 
     return
 
@@ -597,14 +661,23 @@ if __name__ == "__main__":
         ("input", "staticinner"): (input_objects["staticinner"], []),
         ("input", "timeseries"): (input_objects["timeseries"], ["from datamodel.input.timeseriesinner import *"]),
         ("input", "timeseriesinner"): (input_objects["timeseriesinner"], []),
+        ("input", "reliability"): (input_objects["reliability"], ["from datamodel.input.reliabilityinner import *"]),
+        ("input", "reliabilityinner"): (input_objects["reliabilityinner"], []),
         ("output", "static"): (output_objects["static"], ["from datamodel.output.staticinner import *"]),
         ("output", "staticinner"): (output_objects["staticinner"], []),
         ("output", "timeseries"): (output_objects["timeseries"], ["from datamodel.output.timeseriesinner import *"]),
         ("output", "timeseriesinner"): (output_objects["timeseriesinner"], []),
+        ("output", "reliability"): (output_objects["reliability"], ["from datamodel.output.reliabilityinner import *"]),
+        ("output", "reliabilityinner"): (output_objects["reliabilityinner"], []),
     }
     for dirs, data in object_files.items():
         objs, imports = data
-        write_file(datamodel_path, dirs, objs, imports=imports)
+        is_base = True
+        if 'inner' in dirs[1]:
+            is_base = True
+            for key in list(objs.keys()):
+                objs[key.replace('Base','')] = objs.pop(key)
+        write_file(datamodel_path, dirs, objs, is_base, imports=imports)
 
     create_models(format_docs_dir, input_objects, output_objects)
 

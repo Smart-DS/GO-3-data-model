@@ -18,11 +18,20 @@
                     "$ref": "#/definitions/TimeSeriesInput"
                 }
             ]
+        },
+        "reliability": {
+            "title": "reliability",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Reliability"
+                }
+            ]
         }
     },
     "required": [
         "network",
-        "time_series_input"
+        "time_series_input",
+        "reliability"
     ],
     "additionalProperties": false,
     "definitions": {
@@ -33,12 +42,12 @@
             "properties": {
                 "timestamp_start": {
                     "title": "timestamp_start",
-                    "description": "Period beginning timestamp for the first interval with Timestamp format YYYY-MM-DDThh:mm at UTC ",
+                    "description": "Period beginning timestamp for the first interval as string: YYYY-MM-DDThh:mm:ss at UTC ",
                     "type": "string"
                 },
                 "timestamp_stop": {
                     "title": "timestamp_stop",
-                    "description": "Period beginning timestamp for the interval following the last interval with Timestamp format YYYY-MM-DDThh:mm at UTC ",
+                    "description": "Period beginning timestamp for the interval following the last interval as string: YYYY-MM-DDThh:mm:ss at UTC ",
                     "type": "string"
                 },
                 "season": {
@@ -148,17 +157,17 @@
             "properties": {
                 "p_bus_vio_cost": {
                     "title": "p_bus_vio_cost",
-                    "description": "Bus violation costs for active power violation (\\$/pu-h) ",
+                    "description": "Bus violation costs for active power violation in \\$/pu-h ",
                     "type": "number"
                 },
                 "q_bus_vio_cost": {
                     "title": "q_bus_vio_cost",
-                    "description": "Bus violation costs for reactive power violation  (\\$/pu-h) ",
+                    "description": "Bus violation costs for reactive power violation in \\$/pu-h ",
                     "type": "number"
                 },
                 "s_vio_cost": {
                     "title": "s_vio_cost",
-                    "description": "Branch violation costs for thermal violation (\\$/pu-h) ",
+                    "description": "Branch violation costs for thermal violation in \\$/pu-h ",
                     "type": "number"
                 }
             },
@@ -176,12 +185,12 @@
             "properties": {
                 "vm": {
                     "title": "vm",
-                    "description": "Bus voltage magnitude ",
+                    "description": "Bus voltage magnitude in p.u. ",
                     "type": "number"
                 },
                 "va": {
                     "title": "va",
-                    "description": "Bus voltage angle     ",
+                    "description": "Bus voltage angle     in radian ",
                     "type": "number"
                 }
             },
@@ -203,12 +212,12 @@
                 },
                 "vm_ub": {
                     "title": "vm_ub",
-                    "description": "Voltage magnitude upper bound ",
+                    "description": "Voltage magnitude upper bound in p.u. ",
                     "type": "number"
                 },
                 "vm_lb": {
                     "title": "vm_lb",
-                    "description": "Voltage magnitude lower bound ",
+                    "description": "Voltage magnitude lower bound in p.u. ",
                     "type": "number"
                 },
                 "active_reserve_uids": {
@@ -239,12 +248,12 @@
                 },
                 "longitude": {
                     "title": "longitude",
-                    "description": "Bus location - longitude ",
+                    "description": "Bus location - longitude in decimal degree ",
                     "type": "number"
                 },
                 "latitude": {
                     "title": "latitude",
-                    "description": "Bus location - latitude   ",
+                    "description": "Bus location - latitude in decimal degree ",
                     "type": "number"
                 },
                 "city": {
@@ -314,11 +323,6 @@
             "description": "Base data model for all dsgrid data models",
             "type": "object",
             "properties": {
-                "on_status": {
-                    "title": "on_status",
-                    "description": "On-off status ",
-                    "type": "boolean"
-                },
                 "step": {
                     "title": "step",
                     "description": "Number of step ",
@@ -326,7 +330,6 @@
                 }
             },
             "required": [
-                "on_status",
                 "step"
             ],
             "additionalProperties": false
@@ -348,12 +351,12 @@
                 },
                 "gs": {
                     "title": "gs",
-                    "description": "Shunt conductance for one step (p.u.) ",
+                    "description": "Shunt conductance for one step in p.u. ",
                     "type": "number"
                 },
                 "bs": {
                     "title": "bs",
-                    "description": "Shunt susceptance for one step (p.u.) ",
+                    "description": "Shunt susceptance for one step in p.u. ",
                     "type": "number"
                 },
                 "step_ub": {
@@ -399,22 +402,22 @@
                 },
                 "p": {
                     "title": "p",
-                    "description": "{ (Case: producer) Active production for initial time step (Float, p.u.) } { (Case: consumer) Active consumption for initial time step ",
+                    "description": "{ (Case: producer) Active production for initial time step in p.u. (Float) } { (Case: consumer) Active consumption for initial time step in p.u. ",
                     "type": "number"
                 },
                 "q": {
                     "title": "q",
-                    "description": "{ (Case: producer) Reactive production for initial time step (Float, p.u.) } { (Case: consumer) Reactive consumption for initial time step ",
+                    "description": "{ (Case: producer) Reactive production for initial time step in p.u. (Float) } { (Case: consumer) Reactive consumption for initial time step in p.u. ",
                     "type": "number"
                 },
                 "accu_down_time": {
                     "title": "accu_down_time",
-                    "description": "Accumulated down time ",
+                    "description": "Accumulated down time in hr ",
                     "type": "number"
                 },
                 "accu_up_time": {
                     "title": "accu_up_time",
-                    "description": "Accumulated up time ",
+                    "description": "Accumulated up time in hr ",
                     "type": "number"
                 }
             },
@@ -458,27 +461,45 @@
                 },
                 "vm_setpoint": {
                     "title": "vm_setpoint",
-                    "description": "Voltage magnitude setpoint ",
+                    "description": "Voltage magnitude setpoint in p.u. ",
                     "type": "number"
                 },
                 "nameplate_capacity": {
                     "title": "nameplate_capacity",
-                    "description": "Reference capacity ",
+                    "description": "Reference capacity in p.u. ",
                     "type": "number"
                 },
                 "startup_cost": {
                     "title": "startup_cost",
-                    "description": "Device start up cost ",
+                    "description": "Device start up cost in \\$ ",
                     "type": "number"
+                },
+                "startup_states": {
+                    "title": "startup_states",
+                    "description": "Array of downtime dependent start up states, where each states  is an array with exactly two elements: 1) start up cost adjustments in \\$ (Float), 2) maximum down time in hr (Float)  ",
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "minItems": 2,
+                        "maxItems": 2,
+                        "items": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "number"
+                            }
+                        ]
+                    }
                 },
                 "shutdown_cost": {
                     "title": "shutdown_cost",
-                    "description": "Device shut down cost ",
+                    "description": "Device shut down cost in \\$ ",
                     "type": "number"
                 },
                 "startups_ub": {
                     "title": "startups_ub",
-                    "description": "Array of time interval startup data blocks, where each  data block is an array with exactly three elements:  1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and  3) maximum startups within the interval (Int) ",
+                    "description": "Array of time interval startup data blocks, where each  data block is an array with exactly three elements:  1) interval starting time in hr (Float), 2) interval ending time in hr (Float), and  3) maximum startups within the interval (Int) ",
                     "type": "array",
                     "items": {
                         "type": "array",
@@ -499,7 +520,7 @@
                 },
                 "energy_req_ub": {
                     "title": "energy_req_ub",
-                    "description": "Array of energy upper bound requirement data blocks, where each  data block is an array with exactly three elements:  1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and  3) maximum energy within the interval (Float, p.u.) ",
+                    "description": "Array of energy upper bound requirement data blocks, where each  data block is an array with exactly three elements:  1) interval starting time in hr (Float), 2) interval ending time in hr (Float), and  3) maximum energy within the interval in p.u. (Float) ",
                     "type": "array",
                     "items": {
                         "type": "array",
@@ -520,7 +541,7 @@
                 },
                 "energy_req_lb": {
                     "title": "energy_req_lb",
-                    "description": "Array of energy lower bound requirement data blocks, where each  data block is an array with exactly three elements:  1) interval starting time (Float, hr), 2) interval ending time (Float, hr), and  3) minimum energy within the interval (Float, p.u.) ",
+                    "description": "Array of energy lower bound requirement data blocks, where each  data block is an array with exactly three elements:  1) interval starting time in hr (Float), 2) interval ending time in hr (Float), and  3) minimum energy within the interval in p.u. (Float) ",
                     "type": "array",
                     "items": {
                         "type": "array",
@@ -541,37 +562,37 @@
                 },
                 "on_cost": {
                     "title": "on_cost",
-                    "description": "Device fixed operating cost ",
+                    "description": "Device fixed operating cost in \\$ ",
                     "type": "number"
                 },
                 "in_service_time_lb": {
                     "title": "in_service_time_lb",
-                    "description": "Minimum uptime in service ",
+                    "description": "Minimum uptime in service in hr ",
                     "type": "number"
                 },
                 "down_time_lb": {
                     "title": "down_time_lb",
-                    "description": "Minimum downtime ",
+                    "description": "Minimum downtime in hr ",
                     "type": "number"
                 },
                 "p_ramp_up_ub": {
                     "title": "p_ramp_up_ub",
-                    "description": "{(Case: producer) Max production ramp up when operating (Float, p.u./hr)}  {(Case: consumer) Max consumption ramp up when operating ",
+                    "description": "{(Case: producer) Max production ramp up when operating in p.u./hr (Float)}  {(Case: consumer) Max consumption ramp up when operating in p.u./hr ",
                     "type": "number"
                 },
                 "p_ramp_down_ub": {
                     "title": "p_ramp_down_ub",
-                    "description": "{(Case: producer) Max production ramp down when operating (Float, pu/hr)}  {(Case: consumer) Max consumption ramp down when operating ",
+                    "description": "{(Case: producer) Max production ramp down when operating in p.u./hr (Float)}  {(Case: consumer) Max consumption ramp down when operating in p.u./hr ",
                     "type": "number"
                 },
                 "p_startup_ramp_ub": {
                     "title": "p_startup_ramp_ub",
-                    "description": "{(Case: producer) Max production ramp up when start up (Float, p.u./hr)}  {(Case: consumer) Max consumption ramp up when start up ",
+                    "description": "{(Case: producer) Max production ramp up when start up in p.u./hr (Float)}  {(Case: consumer) Max consumption ramp up when start up in p.u./hr ",
                     "type": "number"
                 },
                 "p_shutdown_ramp_ub": {
                     "title": "p_shutdown_ramp_ub",
-                    "description": "{(Case: producer) Max production ramp down when shut down (Float, pu/hr)}  {(Case: consumer) Max consumption ramp down when shut down ",
+                    "description": "{(Case: producer) Max production ramp down when shut down in p.u./hr (Float)}  {(Case: consumer) Max consumption ramp down when shut down in p.u./hr ",
                     "type": "number"
                 },
                 "initial_status": {
@@ -595,42 +616,72 @@
                 },
                 "p_reg_res_up_ub": {
                     "title": "p_reg_res_up_ub",
-                    "description": "Maximum regulation reserve up ",
+                    "description": "Maximum regulation reserve up in p.u. ",
                     "type": "number"
                 },
                 "p_reg_res_down_ub": {
                     "title": "p_reg_res_down_ub",
-                    "description": "Maximum regulation reserve down ",
+                    "description": "Maximum regulation reserve down in p.u. ",
                     "type": "number"
                 },
                 "p_syn_res_ub": {
                     "title": "p_syn_res_ub",
-                    "description": "Maximum synchronized reserve ",
+                    "description": "Maximum synchronized reserve in p.u. ",
                     "type": "number"
                 },
                 "p_nsyn_res_ub": {
                     "title": "p_nsyn_res_ub",
-                    "description": "Maximum non-synchronized reserve ",
+                    "description": "Maximum non-synchronized reserve in p.u. ",
                     "type": "number"
                 },
                 "p_ramp_res_up_online_ub": {
                     "title": "p_ramp_res_up_online_ub",
-                    "description": "Maximum ramp up reserve when online ",
+                    "description": "Maximum ramp up reserve when online in p.u. ",
                     "type": "number"
                 },
                 "p_ramp_res_down_online_ub": {
                     "title": "p_ramp_res_down_online_ub",
-                    "description": "Maximum ramp down reserve when online ",
+                    "description": "Maximum ramp down reserve when online in p.u. ",
                     "type": "number"
                 },
                 "p_ramp_res_up_offline_ub": {
                     "title": "p_ramp_res_up_offline_ub",
-                    "description": "Maximum ramp up reserve when offline ",
+                    "description": "Maximum ramp up reserve when offline in p.u. ",
                     "type": "number"
                 },
                 "p_ramp_res_down_offline_ub": {
                     "title": "p_ramp_res_down_offline_ub",
-                    "description": "Maximum ramp down reserve when offline ",
+                    "description": "Maximum ramp down reserve when offline in p.u. ",
+                    "type": "number"
+                },
+                "q_0": {
+                    "title": "q_0",
+                    "description": "{ (Case: producer) Reactive production at zero active production in p.u. (Float) } { (Case: consumer) Reactive consumption at zero active consumption in p.u. ",
+                    "type": "number"
+                },
+                "beta": {
+                    "title": "beta",
+                    "description": "Slope of active-reactive capability curve ",
+                    "type": "number"
+                },
+                "q_0_ub": {
+                    "title": "q_0_ub",
+                    "description": "{ (Case: producer) Max reactive production at zero active production in p.u. (Float)}  { (Case: consumer) Max reactive consumption at zero active consumption in p.u. ",
+                    "type": "number"
+                },
+                "q_0_lb": {
+                    "title": "q_0_lb",
+                    "description": "{ (Case: producer) Min reactive production at zero active production in p.u. (Float)}  { (Case: consumer) Min reactive consumption at zero active consumption in p.u. ",
+                    "type": "number"
+                },
+                "beta_ub": {
+                    "title": "beta_ub",
+                    "description": "Upper bound for slope of active-reactive capability curve ",
+                    "type": "number"
+                },
+                "beta_lb": {
+                    "title": "beta_lb",
+                    "description": "Lower bound for slope of active-reactive capability curve ",
                     "type": "number"
                 }
             },
@@ -639,6 +690,7 @@
                 "bus",
                 "device_type",
                 "startup_cost",
+                "startup_states",
                 "shutdown_cost",
                 "startups_ub",
                 "energy_req_ub",
@@ -702,47 +754,42 @@
                 },
                 "r": {
                     "title": "r",
-                    "description": "Series resistance ",
+                    "description": "Series resistance in p.u. ",
                     "type": "number"
                 },
                 "x": {
                     "title": "x",
-                    "description": "Series reactance  ",
+                    "description": "Series reactance  in p.u. ",
                     "type": "number"
                 },
                 "b": {
                     "title": "b",
-                    "description": "Shunt susceptance ",
+                    "description": "Shunt susceptance in p.u. ",
                     "type": "number"
                 },
                 "mva_ub_nom": {
                     "title": "mva_ub_nom",
-                    "description": "MVA limit, nominal rating ",
+                    "description": "MVA limit, nominal rating in p.u. ",
                     "type": "number"
                 },
                 "mva_ub_sht": {
                     "title": "mva_ub_sht",
-                    "description": "MVA limit, short term rating ",
+                    "description": "MVA limit, short term rating in p.u. ",
                     "type": "number"
                 },
                 "mva_ub_em": {
                     "title": "mva_ub_em",
-                    "description": "MVA limit, emergency rating ",
-                    "type": "number"
-                },
-                "standby_cost": {
-                    "title": "standby_cost",
-                    "description": "Line fixed standby cost ",
+                    "description": "MVA limit, emergency rating in p.u. ",
                     "type": "number"
                 },
                 "connection_cost": {
                     "title": "connection_cost",
-                    "description": "AC Line connection cost ",
+                    "description": "AC Line connection cost in \\$ ",
                     "type": "number"
                 },
                 "disconnection_cost": {
                     "title": "disconnection_cost",
-                    "description": "AC line disconnection cost ",
+                    "description": "AC line disconnection cost in \\$ ",
                     "type": "number"
                 },
                 "initial_status": {
@@ -758,6 +805,26 @@
                     "title": "additional_shunt",
                     "description": "Branch has additional shunt components ",
                     "type": "boolean"
+                },
+                "g_fr": {
+                    "title": "g_fr",
+                    "description": "Conductance for shunt component at from bus in p.u. ",
+                    "type": "number"
+                },
+                "b_fr": {
+                    "title": "b_fr",
+                    "description": "Susceptance for shunt component at from bus in p.u. ",
+                    "type": "number"
+                },
+                "g_to": {
+                    "title": "g_to",
+                    "description": "Conductance for shunt component at to bus in p.u. ",
+                    "type": "number"
+                },
+                "b_to": {
+                    "title": "b_to",
+                    "description": "Susceptance for shunt component at to bus in p.u. ",
+                    "type": "number"
                 }
             },
             "required": [
@@ -769,7 +836,6 @@
                 "b",
                 "mva_ub_nom",
                 "mva_ub_em",
-                "standby_cost",
                 "connection_cost",
                 "disconnection_cost",
                 "initial_status",
@@ -789,12 +855,12 @@
                 },
                 "tm": {
                     "title": "tm",
-                    "description": "Off-nominal tap ratio (p.u.) ",
+                    "description": "Off-nominal tap ratio in p.u. ",
                     "type": "number"
                 },
                 "ta": {
                     "title": "ta",
-                    "description": "Phase shifting angle (radian) ",
+                    "description": "Phase shifting angle in radian ",
                     "type": "number"
                 }
             },
@@ -827,67 +893,62 @@
                 },
                 "r": {
                     "title": "r",
-                    "description": "Series resistance ",
+                    "description": "Series resistance in p.u. ",
                     "type": "number"
                 },
                 "x": {
                     "title": "x",
-                    "description": "Series reactance  ",
+                    "description": "Series reactance  in p.u. ",
                     "type": "number"
                 },
                 "b": {
                     "title": "b",
-                    "description": "Shunt susceptance ",
+                    "description": "Shunt susceptance in p.u. ",
                     "type": "number"
                 },
                 "tm_ub": {
                     "title": "tm_ub",
-                    "description": "Upper bound for off-nominal tap ratio ",
+                    "description": "Upper bound for off-nominal tap ratio in p.u. ",
                     "type": "number"
                 },
                 "tm_lb": {
                     "title": "tm_lb",
-                    "description": "Lower bound for off-nominal tap ratio ",
+                    "description": "Lower bound for off-nominal tap ratio in p.u. ",
                     "type": "number"
                 },
                 "ta_ub": {
                     "title": "ta_ub",
-                    "description": "Upper bound for phase shifting angle ",
+                    "description": "Upper bound for phase shifting angle in radian ",
                     "type": "number"
                 },
                 "ta_lb": {
                     "title": "ta_lb",
-                    "description": "Lower bound for phase shifting angle ",
+                    "description": "Lower bound for phase shifting angle in radian ",
                     "type": "number"
                 },
                 "mva_ub_nom": {
                     "title": "mva_ub_nom",
-                    "description": "MVA limit, nominal rating ",
+                    "description": "MVA limit, nominal rating in p.u. ",
                     "type": "number"
                 },
                 "mva_ub_sht": {
                     "title": "mva_ub_sht",
-                    "description": "MVA limit, short term rating ",
+                    "description": "MVA limit, short term rating in p.u. ",
                     "type": "number"
                 },
                 "mva_ub_em": {
                     "title": "mva_ub_em",
-                    "description": "MVA limit, emergency rating ",
-                    "type": "number"
-                },
-                "standby_cost": {
-                    "title": "standby_cost",
-                    "description": "Transformer fixed standby cost ",
+                    "description": "MVA limit, emergency rating in p.u. ",
                     "type": "number"
                 },
                 "connection_cost": {
                     "title": "connection_cost",
-                    "description": "Transformer connection cost ",
+                    "description": "Transformer connection cost in \\$ ",
                     "type": "number"
                 },
                 "disconnection_cost": {
                     "title": "disconnection_cost",
-                    "description": "Transformer disconnection cost ",
+                    "description": "Transformer disconnection cost in \\$ ",
                     "type": "number"
                 },
                 "initial_status": {
@@ -903,6 +964,26 @@
                     "title": "additional_shunt",
                     "description": "Transformer has additional shunt components ",
                     "type": "boolean"
+                },
+                "g_fr": {
+                    "title": "g_fr",
+                    "description": "Conductance for shunt component at from bus in p.u. ",
+                    "type": "number"
+                },
+                "b_fr": {
+                    "title": "b_fr",
+                    "description": "Susceptance for shunt component at from bus in p.u. ",
+                    "type": "number"
+                },
+                "g_to": {
+                    "title": "g_to",
+                    "description": "Conductance for shunt component at to bus in p.u. ",
+                    "type": "number"
+                },
+                "b_to": {
+                    "title": "b_to",
+                    "description": "Susceptance for shunt component at to bus in p.u. ",
+                    "type": "number"
                 }
             },
             "required": [
@@ -918,7 +999,6 @@
                 "ta_lb",
                 "mva_ub_nom",
                 "mva_ub_em",
-                "standby_cost",
                 "connection_cost",
                 "disconnection_cost",
                 "initial_status",
@@ -931,29 +1011,23 @@
             "description": "Base data model for all dsgrid data models",
             "type": "object",
             "properties": {
-                "on_status": {
-                    "title": "on_status",
-                    "description": "Connection status ",
-                    "type": "boolean"
-                },
                 "pdc_fr": {
                     "title": "pdc_fr",
-                    "description": "Active power flow, from bus (p.u.) ",
+                    "description": "Active power flow in p.u. ",
                     "type": "number"
                 },
                 "qdc_fr": {
                     "title": "qdc_fr",
-                    "description": "Reactive power flow, from bus (p.u.) ",
+                    "description": "Reactive power flow, from bus in p.u. ",
                     "type": "number"
                 },
                 "qdc_to": {
                     "title": "qdc_to",
-                    "description": "Reactive power flow, to bus (p.u.) ",
+                    "description": "Reactive power flow, to bus in p.u. ",
                     "type": "number"
                 }
             },
             "required": [
-                "on_status",
                 "pdc_fr",
                 "qdc_fr",
                 "qdc_to"
@@ -980,49 +1054,29 @@
                     "description": "Unique identifier for connecting to bus ",
                     "type": "string"
                 },
-                "pdc_fr_ub": {
-                    "title": "pdc_fr_ub",
-                    "description": "Maximum active power, from bus ",
-                    "type": "number"
-                },
-                "pdc_fr_lb": {
-                    "title": "pdc_fr_lb",
-                    "description": "Minimum active power, from bus ",
+                "pdc_ub": {
+                    "title": "pdc_ub",
+                    "description": "Maximum active power in p.u. ",
                     "type": "number"
                 },
                 "qdc_fr_ub": {
                     "title": "qdc_fr_ub",
-                    "description": "Maximum reactive power, from bus ",
+                    "description": "Maximum reactive power, from bus in p.u. ",
                     "type": "number"
                 },
                 "qdc_fr_lb": {
                     "title": "qdc_fr_lb",
-                    "description": "Minimum reactive power, from bus ",
+                    "description": "Minimum reactive power, from bus in p.u. ",
                     "type": "number"
                 },
                 "qdc_to_ub": {
                     "title": "qdc_to_ub",
-                    "description": "Maximum reactive power, to bus ",
+                    "description": "Maximum reactive power, to bus in p.u. ",
                     "type": "number"
                 },
                 "qdc_to_lb": {
                     "title": "qdc_to_lb",
-                    "description": "Minimum reactive power, to bus ",
-                    "type": "number"
-                },
-                "standby_cost": {
-                    "title": "standby_cost",
-                    "description": "{DC line fixed standby cost ",
-                    "type": "number"
-                },
-                "connection_cost": {
-                    "title": "connection_cost",
-                    "description": "{DC line connection cost ",
-                    "type": "number"
-                },
-                "disconnection_cost": {
-                    "title": "disconnection_cost",
-                    "description": "{DC line disconnection cost ",
+                    "description": "Minimum reactive power, to bus in p.u. ",
                     "type": "number"
                 },
                 "initial_status": {
@@ -1039,15 +1093,11 @@
                 "uid",
                 "fr_bus",
                 "to_bus",
-                "pdc_fr_ub",
-                "pdc_fr_lb",
+                "pdc_ub",
                 "qdc_fr_ub",
                 "qdc_fr_lb",
                 "qdc_to_ub",
                 "qdc_to_lb",
-                "standby_cost",
-                "connection_cost",
-                "disconnection_cost",
                 "initial_status"
             ],
             "additionalProperties": false
@@ -1064,52 +1114,52 @@
                 },
                 "REG_UP": {
                     "title": "REG_UP",
-                    "description": "Regulation reserve up requirement ",
+                    "description": "Regulation reserve up requirement fraction ",
                     "type": "number"
                 },
                 "REG_DOWN": {
                     "title": "REG_DOWN",
-                    "description": "Regulation reserve down requirement ",
+                    "description": "Regulation reserve down requirement faction ",
                     "type": "number"
                 },
                 "SYN": {
                     "title": "SYN",
-                    "description": "Synchronized reserve requirement ",
+                    "description": "Synchronized reserve requirement fraction ",
                     "type": "number"
                 },
                 "NSYN": {
                     "title": "NSYN",
-                    "description": "Non-synchronized reserve requirement ",
+                    "description": "Non-synchronized reserve requirement fraction ",
                     "type": "number"
                 },
                 "REG_UP_vio_cost": {
                     "title": "REG_UP_vio_cost",
-                    "description": "Regulation reserve up violation cost (\\$/pu-hr) ",
+                    "description": "Regulation reserve up violation cost in \\$/pu-hr ",
                     "type": "number"
                 },
                 "REG_DOWN_vio_cost": {
                     "title": "REG_DOWN_vio_cost",
-                    "description": "Regulation reserve down violation cost (\\$/pu-hr) ",
+                    "description": "Regulation reserve down violation cost in \\$/pu-hr ",
                     "type": "number"
                 },
                 "SYN_vio_cost": {
                     "title": "SYN_vio_cost",
-                    "description": "Synchronized reserve violation cost (\\$/pu-hr) ",
+                    "description": "Synchronized reserve violation cost in \\$/pu-hr ",
                     "type": "number"
                 },
                 "NSYN_vio_cost": {
                     "title": "NSYN_vio_cost",
-                    "description": "Non-synchronized reserve violation cost (\\$/pu-hr) ",
+                    "description": "Non-synchronized reserve violation cost in \\$/pu-hr ",
                     "type": "number"
                 },
                 "RAMPING_RESERVE_UP_vio_cost": {
                     "title": "RAMPING_RESERVE_UP_vio_cost",
-                    "description": "Flexible-ramp up violation cost (\\$/pu-hr) ",
+                    "description": "Flexible-ramp up violation cost in \\$/pu-hr ",
                     "type": "number"
                 },
                 "RAMPING_RESERVE_DOWN_vio_cost": {
                     "title": "RAMPING_RESERVE_DOWN_vio_cost",
-                    "description": "Flexible-ramp down violation cost (\\$/pu-hr) ",
+                    "description": "Flexible-ramp down violation cost in \\$/pu-hr ",
                     "type": "number"
                 }
             },
@@ -1140,12 +1190,12 @@
                 },
                 "REACT_UP_vio_cost": {
                     "title": "REACT_UP_vio_cost",
-                    "description": "Reactive reserve power violation cost (\\$/pu-hr) ",
+                    "description": "Reactive reserve power violation cost in \\$/pu-hr ",
                     "type": "number"
                 },
                 "REACT_DOWN_vio_cost": {
                     "title": "REACT_DOWN_vio_cost",
-                    "description": "Reactive reserve power violation cost (\\$/pu-hr) ",
+                    "description": "Reactive reserve power violation cost in \\$/pu-hr ",
                     "type": "number"
                 }
             },
@@ -1260,7 +1310,7 @@
                 },
                 "interval_duration": {
                     "title": "interval_duration",
-                    "description": "Time duration of the intervals, per time period in hours  ",
+                    "description": "Time duration of the intervals, per time period in hours ",
                     "type": "array",
                     "items": {
                         "type": "number"
@@ -1301,7 +1351,7 @@
                 },
                 "p_ub": {
                     "title": "p_ub",
-                    "description": "{ (Case: producer) Upper bound of active dispatch (Array of Float)   } { (Case: consumer) Upper bound of active demand   ",
+                    "description": "{ (Case: producer) Upper bound of active dispatch in p.u. (Array of Float)   } { (Case: consumer) Upper bound of active demand in p.u.  ",
                     "type": "array",
                     "items": {
                         "type": "number"
@@ -1309,7 +1359,7 @@
                 },
                 "p_lb": {
                     "title": "p_lb",
-                    "description": "{ (Case: producer) Lower bound of active dispatch (Array of Float)    } { (Case: consumer) Lower bound of active demand   ",
+                    "description": "{ (Case: producer) Lower bound of active dispatch in p.u. (Array of Float)    } { (Case: consumer) Lower bound of active demand in p.u.  ",
                     "type": "array",
                     "items": {
                         "type": "number"
@@ -1317,7 +1367,7 @@
                 },
                 "q_ub": {
                     "title": "q_ub",
-                    "description": "{ (Case: producer) Upper bound of reactive dispatch (Array of Float)  } { (Case: consumer) Upper bound of reactive demand   ",
+                    "description": "{ (Case: producer) Upper bound of reactive dispatch in p.u.(Array of Float)  } { (Case: consumer) Upper bound of reactive demand  in p.u. ",
                     "type": "array",
                     "items": {
                         "type": "number"
@@ -1325,7 +1375,7 @@
                 },
                 "q_lb": {
                     "title": "q_lb",
-                    "description": "{ (Case: producer) Lower bound of reactive dispatch (Array of Float)  } { (Case: consumer) Lower bound of reactive demand   ",
+                    "description": "{ (Case: producer) Lower bound of reactive dispatch in p.u. (Array of Float)  } { (Case: consumer) Lower bound of reactive demand in p.u.  ",
                     "type": "array",
                     "items": {
                         "type": "number"
@@ -1333,7 +1383,7 @@
                 },
                 "cost": {
                     "title": "cost",
-                    "description": "Array of cost blocks, where   each cost block is an array with exactly two elements:     1) marginal  cost (\\$/p.u.-hr), and 2) block size (p.u.) ",
+                    "description": "Array of cost blocks, where   each cost block is an array with exactly two elements:     1) marginal cost in \\$/p.u.-hr (Float), and 2) block size in p.u. (Float) ",
                     "type": "array",
                     "items": {
                         "type": "array",
@@ -1354,7 +1404,7 @@
                 },
                 "p_reg_res_up_cost": {
                     "title": "p_reg_res_up_cost",
-                    "description": "Costs for regulation reserve up (\\$/pu-h)  ",
+                    "description": "Costs for regulation reserve up in \\$/pu-h  ",
                     "type": "array",
                     "items": {
                         "type": "number"
@@ -1362,7 +1412,7 @@
                 },
                 "p_reg_res_down_cost": {
                     "title": "p_reg_res_down_cost",
-                    "description": "Costs for regulation reserve down (\\$/pu-h) ",
+                    "description": "Costs for regulation reserve down in \\$/pu-h ",
                     "type": "array",
                     "items": {
                         "type": "number"
@@ -1370,7 +1420,7 @@
                 },
                 "p_syn_res_cost": {
                     "title": "p_syn_res_cost",
-                    "description": "Costs for synchronized reserve (\\$/pu-h)  ",
+                    "description": "Costs for synchronized reserve in \\$/pu-h  ",
                     "type": "array",
                     "items": {
                         "type": "number"
@@ -1378,7 +1428,7 @@
                 },
                 "p_nsyn_res_cost": {
                     "title": "p_nsyn_res_cost",
-                    "description": "Costs for non-synchronized reserve (\\$/pu-h)  ",
+                    "description": "Costs for non-synchronized reserve in \\$/pu-h  ",
                     "type": "array",
                     "items": {
                         "type": "number"
@@ -1386,7 +1436,7 @@
                 },
                 "p_ramp_res_up_online_cost": {
                     "title": "p_ramp_res_up_online_cost",
-                    "description": "Costs for ramp up reserve when online (\\$/pu-h)  ",
+                    "description": "Costs for ramp up reserve when online in \\$/pu-h  ",
                     "type": "array",
                     "items": {
                         "type": "number"
@@ -1394,7 +1444,7 @@
                 },
                 "p_ramp_res_down_online_cost": {
                     "title": "p_ramp_res_down_online_cost",
-                    "description": "Costs for ramp down reserve when online (\\$/pu-h)  ",
+                    "description": "Costs for ramp down reserve when online in \\$/pu-h  ",
                     "type": "array",
                     "items": {
                         "type": "number"
@@ -1402,7 +1452,7 @@
                 },
                 "p_ramp_res_up_offline_cost": {
                     "title": "p_ramp_res_up_offline_cost",
-                    "description": "Costs for ramp up reserve when offline (\\$/pu-h)  ",
+                    "description": "Costs for ramp up reserve when offline in \\$/pu-h  ",
                     "type": "array",
                     "items": {
                         "type": "number"
@@ -1410,7 +1460,7 @@
                 },
                 "p_ramp_res_down_offline_cost": {
                     "title": "p_ramp_res_down_offline_cost",
-                    "description": "Costs for ramp down reserve when offline (\\$/pu-h)  ",
+                    "description": "Costs for ramp down reserve when offline in \\$/pu-h  ",
                     "type": "array",
                     "items": {
                         "type": "number"
@@ -1418,7 +1468,7 @@
                 },
                 "q_res_up_cost": {
                     "title": "q_res_up_cost",
-                    "description": "Costs for reactive reserve up (\\$/pu-h) ",
+                    "description": "Costs for reactive reserve up in \\$/pu-h ",
                     "type": "array",
                     "items": {
                         "type": "number"
@@ -1426,7 +1476,7 @@
                 },
                 "q_res_down_cost": {
                     "title": "q_res_down_cost",
-                    "description": "Costs for reactive reserve down (\\$/pu-h) ",
+                    "description": "Costs for reactive reserve down in \\$/pu-h ",
                     "type": "array",
                     "items": {
                         "type": "number"
@@ -1563,6 +1613,49 @@
                 "simple_dispatchable_device",
                 "active_zonal_reserve",
                 "reactive_zonal_reserve"
+            ],
+            "additionalProperties": false
+        },
+        "Contingency": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "Contingency unique identifier ",
+                    "type": "string"
+                },
+                "components": {
+                    "title": "components",
+                    "description": "A JSON array, where each element is an unique identifier (string) for the contingency component ",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "uid",
+                "components"
+            ],
+            "additionalProperties": false
+        },
+        "Reliability": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "contingency": {
+                    "title": "contingency",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Contingency"
+                    }
+                }
+            },
+            "required": [
+                "contingency"
             ],
             "additionalProperties": false
         }

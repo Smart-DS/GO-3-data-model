@@ -1,5 +1,4 @@
 import logging
-
 from datamodel.input.timeseriesbase import *
 
 class General(GeneralBase): pass

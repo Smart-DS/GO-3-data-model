@@ -4,7 +4,7 @@ import json
 import os
 from pathlib import Path
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, Field, root_validator
 from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
@@ -22,6 +22,10 @@ class InputDataFileBase(BidDSJsonBaseModel):
 
     time_series_input: TimeSeriesInput = Field(
         title = "time_series_input"
+    )
+
+    reliability: Reliability = Field(
+        title = "reliability"
     )
 
 

@@ -1,5 +1,4 @@
 import logging
-
 from datamodel.input.staticbase import *
 
 class General(GeneralBase): pass

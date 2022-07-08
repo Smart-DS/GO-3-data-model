@@ -4,13 +4,14 @@ import json
 import os
 from pathlib import Path
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, Field, root_validator
 from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
 from datamodel.base import BidDSJsonBaseModel
-import datamodel.input.timeseries
+import datamodel.input.reliability
 import datamodel.input.static
+import datamodel.input.timeseries
 
 class NetworkBase(BidDSJsonBaseModel):
 
@@ -71,6 +72,13 @@ class TimeSeriesInputBase(BidDSJsonBaseModel):
 
     reactive_zonal_reserve: List[datamodel.input.timeseries.ReactiveZonalReserveRequirementsViolationCosts] = Field(
         title = "reactive_zonal_reserve"
+    )
+
+
+class ReliabilityBase(BidDSJsonBaseModel):
+
+    contingency: List[datamodel.input.reliability.Contingency] = Field(
+        title = "contingency"
     )
 
 
