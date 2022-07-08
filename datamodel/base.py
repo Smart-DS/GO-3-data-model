@@ -57,7 +57,7 @@ class BidDSJsonBaseModel(BaseModel):
         filename = Path(filename)
         try:
             # TODO: Check if this validates. If not do a validation
-            json_model = cls.dict()
+            json_model = cls.dict(exclude_unset=True)
             with open(filename,'w') as file_pointer:
                 json.dump(json_model,file_pointer,indent=4)
         except ValidationError:
