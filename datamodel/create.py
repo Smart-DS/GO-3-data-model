@@ -293,17 +293,17 @@ def get_objects_from_table(object_name, astr):
 
 # Gets extended with internal json objects
 types_map = {
-    "Array of Int": "List[int]",
+    "Array of Int": "List[StrictInt]",
     "Array of Float": "List[float]",
     "Array of Binary": "List[bool]",
     "Array of String": "List[str]",
     "Array of Float Float": "List[Tuple[float,float]]",
     "Array of Array of Float Float": "List[List[Tuple[float,float]]]",
     "Array of Float Float Float": "List[Tuple[float,float,float]]",
-    "Array of Float Float Int": "List[Tuple[float,float,int]]",
+    "Array of Float Float Int": "List[Tuple[float,float,StrictInt]]",
     "String": "str",
     "Timestamp": "str",
-    "Int": "int",
+    "Int": "StrictInt",
     "Float": "float",
     "Binary": "bool"
 }
@@ -348,8 +348,7 @@ def parse_field(ln,object_name,is_conditional=False):
             # to be that Enum
             type_name = "str"
         elif type_name.startswith("Binary:"):
-            choices = [0,1]
-            type_name = "int"
+            type_name = "bool"
         else:
             logger.warning(f"Unable to extract type_name from {type_name!r}")
             return sec, ""
@@ -614,7 +613,7 @@ import json
 import os
 from pathlib import Path
 
-from pydantic import BaseModel, Field, root_validator
+from pydantic import BaseModel, Field, root_validator, StrictInt
 from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 

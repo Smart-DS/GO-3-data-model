@@ -4,7 +4,7 @@ import json
 import os
 from pathlib import Path
 
-from pydantic import BaseModel, Field, root_validator
+from pydantic import BaseModel, Field, root_validator, StrictInt
 from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
@@ -222,12 +222,12 @@ class ShuntBase(BidDSJsonBaseModel):
         description = "Shunt susceptance for one step in p.u. "
     )
 
-    step_ub: int = Field(
+    step_ub: StrictInt = Field(
         title = "step_ub",
         description = "Maximum step number "
     )
 
-    step_lb: int = Field(
+    step_lb: StrictInt = Field(
         title = "step_lb",
         description = "Minimum step number "
     )
@@ -288,7 +288,7 @@ class DispatchableDevices_SimpleProducingConsumingDevicesBase(BidDSJsonBaseModel
         description = "Device shut down cost in \$ "
     )
 
-    startups_ub: List[Tuple[float,float,int]] = Field(
+    startups_ub: List[Tuple[float,float,StrictInt]] = Field(
         title = "startups_ub",
         description = "Array of time interval startup data blocks, where each  data block is an array with exactly three elements:  1) interval starting time in hr (Float), 2) interval ending time in hr (Float), and  3) maximum startups within the interval (Int) "
     )
