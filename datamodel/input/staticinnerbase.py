@@ -4,7 +4,7 @@ import json
 import os
 from pathlib import Path
 
-from pydantic import BaseModel, Field, root_validator
+from pydantic import BaseModel, Field, root_validator, StrictInt
 from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
@@ -25,7 +25,7 @@ class BusInitialStatusBase(BidDSJsonBaseModel):
 
 class ShuntInitialStatusBase(BidDSJsonBaseModel):
 
-    step: int = Field(
+    step: StrictInt = Field(
         title = "step",
         description = "Number of step "
     )

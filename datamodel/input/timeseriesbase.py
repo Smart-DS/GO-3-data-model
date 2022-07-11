@@ -4,7 +4,7 @@ import json
 import os
 from pathlib import Path
 
-from pydantic import BaseModel, Field, root_validator
+from pydantic import BaseModel, Field, root_validator, StrictInt
 from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
@@ -15,7 +15,7 @@ class GeneralBase(BidDSJsonBaseModel):
 
     # Global time attributes
 
-    time_periods: int = Field(
+    time_periods: StrictInt = Field(
         title = "time_periods",
         description = "The number of time periods "
     )
