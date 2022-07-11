@@ -23,7 +23,7 @@
             "title": "reliability",
             "allOf": [
                 {
-                    "$ref": "#/definitions/ReliabilityInput"
+                    "$ref": "#/definitions/Reliability"
                 }
             ]
         }
@@ -42,12 +42,12 @@
             "properties": {
                 "timestamp_start": {
                     "title": "timestamp_start",
-                    "description": "Period beginning timestamp for the first interval as string: YYYY-MM-DDThh:mm at UTC ",
+                    "description": "Period beginning timestamp for the first interval as string: YYYY-MM-DDThh:mm:ss at UTC ",
                     "type": "string"
                 },
                 "timestamp_stop": {
                     "title": "timestamp_stop",
-                    "description": "Period beginning timestamp for the interval following the last interval as string: YYYY-MM-DDThh:mm at UTC ",
+                    "description": "Period beginning timestamp for the interval following the last interval as string: YYYY-MM-DDThh:mm:ss at UTC ",
                     "type": "string"
                 },
                 "season": {
@@ -1641,7 +1641,7 @@
             ],
             "additionalProperties": false
         },
-        "ReliabilityInput": {
+        "Reliability": {
             "title": "BidDSJsonModel",
             "description": "Base data model for all dsgrid data models",
             "type": "object",

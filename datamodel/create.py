@@ -243,7 +243,6 @@ def get_objects_from_table(object_name, astr):
             continue
         if ln.strip().startswith("{\\tt"):
             sec, field = parse_field(ln,object_name)
-            print(field,sec)
             if field:
                 if sec == "S":
                     static_result += field
@@ -462,9 +461,6 @@ def create_models(format_docs_dir, input_objects, output_objects):
                 object_store[object_name] = obj
 
         # write out the overall file
-        if 'InputDataFile' in object_store:
-            object_store['InputDataFile'] = object_store['InputDataFile'].replace('timeseriesinput','time_series_input')
-            object_store['InputDataFile'] = object_store['InputDataFile'].replace('reliabilityinput','reliability')
         write_file(datamodel_path, names, object_store, is_base=True, imports=[f"from datamodel.{'.'.join(sections_names)} import *"])
 
 

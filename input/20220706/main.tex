@@ -38,7 +38,7 @@ frametitleaboveskip=\dimexpr-\ht\strutbox\relax
 
 \title{ARPA-E GO Competition Challenge 3 \\ Data Format}
 \author{ARPA-E GO Competition Team}
-\date{July 5, 2022 - \underline{Release Candidate (v1.0.0)}}
+\date{July 8, 2022 - \underline{Release Candidate (v1.0.1)}}
 
 \begin{document}
 
@@ -127,8 +127,8 @@ Global time attributes & Description (Type) & Req & Sec & Sym\\
 %                           & (Array of Float) &  &  & \\
 % END ORIGINAL
                            \hline
- {\tt timestamp\_start} & Period beginning timestamp for the first interval as string: YYYY-MM-DDThh:mm at UTC (Timestamp)& N & S & \\  
- {\tt timestamp\_stop} & Period beginning timestamp for the interval following the last interval as string: YYYY-MM-DDThh:mm at UTC (Timestamp)& N & S & \\
+ {\tt timestamp\_start} & Period beginning timestamp for the first interval as string: YYYY-MM-DDThh:mm:ss at UTC (Timestamp)& N & S & \\   
+ {\tt timestamp\_stop} & Period beginning timestamp for the interval following the last interval as string: YYYY-MM-DDThh:mm:ss at UTC (Timestamp)& N & S & \\
 \hline
 Qualitative descriptors & Description (Type) & Req & Sec & Sym\\
 \hline
@@ -704,7 +704,7 @@ are listed below.
 \section{Time series input data}
 \input{time_series}
 
-\section{Reliability Parameters}    
+\section{Reliability Parameters}
 \input{reliability}
 
 Competitors are reminded that the format above may be more general than
