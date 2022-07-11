@@ -9,7 +9,7 @@ class Network(NetworkBase):
 
 class TimeSeriesInput(TimeSeriesInputBase): pass
 
-class Reliability(ReliabilityBase): pass
+class Reliability(ReliabilityBase):
 
     # todo ctg UIDs unique?
     pass
