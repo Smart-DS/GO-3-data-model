@@ -45,8 +45,8 @@ class InputDataFile(InputDataFileBase):
             uids_num[i] += 1
         uids_num_max = max([0] + list(uids_num.values()))
         if uids_num_max > 1:
-            msg = "fails uid uniqueness. repeated uids, with numbers of occurrences: {}".format(
-                {k: v for k, v in uids_num.items() if v > 1})
+            msg = "fails uid uniqueness. repeated uids (uid, number of occurrences): {}".format(
+                [(k, v) for k, v in uids_num.items() if v > 1])
             raise ValueError(msg)
 
     def get_uids(self):
