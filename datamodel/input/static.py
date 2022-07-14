@@ -5,15 +5,11 @@ from datamodel.input.staticbase import *
 
 class General(GeneralBase):
 
-    #print('hello world 1')
-
     @root_validator
     def stop_is_after_start(cls, data):
-        #print('hello world 5')
+
         start = data.get("timestamp_start")
         stop = data.get("timestamp_stop")
-        #print('hello world 2')
-        #raise ValueError('hello world 6')
         if (start is not None) and (stop is not None) and not (start < stop):
             msg = "fails {} < {}. {}: {}, {}: {}".format(
                 "timestamp_start", "timestamp_stop", "timestamp_start", start, "timestamp_stop", stop)
@@ -95,19 +91,6 @@ class Shunt(ShuntBase):
         #   "step": 1
         # }
 
-    # todo: note this does not work. Parsing converts non-int float to int before validator is called
-    # perhaps we could type the step_ub field as pydantic.StrictInt instead of as int in datamodel.input.staticbase
-    # if we do that then we do not need this validator anyway
-    @validator("step_ub")
-    def step_ub_int(cls, data):
-
-        if not (data == round(data)):
-            msg = "fails {} integer. {}: {}".format(
-                "step_ub", "step_ub", data)
-            raise ValueError(msg)
-        #raise ValueError('hello world shunt. data: {}'.format(data))
-        return data
-
     @validator("step_lb")
     def step_lb_ge_0(cls, data):
 
@@ -143,7 +126,178 @@ class Shunt(ShuntBase):
                 raise ValueError(msg)
         return data
 
-class DispatchableDevices_SimpleProducingConsumingDevices(DispatchableDevices_SimpleProducingConsumingDevicesBase): pass
+class DispatchableDevices_SimpleProducingConsumingDevices(DispatchableDevices_SimpleProducingConsumingDevicesBase):
+
+    @validator("startups_ub")
+    def startups_ub_entry0_ge_0(cls, data):
+
+        num_constrs = len(data)
+        idx_err = [i for i in range(num_constrs) if data[i][0] < 0.0]
+        errs = [(i, data[i][0]) for i in idx_err]
+        if len(idx_err) > 0:
+            msg = "fails constraints have entry 0 >= 0. failures (index, entry 0): {}".format(errs)
+            raise ValueError(msg)
+        return data
+
+    @validator("startups_ub")
+    def startups_ub_entry1_ge_entry0(cls, data):
+
+        num_constrs = len(data)
+        idx_err = [i for i in range(num_constrs) if data[i][1] < data[i][0]]
+        errs = [(i, data[i][0], data[i][1]) for i in idx_err]
+        if len(idx_err) > 0:
+            msg = "fails constraints have entry 1 >= entry 0. failures (index, entry 0, entry 1): {}".format(errs)
+            raise ValueError(msg)
+        return data
+
+    @validator("startups_ub")
+    def startups_ub_entry2_ge_0(cls, data):
+
+        num_constrs = len(data)
+        idx_err = [i for i in range(num_constrs) if data[i][2] < 0]
+        errs = [(i, data[i][2]) for i in idx_err]
+        if len(idx_err) > 0:
+            msg = "fails constraints have entry 2 >= 0. failures (index, entry 2): {}".format(errs)
+            raise ValueError(msg)
+        return data
+
+    @validator("energy_req_ub")
+    def energy_req_ub_entry0_ge_0(cls, data):
+
+        num_constrs = len(data)
+        idx_err = [i for i in range(num_constrs) if data[i][0] < 0.0]
+        errs = [(i, data[i][0]) for i in idx_err]
+        if len(idx_err) > 0:
+            msg = "fails constraints have entry 0 >= 0. failures (index, entry 0): {}".format(errs)
+            raise ValueError(msg)
+        return data
+
+    @validator("energy_req_ub")
+    def energy_req_ub_entry1_ge_energy0(cls, data):
+
+        num_constrs = len(data)
+        idx_err = [i for i in range(num_constrs) if data[i][1] < data[i][0]]
+        errs = [(i, data[i][0], data[i][1]) for i in idx_err]
+        if len(idx_err) > 0:
+            msg = "fails constraints have entry 1 >= entry 0. failures (index, entry 0, entry 1): {}".format(errs)
+            raise ValueError(msg)
+        return data
+
+    @validator("energy_req_ub")
+    def energy_req_ub_entry2_ge_0(cls, data):
+
+        num_constrs = len(data)
+        idx_err = [i for i in range(num_constrs) if data[i][2] < 0.0]
+        errs = [(i, data[i][2]) for i in idx_err]
+        if len(idx_err) > 0:
+            msg = "fails constraints have entry 2 >= 0. failures (index, entry 2): {}".format(errs)
+            raise ValueError(msg)
+        return data
+
+    @validator("energy_req_lb")
+    def energy_req_lb_entry0_ge_0(cls, data):
+
+        num_constrs = len(data)
+        idx_err = [i for i in range(num_constrs) if data[i][0] < 0.0]
+        errs = [(i, data[i][0]) for i in idx_err]
+        if len(idx_err) > 0:
+            msg = "fails constraints have entry 0 >= 0. failures (index, entry 0): {}".format(errs)
+            raise ValueError(msg)
+        return data
+
+    @validator("energy_req_lb")
+    def energy_req_lb_entry1_ge_energy0(cls, data):
+
+        num_constrs = len(data)
+        idx_err = [i for i in range(num_constrs) if data[i][1] < data[i][0]]
+        errs = [(i, data[i][0], data[i][1]) for i in idx_err]
+        if len(idx_err) > 0:
+            msg = "fails constraints have entry 1 >= entry 0. failures (index, entry 0, entry 1): {}".format(errs)
+            raise ValueError(msg)
+        return data
+
+    @validator("energy_req_lb")
+    def energy_req_lb_entry2_ge_0(cls, data):
+
+        num_constrs = len(data)
+        idx_err = [i for i in range(num_constrs) if data[i][2] < 0.0]
+        errs = [(i, data[i][2]) for i in idx_err]
+        if len(idx_err) > 0:
+            msg = "fails constraints have entry 2 >= 0. failures (index, entry 2): {}".format(errs)
+            raise ValueError(msg)
+        return data
+
+    @validator("in_service_time_lb")
+    def min_uptime_ge_0(cls, data):
+
+        if data < 0:
+            msg = "fails min uptime >= 0. min uptime: {}".format(data)
+            raise ValueError(msg)
+        return data
+
+    @validator("down_time_lb")
+    def min_downtime_ge_0(cls, data):
+
+        if data < 0:
+            msg = "fails min downtime >= 0. min downtime: {}".format(data)
+            raise ValueError(msg)
+        return data
+
+    @validator("p_ramp_up_ub")
+    def ramp_up_rate_ge_0(cls, data):
+
+        if data < 0:
+            msg = "fails ramp up rate >= 0. ramp up rate: {}".format(data)
+            raise ValueError(msg)
+        return data
+
+    @validator("p_ramp_down_ub")
+    def ramp_down_rate_ge_0(cls, data):
+
+        if data < 0:
+            msg = "fails ramp down rate >= 0. ramp down rate: {}".format(data)
+            raise ValueError(msg)
+        return data
+
+    @validator("p_startup_ramp_ub")
+    def startup_ramp_rate_ge_0(cls, data):
+
+        if data < 0:
+            msg = "fails startup ramp rate >= 0. startup ramp rate: {}".format(data)
+            raise ValueError(msg)
+        return data
+
+    @validator("p_shutdown_ramp_ub")
+    def shutdown_ramp_rate_ge_0(cls, data):
+
+        if data < 0:
+            msg = "fails shutdown ramp rate >= 0. shutdown ramp rate: {}".format(data)
+            raise ValueError(msg)
+        return data
+
+
+
+
+        # "q_linear_cap": 0,
+        # "q_bound_cap": 1,
+        # "p_reg_res_up_ub": 3.56,
+        # "p_reg_res_down_ub": 3.56,
+        # "p_syn_res_ub": 3.56,
+        # "p_nsyn_res_ub": 3.56,
+        # "p_ramp_res_up_online_ub": 3.56,
+        # "p_ramp_res_down_online_ub": 3.56,
+        # "p_ramp_res_up_offline_ub": 3.56,
+        # "p_ramp_res_down_offline_ub": 3.56,
+        # "q_0_ub": 5.0,
+        # "q_0_lb": -5.0,
+        # "beta_ub": 2.0,
+        # "beta_lb": -0.5
+
+
+
+
+
+
 
 class ACTransmissionLine(ACTransmissionLineBase):
 
