@@ -3,9 +3,6 @@ from datamodel.input.sectionsbase import *
 
 class Network(NetworkBase):
 
-    # todo bus UIDs unique
-    # etc
-
     def get_bus_uids(self):
 
         return [i.uid for i in self.bus]
@@ -50,22 +47,6 @@ class Network(NetworkBase):
             self.get_active_zonal_reserve_uids() +
             self.get_reactive_zonal_reserve_uids())
         return uids
-
-    def shunt_bus_uids_in_domain(self):
-
-        domain = self.get_bus_uids()
-        domain = set(domain)
-        num_shunt = len(self.shunt)
-        shunt_idx_bus_not_in_domain = [
-            i for i in range(num_shunt)
-            if not (self.shunt[i].bus in domain)]
-        shunt_bus_not_in_domain = [
-            (i, self.shunt[i].uid, self.shunt[i].bus)
-            for i in shunt_idx_bus_not_in_domain]
-        if len(shunt_idx_bus_not_in_domain) > 0:
-            msg = "fails shunt bus in buses. failing shunts (index, uid, bus uid): {}".format(
-                shunt_bus_not_in_domain)
-            raise ValueError(msg)
 
 class TimeSeriesInput(TimeSeriesInputBase): pass
 
