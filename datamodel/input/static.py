@@ -85,11 +85,6 @@ class Bus(BusBase):
         return data
 
 class Shunt(ShuntBase):
-        # "step_ub": 2,
-        # "step_lb": 0.5,
-        # "initial_status": {
-        #   "step": 1
-        # }
 
     @validator("step_lb")
     def step_lb_ge_0(cls, data):
@@ -275,19 +270,78 @@ class DispatchableDevices_SimpleProducingConsumingDevices(DispatchableDevices_Si
             raise ValueError(msg)
         return data
 
+    @validator("p_reg_res_up_ub")
+    def p_reg_res_up_ub_ge_0(cls, data):
+
+        if data < 0:
+            msg = "fails p_reg_res_up_ub >= 0. p_reg_res_up_ub: {}".format(data)
+            raise ValueError(msg)
+        return data
+
+    @validator("p_reg_res_down_ub")
+    def p_reg_res_down_ub_ge_0(cls, data):
+
+        if data < 0:
+            msg = "fails p_reg_res_down_ub >= 0. p_reg_res_down_ub: {}".format(data)
+            raise ValueError(msg)
+        return data
+
+    @validator("p_syn_res_ub")
+    def p_syn_res_ub_ge_0(cls, data):
+
+        if data < 0:
+            msg = "fails p_syn_res_ub >= 0. p_syn_res_ub: {}".format(data)
+            raise ValueError(msg)
+        return data
+
+    @validator("p_nsyn_res_ub")
+    def p_nsyn_res_ub_ge_0(cls, data):
+
+        if data < 0:
+            msg = "fails p_nsyn_res_ub >= 0. p_nsyn_res_ub: {}".format(data)
+            raise ValueError(msg)
+        return data
+
+    @validator("p_ramp_res_up_online_ub")
+    def p_ramp_res_up_online_ub_ge_0(cls, data):
+
+        if data < 0:
+            msg = "fails p_ramp_res_up_online_ub >= 0. p_ramp_res_up_online_ub: {}".format(data)
+            raise ValueError(msg)
+        return data
+
+    @validator("p_ramp_res_down_online_ub")
+    def p_ramp_res_down_online_ub_ge_0(cls, data):
+
+        if data < 0:
+            msg = "fails p_ramp_res_down_online_ub >= 0. p_ramp_res_down_online_ub: {}".format(data)
+            raise ValueError(msg)
+        return data
+
+    @validator("p_ramp_res_up_offline_ub")
+    def p_ramp_res_up_offline_ub_ge_0(cls, data):
+
+        if data < 0:
+            msg = "fails p_ramp_res_up_offline_ub >= 0. p_ramp_res_up_offline_ub: {}".format(data)
+            raise ValueError(msg)
+        return data
+
+    @validator("p_ramp_res_down_offline_ub")
+    def p_ramp_res_down_offline_ub_ge_0(cls, data):
+
+        if data < 0:
+            msg = "fails p_ramp_res_down_offline_ub >= 0. p_ramp_res_down_offline_ub: {}".format(data)
+            raise ValueError(msg)
+        return data
+
+
+
+
 
 
 
         # "q_linear_cap": 0,
         # "q_bound_cap": 1,
-        # "p_reg_res_up_ub": 3.56,
-        # "p_reg_res_down_ub": 3.56,
-        # "p_syn_res_ub": 3.56,
-        # "p_nsyn_res_ub": 3.56,
-        # "p_ramp_res_up_online_ub": 3.56,
-        # "p_ramp_res_down_online_ub": 3.56,
-        # "p_ramp_res_up_offline_ub": 3.56,
-        # "p_ramp_res_down_offline_ub": 3.56,
         # "q_0_ub": 5.0,
         # "q_0_lb": -5.0,
         # "beta_ub": 2.0,
