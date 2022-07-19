@@ -657,9 +657,112 @@ class DCLine(DCLineBase):
 
 class ActiveZonalReserveRequirementsViolationCosts(ActiveZonalReserveRequirementsViolationCostsBase):
 
-    pass
+    @validator("REG_UP")
+    def reg_up_ge_0(cls, data):
+
+        if not (data >= 0):
+            msg = "fails {} >= 0. {}: {}".format(
+                "REG_UP", "REG_UP", data)
+            raise ValueError(msg)
+        return data            
+
+    @validator("REG_DOWN")
+    def reg_down_ge_0(cls, data):
+
+        if not (data >= 0):
+            msg = "fails {} >= 0. {}: {}".format(
+                "REG_DOWN", "REG_DOWN", data)
+            raise ValueError(msg)
+        return data            
+
+    @validator("SYN")
+    def syn_ge_0(cls, data):
+
+        if not (data >= 0):
+            msg = "fails {} >= 0. {}: {}".format(
+                "SYN", "SYN", data)
+            raise ValueError(msg)
+        return data            
+
+    @validator("NSYN")
+    def nsyn_ge_0(cls, data):
+
+        if not (data >= 0):
+            msg = "fails {} >= 0. {}: {}".format(
+                "NSYN", "NSYN", data)
+            raise ValueError(msg)
+        return data            
+
+    @validator("REG_UP_vio_cost")
+    def reg_up_vio_cost_ge_0(cls, data):
+
+        if not (data >= 0):
+            msg = "fails {} >= 0. {}: {}".format(
+                "REG_UP_vio_cost", "REG_UP_vio_cost", data)
+            raise ValueError(msg)
+        return data            
+
+    @validator("REG_DOWN_vio_cost")
+    def reg_down_vio_cost_ge_0(cls, data):
+
+        if not (data >= 0):
+            msg = "fails {} >= 0. {}: {}".format(
+                "REG_DOWN_vio_cost", "REG_DOWN_vio_cost", data)
+            raise ValueError(msg)
+        return data            
+
+    @validator("SYN_vio_cost")
+    def syn_vio_cost_ge_0(cls, data):
+
+        if not (data >= 0):
+            msg = "fails {} >= 0. {}: {}".format(
+                "SYN_vio_cost", "SYN_vio_cost", data)
+            raise ValueError(msg)
+        return data            
+
+    @validator("NSYN_vio_cost")
+    def nsyn_vio_cost_ge_0(cls, data):
+
+        if not (data >= 0):
+            msg = "fails {} >= 0. {}: {}".format(
+                "NSYN_vio_cost", "NSYN_vio_cost", data)
+            raise ValueError(msg)
+        return data            
+
+    @validator("RAMPING_RESERVE_UP_vio_cost")
+    def ramping_reserve_up_vio_cost_ge_0(cls, data):
+
+        if not (data >= 0):
+            msg = "fails {} >= 0. {}: {}".format(
+                "RAMPING_RESERVE_UP_vio_cost", "RAMPING_RESERVE_UP_vio_cost", data)
+            raise ValueError(msg)
+        return data            
+
+    @validator("RAMPING_RESERVE_DOWN_vio_cost")
+    def ramping_reserve_down_vio_cost_ge_0(cls, data):
+
+        if not (data >= 0):
+            msg = "fails {} >= 0. {}: {}".format(
+                "RAMPING_RESERVE_DOWN_vio_cost", "RAMPING_RESERVE_DOWN_vio_cost", data)
+            raise ValueError(msg)
+        return data            
 
 class ReactiveZonalReserveRequirementsViolationCosts(ReactiveZonalReserveRequirementsViolationCostsBase):
 
-    pass
+    @validator("REACT_UP_vio_cost")
+    def react_up_vio_cost_ge_0(cls, data):
 
+        if not (data >= 0):
+            msg = "fails {} >= 0. {}: {}".format(
+                "REACT_UP_vio_cost", "REACT_UP_vio_cost", data)
+            raise ValueError(msg)
+        return data            
+
+    @validator("REACT_DOWN_vio_cost")
+    def react_down_vio_cost_ge_0(cls, data):
+
+        if not (data >= 0):
+            msg = "fails {} >= 0. {}: {}".format(
+                "REACT_DOWN_vio_cost", "REACT_DOWN_vio_cost", data)
+            raise ValueError(msg)
+        return data            
