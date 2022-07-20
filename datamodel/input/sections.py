@@ -48,7 +48,27 @@ class Network(NetworkBase):
             self.get_reactive_zonal_reserve_uids())
         return uids
 
-class TimeSeriesInput(TimeSeriesInputBase): pass
+class TimeSeriesInput(TimeSeriesInputBase):
+
+    def get_simple_dispatchable_device_uids(self):
+
+        return [i.uid for i in self.simple_dispatchable_device]
+
+    def get_active_zonal_reserve_uids(self):
+
+        return [i.uid for i in self.active_zonal_reserve]
+
+    def get_reactive_zonal_reserve_uids(self):
+
+        return [i.uid for i in self.reactive_zonal_reserve]
+
+    def get_uids(self):
+
+        uids = (
+            self.get_simple_dispatchable_device_uids() +
+            self.get_active_zonal_reserve_uids() +
+            self.get_reactive_zonal_reserve_uids())
+        return uids
 
 class Reliability(ReliabilityBase):
 
