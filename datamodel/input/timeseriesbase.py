@@ -4,7 +4,7 @@ import json
 import os
 from pathlib import Path
 
-from pydantic import BaseModel, Field, root_validator, StrictInt
+from pydantic import BaseModel, Field, root_validator, StrictInt, confloat
 from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
@@ -54,8 +54,9 @@ class DispatchableDevices_SimpleProducingConsumingDevicesBase(BidDSJsonBaseModel
         title = "on_status_lb",
         description = "{On status indicator lower bound "
     )
-
-    p_ub: List[float] = Field(
+    
+    #p_ub: List[float] = Field(
+    p_ub: List[confloat(gt=-float("inf"), lt=float("inf"))] = Field(
         title = "p_ub",
         description = "{ (Case: producer) Upper bound of active dispatch in p.u. (Array of Float)   } { (Case: consumer) Upper bound of active demand in p.u.  "
     )
