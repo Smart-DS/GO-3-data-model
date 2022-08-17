@@ -1,0 +1,176 @@
+\label{sec:solution_format}
+This section presents the latest data format in JSON for the 
+communicating the solution data back to the ARPA-E competition team.
+The section first presents the top level JSON object --- the
+object for storing all the solution/output data 
+%(attributes marked with `O'/`B' in Section~\ref{sec:naming})
+for each network component.
+JSON objects associated with each individual component will be presented afterwards.
+
+
+\label{sec:output_data}
+\subsection{Time Series Output}
+The time series JSON object consists of:
+\begin{itemize}
+    \item A \texttt{"bus"} array\\
+    The object contains a JSON array of buses, defined in~\ref{sec:output_bus}.
+    \item A \texttt{"shunt"} array\\
+    The object contains a JSON array of shunts, defined in~\ref{sec:output_shunt}.
+    \item A \texttt{"simple\_dispatchable\_device"} array\\
+    The object contains a JSON array of simple producing \& consuming devices, defined in~\ref{sec:output_generators}.
+    \item A \texttt{"ac\_line"} array\\
+    The object contains a JSON array of AC lines, defined in~\ref{sec:output_acline}.
+    \item A \texttt{"two\_winding\_transformer"} array\\
+    The object contains a JSON array of two winding transformers, defined in~\ref{sec:output_2wtransformer}.
+    \item A \texttt{"dc\_line"} array\\
+    The object contains a JSON array of DC lines, defined in~\ref{sec:output_dcline}.
+\end{itemize}
+
+% \begin{verbatim}
+% "solution_output”: {
+%   "bus": [ … ],
+%   "shunt": [ … ],
+%   "simple_dispatchable_device": [ … ],
+%   "multi_mode_dispatchable_device": [ … ],
+%   "sub_device": [ … ],
+%   "storage": [ … ],
+%   "ac_line”: [ … ],
+%   "two_winding_transformer”: [ … ],
+%   "dc_line”: [ … ],   
+%   "active_regional_reserve”: [ … ],
+%   "reactive_regional_reserve”: [ … ]
+% }    
+% \end{verbatim}
+\begin{verbatim}
+"time_series_solution”: {
+   "bus": [ … ],
+   "shunt": [ … ],
+   "simple_dispatchable_device": [ … ],
+   "ac_line”: [ … ],
+   "two_winding_transformer”: [ … ],
+   "dc_line”: [ … ]
+}    
+\end{verbatim}
+
+\label{sec:output_bus}
+\subsection{Bus}
+Attributes for buses are listed in Section~\ref{nom:bus}.
+Below shows a schematic example on output parameters for buses.
+\begin{verbatim}
+{
+  "uid" : "IDB0001",
+  "vm" : [1.0, 0.99, 0.98],
+  "va" : [0.0, 0.0125, 0.0233]
+},
+...
+\end{verbatim}
+    
+\label{sec:output_shunt}
+\subsection{Shunt}
+Attributes for shunts are listed in Section~\ref{nom:shunt}.
+Below shows a schematic example on the output parameters for shunts.
+\begin{verbatim}
+{
+    "uid" : "IDSH0001",
+    "step" : [1, 1, 0]
+},
+…    
+\end{verbatim}
+
+\label{sec:output_generators}
+\subsection{Dispatchable Devices: Simple Producing \& Consuming Devices}
+Attributes for simple producing \& consuming devices are listed in Section~\ref{nom:gen_single}.
+Below shows a schematic example on the output parameters for the simple devices.
+
+\begin{verbatim}
+{
+    "uid" : "IDG0001",
+    "on_status" : [1, 1, 1],
+    "p_on" : [0.0, 2.0, 7.0],
+    "q"    : [0.0, 1.0, 4.0],
+    "p_reg_res_up" : [0.0, 0.5, 0.5],
+    "p_reg_res_down" : [0.0, 0.5, 1.0],
+    "p_syn_res" : [0.0, 0.5, 1.0],
+    "p_nsyn_res" : [0.0, 0.5, 1.0],
+    "p_ramp_res_up_online" : [0.0, 1.0, 0.5],
+    "p_ramp_res_down_online" : [0.0, 1.0, 2.0],
+    "p_ramp_res_up_offline" : [1.0, 0.0, 0.0],
+    "p_ramp_res_down_offline" : [0.0, 0.0, 0.0],
+    "q_res_up" : [0.0, 1.0, 2.0],
+    "q_res_down" : [0.0, 1.0, 2.0]
+},
+…     
+\end{verbatim}
+
+\label{sec:output_acline}
+\subsection{AC Transmission Line}
+Attributes for AC transmission lines are listed in Section~\ref{nom:line}.
+Below shows a schematic example on the output parameters for lines.
+
+\begin{verbatim}
+{
+    "uid" : "IDAC0001",
+    "on_status" : [0, 1, 1]
+},
+…     
+\end{verbatim}
+
+
+\label{sec:output_2wtransformer}
+\subsection{Two Winding Transformer}
+Attributes for two winding transformers are listed in Section~\ref{nom:transformer}.
+Below shows a schematic example on the output parameters for transformers.
+
+\begin{verbatim}
+{
+    "uid" : "ID2T0001",
+    "tm"    : [1.0, 1.05, 1.0],
+    "ta"    : [0.0, 0.0, 0.0],
+    "on_status" : [1, 1, 0]
+},
+…     
+\end{verbatim}
+
+\label{sec:output_dcline}
+\subsection{DC Line}
+Attributes for DC lines are listed in Section~\ref{nom:dcline}.
+Below shows a schematic example on the output parameters for DC lines.
+%    "on_status" : [1, 1, 1],   
+\begin{verbatim}
+{
+   "uid" : "IDDC0001",
+   "pdc_fr” : [0.5, 0.6, 0.7],
+   "qdc_fr” : [0.0, 0.0, 0.1],
+   "qdc_to” : [0.0, 0.0, -0.1]
+},
+…    
+\end{verbatim}
+
+
+
+% \subsection{Regional Reserve}
+% Attributes for regional reserves are listed in Section~\ref{nom:reserves}.
+% Below shows a schematic example on the output parameters for active reserve zones.
+% \begin{verbatim}
+% {
+%   "uid" : "IDRES0001",
+%   "REG_UP" : [0.10, 0.10, 0.10],
+%   "REG_DOWN" : [0.05, 0.03, 0.05],
+%   "SYN" : [0.40, 0.40, 0.60],
+%   "NSYN" : [1.00, 1.00, 1.00],  
+%   "RAMPING_RESERVE_UP" : [2.00, 3.00, 4.00],  
+%   "RAMPING_RESERVE_DOWN" : [2.00, 3.00, 1.00]
+% },
+% ...
+% \end{verbatim}
+
+% Below shows a schematic example on the output parameters for reactive reserve zones.
+% \begin{verbatim}
+% {
+%   "uid" : "IDRES0010",
+%   "REACT_UP" : [0.02, 0.02, 0.01],
+%   "REACT_DOWN" : [0.02, 0.02, 0.01]
+% },
+% ...
+% \end{verbatim}
+

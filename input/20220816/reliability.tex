@@ -1,0 +1,31 @@
+\label{sec:reliability}
+This section presents the latest data format in JSON for the reliability input data.
+The JSON format for contingencies consists of a JSON array,
+where each JSON object within the array contains data for each contingency.
+
+\subsection{Reliability}
+\label{sec:reliability_data}
+The time series JSON object consists of:
+\begin{itemize}
+    \item A \texttt{contingency} array\\
+        The object contains the contingency data listed in Section~\ref{nom:contingency}.
+\end{itemize}
+
+% Each contingency JSON object will have two types of objects:
+% \begin{enumerate}
+%     \item A ``uid'' string object \\
+%     The value of the object contains the unique identifier (string) of the contingency.
+%     \item A ``components'' array \\
+%     The value of the object is a JSON array storing the the unique identifier (string) of the contingency component.
+% \end{enumerate}
+
+Below shows a schematic example on the contingency input data parameters in the JSON data format.
+\begin{verbatim}
+"contingency”: [
+    {"uid" : "CONT1", "components" : [ "IDAC0001" ]},
+    {"uid" : "CONT2", "components" : [ "IDAC0003" ]},
+    {"uid" : "CONT3", "components" : [ "ID2T0001" ]}
+]
+\end{verbatim}
+
+
