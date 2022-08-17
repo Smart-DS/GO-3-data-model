@@ -30,17 +30,10 @@ def create_objects(format_docs_dir):
         "static": {},
         "staticinner": {},
         "timeseries": {},
-        "timeseriesinner": {},
         "reliability": {},
-        "reliabilityinner": {}
     }
     output_objects = {
-        "static": {},
-        "staticinner": {},
-        "timeseries": {},
-        "timeseriesinner": {},
-        "reliability": {},
-        "reliabilityinner": {}
+        "timeseries": {}
     }
     with open(format_docs_dir / "main.tex", encoding="utf8") as f:
         main_file = f.read()
@@ -410,6 +403,9 @@ def create_models(format_docs_dir, input_objects, output_objects):
             elif file.startswith("reliability"):
                 object_ref = object_refs["reliability"]
                 object_preamble += ".reliability"
+            elif file.startswith("solution"):
+                object_ref = object_refs["timeseries"]
+                object_preamble += ".timeseries"
             elif file.startswith("parsing_mapping"):
                 object_ref = object_store
                 object_preamble = ""
@@ -663,16 +659,9 @@ if __name__ == "__main__":
     object_files = {
         ("input", "static"): (input_objects["static"], ["from datamodel.input.staticinner import *"]),
         ("input", "staticinner"): (input_objects["staticinner"], []),
-        ("input", "timeseries"): (input_objects["timeseries"], ["from datamodel.input.timeseriesinner import *"]),
-        ("input", "timeseriesinner"): (input_objects["timeseriesinner"], []),
-        ("input", "reliability"): (input_objects["reliability"], ["from datamodel.input.reliabilityinner import *"]),
-        ("input", "reliabilityinner"): (input_objects["reliabilityinner"], []),
-        ("output", "static"): (output_objects["static"], ["from datamodel.output.staticinner import *"]),
-        ("output", "staticinner"): (output_objects["staticinner"], []),
-        ("output", "timeseries"): (output_objects["timeseries"], ["from datamodel.output.timeseriesinner import *"]),
-        ("output", "timeseriesinner"): (output_objects["timeseriesinner"], []),
-        ("output", "reliability"): (output_objects["reliability"], ["from datamodel.output.reliabilityinner import *"]),
-        ("output", "reliabilityinner"): (output_objects["reliabilityinner"], []),
+        ("input", "timeseries"): (input_objects["timeseries"], []),
+        ("input", "reliability"): (input_objects["reliability"], []),
+        ("output", "timeseries"): (output_objects["timeseries"], []),
     }
     for dirs, data in object_files.items():
         objs, imports = data
