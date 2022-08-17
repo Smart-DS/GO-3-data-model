@@ -11,3 +11,13 @@ from typing import Dict, List, Optional, Union, Tuple
 from datamodel.base import BidDSJsonBaseModel
 from datamodel.output.sections import *
 
+class OutputDataFileBase(BidDSJsonBaseModel):
+
+    class Config:
+        title = "OutputDataFile"
+        
+    time_series_output: TimeSeriesOutput = Field(
+        title = "time_series_output"
+    )
+
+
