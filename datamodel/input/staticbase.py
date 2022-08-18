@@ -4,7 +4,7 @@ import json
 import os
 from pathlib import Path
 
-from pydantic import BaseModel, Field, root_validator, StrictInt
+from pydantic import BaseModel, Field, root_validator, StrictInt, conint, confloat
 from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
@@ -77,7 +77,7 @@ class GeneralBase(BidDSJsonBaseModel):
 
     # Normalization attributes
 
-    base_norm_mva: float = Field(
+    base_norm_mva: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "base_norm_mva",
         description = "Base MVA normalization constant "
     )
@@ -87,17 +87,17 @@ class ViolationCostsParametersBase(BidDSJsonBaseModel):
 
     # Global violation attributes
 
-    p_bus_vio_cost: float = Field(
+    p_bus_vio_cost: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "p_bus_vio_cost",
         description = "Bus violation costs for active power violation in \$/pu-h "
     )
 
-    q_bus_vio_cost: float = Field(
+    q_bus_vio_cost: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "q_bus_vio_cost",
         description = "Bus violation costs for reactive power violation in \$/pu-h "
     )
 
-    s_vio_cost: float = Field(
+    s_vio_cost: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "s_vio_cost",
         description = "Branch violation costs for thermal violation in \$/pu-h "
     )
@@ -112,12 +112,12 @@ class BusBase(BidDSJsonBaseModel):
         description = "Bus unique identifier "
     )
 
-    vm_ub: float = Field(
+    vm_ub: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "vm_ub",
         description = "Voltage magnitude upper bound in p.u. "
     )
 
-    vm_lb: float = Field(
+    vm_lb: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "vm_lb",
         description = "Voltage magnitude lower bound in p.u. "
     )
@@ -144,12 +144,12 @@ class BusBase(BidDSJsonBaseModel):
         description = "Bus control zone "
     )
 
-    longitude: Optional[float] = Field(
+    longitude: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "longitude",
         description = "Bus location - longitude in decimal degree "
     )
 
-    latitude: Optional[float] = Field(
+    latitude: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "latitude",
         description = "Bus location - latitude in decimal degree "
     )
@@ -176,12 +176,12 @@ class BusBase(BidDSJsonBaseModel):
 
     # Operations information
 
-    con_loss_factor: Optional[float] = Field(
+    con_loss_factor: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "con_loss_factor",
         description = "Contingency participation loss factor "
     )
 
-    base_nom_volt: float = Field(
+    base_nom_volt: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "base_nom_volt",
         description = "Bus nominal voltage "
     )
@@ -212,12 +212,12 @@ class ShuntBase(BidDSJsonBaseModel):
         description = "Unique identifier for connecting bus "
     )
 
-    gs: float = Field(
+    gs: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "gs",
         description = "Shunt conductance for one step in p.u. "
     )
 
-    bs: float = Field(
+    bs: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "bs",
         description = "Shunt susceptance for one step in p.u. "
     )
@@ -263,79 +263,79 @@ class DispatchableDevices_SimpleProducingConsumingDevicesBase(BidDSJsonBaseModel
         description = "Detail description of the device  "
     )
 
-    vm_setpoint: Optional[float] = Field(
+    vm_setpoint: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "vm_setpoint",
         description = "Voltage magnitude setpoint in p.u. "
     )
 
-    nameplate_capacity: Optional[float] = Field(
+    nameplate_capacity: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "nameplate_capacity",
         description = "Reference capacity in p.u. "
     )
 
-    startup_cost: float = Field(
+    startup_cost: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "startup_cost",
         description = "Device start up cost in \$ "
     )
 
-    startup_states: List[Tuple[float,float]] = Field(
+    startup_states: List[Tuple[confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False)]] = Field(
         title = "startup_states",
         description = "Array of downtime dependent start up states, where each states  is an array with exactly two elements: 1) start up cost adjustments in \$ (Float), 2) maximum down time in hr (Float)  "
     )
 
-    shutdown_cost: float = Field(
+    shutdown_cost: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "shutdown_cost",
         description = "Device shut down cost in \$ "
     )
 
-    startups_ub: List[Tuple[float,float,StrictInt]] = Field(
+    startups_ub: List[Tuple[confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False), StrictInt]] = Field(
         title = "startups_ub",
         description = "Array of time interval startup data blocks, where each  data block is an array with exactly three elements:  1) interval starting time in hr (Float), 2) interval ending time in hr (Float), and  3) maximum startups within the interval (Int) "
     )
 
     # 
 
-    energy_req_ub: List[Tuple[float,float,float]] = Field(
+    energy_req_ub: List[Tuple[confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False)]] = Field(
         title = "energy_req_ub",
         description = "Array of energy upper bound requirement data blocks, where each  data block is an array with exactly three elements:  1) interval starting time in hr (Float), 2) interval ending time in hr (Float), and  3) maximum energy within the interval in p.u. (Float) "
     )
 
-    energy_req_lb: List[Tuple[float,float,float]] = Field(
+    energy_req_lb: List[Tuple[confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False)]] = Field(
         title = "energy_req_lb",
         description = "Array of energy lower bound requirement data blocks, where each  data block is an array with exactly three elements:  1) interval starting time in hr (Float), 2) interval ending time in hr (Float), and  3) minimum energy within the interval in p.u. (Float) "
     )
 
-    on_cost: float = Field(
+    on_cost: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "on_cost",
         description = "Device fixed operating cost in \$ "
     )
 
-    in_service_time_lb: float = Field(
+    in_service_time_lb: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "in_service_time_lb",
         description = "Minimum uptime in service in hr "
     )
 
-    down_time_lb: float = Field(
+    down_time_lb: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "down_time_lb",
         description = "Minimum downtime in hr "
     )
 
-    p_ramp_up_ub: float = Field(
+    p_ramp_up_ub: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "p_ramp_up_ub",
         description = "{(Case: producer) Max production ramp up when operating in p.u./hr (Float)}  {(Case: consumer) Max consumption ramp up when operating in p.u./hr "
     )
 
-    p_ramp_down_ub: float = Field(
+    p_ramp_down_ub: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "p_ramp_down_ub",
         description = "{(Case: producer) Max production ramp down when operating in p.u./hr (Float)}  {(Case: consumer) Max consumption ramp down when operating in p.u./hr "
     )
 
-    p_startup_ramp_ub: float = Field(
+    p_startup_ramp_ub: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "p_startup_ramp_ub",
         description = "{(Case: producer) Max production ramp up when start up in p.u./hr (Float)}  {(Case: consumer) Max consumption ramp up when start up in p.u./hr "
     )
 
-    p_shutdown_ramp_ub: float = Field(
+    p_shutdown_ramp_ub: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "p_shutdown_ramp_ub",
         description = "{(Case: producer) Max production ramp down when shut down in p.u./hr (Float)}  {(Case: consumer) Max consumption ramp down when shut down in p.u./hr "
     )
@@ -347,12 +347,12 @@ class DispatchableDevices_SimpleProducingConsumingDevicesBase(BidDSJsonBaseModel
 
     # Flags for extra parameters
 
-    q_linear_cap: bool = Field(
+    q_linear_cap: conint(ge=0, le=1, strict=True) = Field(
         title = "q_linear_cap",
         description = "Device has additional reactive constraint "
     )
 
-    q_bound_cap: bool = Field(
+    q_bound_cap: conint(ge=0, le=1, strict=True) = Field(
         title = "q_bound_cap",
         description = "Device has additional reactive bounds "
     )
@@ -363,42 +363,42 @@ class DispatchableDevices_SimpleProducingConsumingDevicesBase(BidDSJsonBaseModel
 
     # Reserve attributes
 
-    p_reg_res_up_ub: float = Field(
+    p_reg_res_up_ub: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "p_reg_res_up_ub",
         description = "Maximum regulation reserve up in p.u. "
     )
 
-    p_reg_res_down_ub: float = Field(
+    p_reg_res_down_ub: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "p_reg_res_down_ub",
         description = "Maximum regulation reserve down in p.u. "
     )
 
-    p_syn_res_ub: float = Field(
+    p_syn_res_ub: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "p_syn_res_ub",
         description = "Maximum synchronized reserve in p.u. "
     )
 
-    p_nsyn_res_ub: float = Field(
+    p_nsyn_res_ub: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "p_nsyn_res_ub",
         description = "Maximum non-synchronized reserve in p.u. "
     )
 
-    p_ramp_res_up_online_ub: float = Field(
+    p_ramp_res_up_online_ub: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "p_ramp_res_up_online_ub",
         description = "Maximum ramp up reserve when online in p.u. "
     )
 
-    p_ramp_res_down_online_ub: float = Field(
+    p_ramp_res_down_online_ub: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "p_ramp_res_down_online_ub",
         description = "Maximum ramp down reserve when online in p.u. "
     )
 
-    p_ramp_res_up_offline_ub: float = Field(
+    p_ramp_res_up_offline_ub: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "p_ramp_res_up_offline_ub",
         description = "Maximum ramp up reserve when offline in p.u. "
     )
 
-    p_ramp_res_down_offline_ub: float = Field(
+    p_ramp_res_down_offline_ub: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "p_ramp_res_down_offline_ub",
         description = "Maximum ramp down reserve when offline in p.u. "
     )
@@ -407,76 +407,76 @@ class DispatchableDevices_SimpleProducingConsumingDevicesBase(BidDSJsonBaseModel
 
     # 
 
-    q_0: Optional[float] = Field(
+    q_0: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "q_0",
         description = "{ (Case: producer) Reactive production at zero active production in p.u. (Float) } { (Case: consumer) Reactive consumption at zero active consumption in p.u. "
     )
 
-    beta: Optional[float] = Field(
+    beta: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "beta",
         description = "Slope of active-reactive capability curve "
     )
 
-    q_0_ub: Optional[float] = Field(
+    q_0_ub: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "q_0_ub",
         description = "{ (Case: producer) Max reactive production at zero active production in p.u. (Float)}  { (Case: consumer) Max reactive consumption at zero active consumption in p.u. "
     )
 
-    q_0_lb: Optional[float] = Field(
+    q_0_lb: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "q_0_lb",
         description = "{ (Case: producer) Min reactive production at zero active production in p.u. (Float)}  { (Case: consumer) Min reactive consumption at zero active consumption in p.u. "
     )
 
-    beta_ub: Optional[float] = Field(
+    beta_ub: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "beta_ub",
         description = "Upper bound for slope of active-reactive capability curve "
     )
 
-    beta_lb: Optional[float] = Field(
+    beta_lb: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "beta_lb",
         description = "Lower bound for slope of active-reactive capability curve "
     )
 
     @root_validator(pre=False)
     def check_conditional_q_0(cls, values):
-        if values["q_linear_cap"] == 1 and values["q_0"] is None:
+        if values["q_linear_cap"] == 1 and values.get("q_0") is None:
              raise ValueError("Conditional element q_0 is missing when q_linear_cap is 1")
-        if values["q_linear_cap"] != 1 and values["q_0"] is not None:
+        if values["q_linear_cap"] != 1 and values.get("q_0") is not None:
              raise ValueError("Conditional element q_0 is present when q_linear_cap is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_beta(cls, values):
-        if values["q_linear_cap"] == 1 and values["beta"] is None:
+        if values["q_linear_cap"] == 1 and values.get("beta") is None:
              raise ValueError("Conditional element beta is missing when q_linear_cap is 1")
-        if values["q_linear_cap"] != 1 and values["beta"] is not None:
+        if values["q_linear_cap"] != 1 and values.get("beta") is not None:
              raise ValueError("Conditional element beta is present when q_linear_cap is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_q_0_ub(cls, values):
-        if values["q_bound_cap"] == 1 and values["q_0_ub"] is None:
+        if values["q_bound_cap"] == 1 and values.get("q_0_ub") is None:
              raise ValueError("Conditional element q_0_ub is missing when q_bound_cap is 1")
-        if values["q_bound_cap"] != 1 and values["q_0_ub"] is not None:
+        if values["q_bound_cap"] != 1 and values.get("q_0_ub") is not None:
              raise ValueError("Conditional element q_0_ub is present when q_bound_cap is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_q_0_lb(cls, values):
-        if values["q_bound_cap"] == 1 and values["q_0_lb"] is None:
+        if values["q_bound_cap"] == 1 and values.get("q_0_lb") is None:
              raise ValueError("Conditional element q_0_lb is missing when q_bound_cap is 1")
-        if values["q_bound_cap"] != 1 and values["q_0_lb"] is not None:
+        if values["q_bound_cap"] != 1 and values.get("q_0_lb") is not None:
              raise ValueError("Conditional element q_0_lb is present when q_bound_cap is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_beta_ub(cls, values):
-        if values["q_bound_cap"] == 1 and values["beta_ub"] is None:
+        if values["q_bound_cap"] == 1 and values.get("beta_ub") is None:
              raise ValueError("Conditional element beta_ub is missing when q_bound_cap is 1")
-        if values["q_bound_cap"] != 1 and values["beta_ub"] is not None:
+        if values["q_bound_cap"] != 1 and values.get("beta_ub") is not None:
              raise ValueError("Conditional element beta_ub is present when q_bound_cap is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_beta_lb(cls, values):
-        if values["q_bound_cap"] == 1 and values["beta_lb"] is None:
+        if values["q_bound_cap"] == 1 and values.get("beta_lb") is None:
              raise ValueError("Conditional element beta_lb is missing when q_bound_cap is 1")
-        if values["q_bound_cap"] != 1 and values["beta_lb"] is not None:
+        if values["q_bound_cap"] != 1 and values.get("beta_lb") is not None:
              raise ValueError("Conditional element beta_lb is present when q_bound_cap is not 1")
         return values
 
@@ -499,42 +499,42 @@ class ACTransmissionLineBase(BidDSJsonBaseModel):
         description = "Unique identifier for connecting to bus "
     )
 
-    r: float = Field(
+    r: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "r",
         description = "Series resistance in p.u. "
     )
 
-    x: float = Field(
+    x: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "x",
         description = "Series reactance  in p.u. "
     )
 
-    b: float = Field(
+    b: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "b",
         description = "Shunt susceptance in p.u. "
     )
 
-    mva_ub_nom: float = Field(
+    mva_ub_nom: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "mva_ub_nom",
         description = "MVA limit, nominal rating in p.u. "
     )
 
-    mva_ub_sht: Optional[float] = Field(
+    mva_ub_sht: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "mva_ub_sht",
         description = "MVA limit, short term rating in p.u. "
     )
 
-    mva_ub_em: float = Field(
+    mva_ub_em: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "mva_ub_em",
         description = "MVA limit, emergency rating in p.u. "
     )
 
-    connection_cost: float = Field(
+    connection_cost: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "connection_cost",
         description = "AC Line connection cost in \$ "
     )
 
-    disconnection_cost: float = Field(
+    disconnection_cost: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "disconnection_cost",
         description = "AC line disconnection cost in \$ "
     )
@@ -544,57 +544,57 @@ class ACTransmissionLineBase(BidDSJsonBaseModel):
         description = "A JSON inner object storing data   for initial time step "
     )
 
-    additional_shunt: bool = Field(
+    additional_shunt: conint(ge=0, le=1, strict=True) = Field(
         title = "additional_shunt",
         description = "Branch has additional shunt components "
     )
 
-    g_fr: Optional[float] = Field(
+    g_fr: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "g_fr",
         description = "Conductance for shunt component at from bus in p.u. "
     )
 
-    b_fr: Optional[float] = Field(
+    b_fr: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "b_fr",
         description = "Susceptance for shunt component at from bus in p.u. "
     )
 
-    g_to: Optional[float] = Field(
+    g_to: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "g_to",
         description = "Conductance for shunt component at to bus in p.u. "
     )
 
-    b_to: Optional[float] = Field(
+    b_to: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "b_to",
         description = "Susceptance for shunt component at to bus in p.u. "
     )
 
     @root_validator(pre=False)
     def check_conditional_g_fr(cls, values):
-        if values["additional_shunt"] == 1 and values["g_fr"] is None:
+        if values["additional_shunt"] == 1 and values.get("g_fr") is None:
              raise ValueError("Conditional element g_fr is missing when additional_shunt is 1")
-        if values["additional_shunt"] != 1 and values["g_fr"] is not None:
+        if values["additional_shunt"] != 1 and values.get("g_fr") is not None:
              raise ValueError("Conditional element g_fr is present when additional_shunt is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_b_fr(cls, values):
-        if values["additional_shunt"] == 1 and values["b_fr"] is None:
+        if values["additional_shunt"] == 1 and values.get("b_fr") is None:
              raise ValueError("Conditional element b_fr is missing when additional_shunt is 1")
-        if values["additional_shunt"] != 1 and values["b_fr"] is not None:
+        if values["additional_shunt"] != 1 and values.get("b_fr") is not None:
              raise ValueError("Conditional element b_fr is present when additional_shunt is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_g_to(cls, values):
-        if values["additional_shunt"] == 1 and values["g_to"] is None:
+        if values["additional_shunt"] == 1 and values.get("g_to") is None:
              raise ValueError("Conditional element g_to is missing when additional_shunt is 1")
-        if values["additional_shunt"] != 1 and values["g_to"] is not None:
+        if values["additional_shunt"] != 1 and values.get("g_to") is not None:
              raise ValueError("Conditional element g_to is present when additional_shunt is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_b_to(cls, values):
-        if values["additional_shunt"] == 1 and values["b_to"] is None:
+        if values["additional_shunt"] == 1 and values.get("b_to") is None:
              raise ValueError("Conditional element b_to is missing when additional_shunt is 1")
-        if values["additional_shunt"] != 1 and values["b_to"] is not None:
+        if values["additional_shunt"] != 1 and values.get("b_to") is not None:
              raise ValueError("Conditional element b_to is present when additional_shunt is not 1")
         return values
 
@@ -617,62 +617,62 @@ class TwoWindingTransformerBase(BidDSJsonBaseModel):
         description = "Unique identifier for connecting to bus "
     )
 
-    r: float = Field(
+    r: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "r",
         description = "Series resistance in p.u. "
     )
 
-    x: float = Field(
+    x: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "x",
         description = "Series reactance  in p.u. "
     )
 
-    b: float = Field(
+    b: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "b",
         description = "Shunt susceptance in p.u. "
     )
 
-    tm_ub: float = Field(
+    tm_ub: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "tm_ub",
         description = "Upper bound for off-nominal tap ratio in p.u. "
     )
 
-    tm_lb: float = Field(
+    tm_lb: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "tm_lb",
         description = "Lower bound for off-nominal tap ratio in p.u. "
     )
 
-    ta_ub: float = Field(
+    ta_ub: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "ta_ub",
         description = "Upper bound for phase shifting angle in radian "
     )
 
-    ta_lb: float = Field(
+    ta_lb: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "ta_lb",
         description = "Lower bound for phase shifting angle in radian "
     )
 
-    mva_ub_nom: float = Field(
+    mva_ub_nom: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "mva_ub_nom",
         description = "MVA limit, nominal rating in p.u. "
     )
 
-    mva_ub_sht: Optional[float] = Field(
+    mva_ub_sht: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "mva_ub_sht",
         description = "MVA limit, short term rating in p.u. "
     )
 
-    mva_ub_em: float = Field(
+    mva_ub_em: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "mva_ub_em",
         description = "MVA limit, emergency rating in p.u. "
     )
 
-    connection_cost: float = Field(
+    connection_cost: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "connection_cost",
         description = "Transformer connection cost in \$ "
     )
 
-    disconnection_cost: float = Field(
+    disconnection_cost: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "disconnection_cost",
         description = "Transformer disconnection cost in \$ "
     )
@@ -682,57 +682,57 @@ class TwoWindingTransformerBase(BidDSJsonBaseModel):
         description = "A JSON inner object storing data   for initial time step "
     )
 
-    additional_shunt: bool = Field(
+    additional_shunt: conint(ge=0, le=1, strict=True) = Field(
         title = "additional_shunt",
         description = "Transformer has additional shunt components "
     )
 
-    g_fr: Optional[float] = Field(
+    g_fr: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "g_fr",
         description = "Conductance for shunt component at from bus in p.u. "
     )
 
-    b_fr: Optional[float] = Field(
+    b_fr: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "b_fr",
         description = "Susceptance for shunt component at from bus in p.u. "
     )
 
-    g_to: Optional[float] = Field(
+    g_to: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "g_to",
         description = "Conductance for shunt component at to bus in p.u. "
     )
 
-    b_to: Optional[float] = Field(
+    b_to: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
         title = "b_to",
         description = "Susceptance for shunt component at to bus in p.u. "
     )
 
     @root_validator(pre=False)
     def check_conditional_g_fr(cls, values):
-        if values["additional_shunt"] == 1 and values["g_fr"] is None:
+        if values["additional_shunt"] == 1 and values.get("g_fr") is None:
              raise ValueError("Conditional element g_fr is missing when additional_shunt is 1")
-        if values["additional_shunt"] != 1 and values["g_fr"] is not None:
+        if values["additional_shunt"] != 1 and values.get("g_fr") is not None:
              raise ValueError("Conditional element g_fr is present when additional_shunt is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_b_fr(cls, values):
-        if values["additional_shunt"] == 1 and values["b_fr"] is None:
+        if values["additional_shunt"] == 1 and values.get("b_fr") is None:
              raise ValueError("Conditional element b_fr is missing when additional_shunt is 1")
-        if values["additional_shunt"] != 1 and values["b_fr"] is not None:
+        if values["additional_shunt"] != 1 and values.get("b_fr") is not None:
              raise ValueError("Conditional element b_fr is present when additional_shunt is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_g_to(cls, values):
-        if values["additional_shunt"] == 1 and values["g_to"] is None:
+        if values["additional_shunt"] == 1 and values.get("g_to") is None:
              raise ValueError("Conditional element g_to is missing when additional_shunt is 1")
-        if values["additional_shunt"] != 1 and values["g_to"] is not None:
+        if values["additional_shunt"] != 1 and values.get("g_to") is not None:
              raise ValueError("Conditional element g_to is present when additional_shunt is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_b_to(cls, values):
-        if values["additional_shunt"] == 1 and values["b_to"] is None:
+        if values["additional_shunt"] == 1 and values.get("b_to") is None:
              raise ValueError("Conditional element b_to is missing when additional_shunt is 1")
-        if values["additional_shunt"] != 1 and values["b_to"] is not None:
+        if values["additional_shunt"] != 1 and values.get("b_to") is not None:
              raise ValueError("Conditional element b_to is present when additional_shunt is not 1")
         return values
 
@@ -755,27 +755,27 @@ class DCLineBase(BidDSJsonBaseModel):
         description = "Unique identifier for connecting to bus "
     )
 
-    pdc_ub: float = Field(
+    pdc_ub: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "pdc_ub",
         description = "Maximum active power in p.u. "
     )
 
-    qdc_fr_ub: float = Field(
+    qdc_fr_ub: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "qdc_fr_ub",
         description = "Maximum reactive power, from bus in p.u. "
     )
 
-    qdc_fr_lb: float = Field(
+    qdc_fr_lb: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "qdc_fr_lb",
         description = "Minimum reactive power, from bus in p.u. "
     )
 
-    qdc_to_ub: float = Field(
+    qdc_to_ub: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "qdc_to_ub",
         description = "Maximum reactive power, to bus in p.u. "
     )
 
-    qdc_to_lb: float = Field(
+    qdc_to_lb: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "qdc_to_lb",
         description = "Minimum reactive power, to bus in p.u. "
     )
@@ -795,52 +795,52 @@ class ActiveZonalReserveRequirementsViolationCostsBase(BidDSJsonBaseModel):
         description = "Zone reserve unique identifier "
     )
 
-    REG_UP: float = Field(
+    REG_UP: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "REG_UP",
         description = "Regulation reserve up requirement fraction "
     )
 
-    REG_DOWN: float = Field(
+    REG_DOWN: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "REG_DOWN",
         description = "Regulation reserve down requirement faction "
     )
 
-    SYN: float = Field(
+    SYN: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "SYN",
         description = "Synchronized reserve requirement fraction "
     )
 
-    NSYN: float = Field(
+    NSYN: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "NSYN",
         description = "Non-synchronized reserve requirement fraction "
     )
 
-    REG_UP_vio_cost: float = Field(
+    REG_UP_vio_cost: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "REG_UP_vio_cost",
         description = "Regulation reserve up violation cost in \$/pu-hr "
     )
 
-    REG_DOWN_vio_cost: float = Field(
+    REG_DOWN_vio_cost: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "REG_DOWN_vio_cost",
         description = "Regulation reserve down violation cost in \$/pu-hr "
     )
 
-    SYN_vio_cost: float = Field(
+    SYN_vio_cost: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "SYN_vio_cost",
         description = "Synchronized reserve violation cost in \$/pu-hr "
     )
 
-    NSYN_vio_cost: float = Field(
+    NSYN_vio_cost: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "NSYN_vio_cost",
         description = "Non-synchronized reserve violation cost in \$/pu-hr "
     )
 
-    RAMPING_RESERVE_UP_vio_cost: float = Field(
+    RAMPING_RESERVE_UP_vio_cost: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "RAMPING_RESERVE_UP_vio_cost",
         description = "Flexible-ramp up violation cost in \$/pu-hr "
     )
 
-    RAMPING_RESERVE_DOWN_vio_cost: float = Field(
+    RAMPING_RESERVE_DOWN_vio_cost: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "RAMPING_RESERVE_DOWN_vio_cost",
         description = "Flexible-ramp down violation cost in \$/pu-hr "
     )
@@ -855,12 +855,12 @@ class ReactiveZonalReserveRequirementsViolationCostsBase(BidDSJsonBaseModel):
         description = "Region reserve unique identifier "
     )
 
-    REACT_UP_vio_cost: float = Field(
+    REACT_UP_vio_cost: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "REACT_UP_vio_cost",
         description = "Reactive reserve power violation cost in \$/pu-hr "
     )
 
-    REACT_DOWN_vio_cost: float = Field(
+    REACT_DOWN_vio_cost: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "REACT_DOWN_vio_cost",
         description = "Reactive reserve power violation cost in \$/pu-hr "
     )

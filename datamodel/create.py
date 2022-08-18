@@ -108,7 +108,7 @@ def create_objects(format_docs_dir):
 
 def get_objects_from_table(object_name, astr):
     static_result = ""
-    static_conditinal_result = ""
+    static_conditional_result = ""
     timeseries_result = ""
     timeseries_conditional_result = ""
     reliability_result = ""
@@ -194,7 +194,7 @@ def get_objects_from_table(object_name, astr):
                     field_name = field.strip().split(':')[0]
                     if sec == 'S' or sec == 'B':
                         static_conditional_elements[field_name] = conditional_attribute
-                        static_conditinal_result += field
+                        static_conditional_result += field
                     if sec == 'T' or sec == 'B':
                         timeseries_conditional_elements[field_name] = conditional_attribute
                         timeseries_conditional_result += field
@@ -256,7 +256,7 @@ def get_objects_from_table(object_name, astr):
             timeseries_result += f"\n    # {meta}\n"
             continue
 
-    static_result += static_conditinal_result
+    static_result += static_conditional_result # fix bug here - misspelling conditional - eh, not actually a bug, just confusing
     timeseries_result += timeseries_conditional_result
 
     if not has_static:
@@ -265,7 +265,9 @@ def get_objects_from_table(object_name, astr):
     else:
         if len(static_conditional_elements) > 0:
             for conditional_element, dependency in static_conditional_elements.items():
-                static_result+= f"""\n    @root_validator(pre=False)\n    def check_conditional_{conditional_element}(cls, values):\n        if values["{dependency}"] == 1 and values["{conditional_element}"] is None:\n             raise ValueError("Conditional element {conditional_element} is missing when {dependency} is 1")\n        if values["{dependency}"] != 1 and values["{conditional_element}"] is not None:\n             raise ValueError("Conditional element {conditional_element} is present when {dependency} is not 1")\n        return values"""
+                # values is a dict. need to use values.get(key), not values[key]
+                #static_result+= f"""\n    @root_validator(pre=False)\n    def check_conditional_{conditional_element}(cls, values):\n        if values["{dependency}"] == 1 and values["{conditional_element}"] is None:\n             raise ValueError("Conditional element {conditional_element} is missing when {dependency} is 1")\n        if values["{dependency}"] != 1 and values["{conditional_element}"] is not None:\n             raise ValueError("Conditional element {conditional_element} is present when {dependency} is not 1")\n        return values"""
+                static_result+= f"""\n    @root_validator(pre=False)\n    def check_conditional_{conditional_element}(cls, values):\n        if values["{dependency}"] == 1 and values.get("{conditional_element}") is None:\n             raise ValueError("Conditional element {conditional_element} is missing when {dependency} is 1")\n        if values["{dependency}"] != 1 and values.get("{conditional_element}") is not None:\n             raise ValueError("Conditional element {conditional_element} is present when {dependency} is not 1")\n        return values"""
                              
     if not has_timeseries:
         timeseries_result = None
@@ -273,7 +275,7 @@ def get_objects_from_table(object_name, astr):
     else:
         if len(timeseries_conditional_elements) > 0:
             for conditional_element, dependency in timeseries_conditional_elements.items():
-                static_result+= f"""\n    @root_validator(pre=False)\n    def check_conditional_{conditional_element}(cls, values):\n        if values["{dependency}"] == 1 and values["{conditional_element}"] is None:\n             raise ValueError("Conditional element {conditional_element} is missing when {dependency} is 1")\n        if values["{dependency}"] != 1 and values["{conditional_element}"] is not None:\n             raise ValueError("Conditional element {conditional_element} is present when {dependency} is not 1")\n        return values"""
+                static_result+= f"""\n    @root_validator(pre=False)\n    def check_conditional_{conditional_element}(cls, values):\n        if values["{dependency}"] == 1 and values.get("{conditional_element}") is None:\n             raise ValueError("Conditional element {conditional_element} is missing when {dependency} is 1")\n        if values["{dependency}"] != 1 and values.get("{conditional_element}") is not None:\n             raise ValueError("Conditional element {conditional_element} is present when {dependency} is not 1")\n        return values"""
 
     if not has_reliability:
         reliability_result = None
@@ -287,18 +289,20 @@ def get_objects_from_table(object_name, astr):
 # Gets extended with internal json objects
 types_map = {
     "Array of Int": "List[StrictInt]",
-    "Array of Float": "List[float]",
-    "Array of Binary": "List[bool]",
+    "Array of Float": "List[confloat(gt=-float('inf'), lt=float('inf'), strict=False)]",
+    #"Array of Binary": "List[bool]",
+    "Array of Binary": "List[conint(ge=0, le=1, strict=True)]",
     "Array of String": "List[str]",
-    "Array of Float Float": "List[Tuple[float,float]]",
-    "Array of Array of Float Float": "List[List[Tuple[float,float]]]",
-    "Array of Float Float Float": "List[Tuple[float,float,float]]",
-    "Array of Float Float Int": "List[Tuple[float,float,StrictInt]]",
+    "Array of Float Float": "List[Tuple[confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False)]]",
+    "Array of Array of Float Float": "List[List[Tuple[confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False)]]]",
+    "Array of Float Float Float": "List[Tuple[confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False)]]",
+    "Array of Float Float Int": "List[Tuple[confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False), StrictInt]]",
     "String": "str",
     "Timestamp": "str",
     "Int": "StrictInt",
-    "Float": "float",
-    "Binary": "bool"
+    "Float": "confloat(gt=-float('inf'), lt=float('inf'), strict=False)",
+    #"Binary": "bool",
+    "Binary": "conint(ge=0, le=1, strict=True)",
 }
 
 def parse_field(ln,object_name,is_conditional=False):
@@ -609,7 +613,7 @@ import json
 import os
 from pathlib import Path
 
-from pydantic import BaseModel, Field, root_validator, StrictInt
+from pydantic import BaseModel, Field, root_validator, StrictInt, conint, confloat
 from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
