@@ -9,9 +9,9 @@ from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
 from datamodel.base import BidDSJsonBaseModel
+import datamodel.input.reliability
 import datamodel.input.timeseries
 import datamodel.input.static
-import datamodel.input.reliability
 
 class NetworkBase(BidDSJsonBaseModel):
 

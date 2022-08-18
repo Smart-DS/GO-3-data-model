@@ -439,44 +439,44 @@ class DispatchableDevices_SimpleProducingConsumingDevicesBase(BidDSJsonBaseModel
 
     @root_validator(pre=False)
     def check_conditional_q_0(cls, values):
-        if values["q_linear_cap"] == 1 and values.get("q_0") is None:
+        if values.get("q_linear_cap") is not None and values.get("q_linear_cap") == 1 and values.get("q_0") is None:
              raise ValueError("Conditional element q_0 is missing when q_linear_cap is 1")
-        if values["q_linear_cap"] != 1 and values.get("q_0") is not None:
+        if values.get("q_linear_cap") is not None and values.get("q_linear_cap") != 1 and values.get("q_0") is not None:
              raise ValueError("Conditional element q_0 is present when q_linear_cap is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_beta(cls, values):
-        if values["q_linear_cap"] == 1 and values.get("beta") is None:
+        if values.get("q_linear_cap") is not None and values.get("q_linear_cap") == 1 and values.get("beta") is None:
              raise ValueError("Conditional element beta is missing when q_linear_cap is 1")
-        if values["q_linear_cap"] != 1 and values.get("beta") is not None:
+        if values.get("q_linear_cap") is not None and values.get("q_linear_cap") != 1 and values.get("beta") is not None:
              raise ValueError("Conditional element beta is present when q_linear_cap is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_q_0_ub(cls, values):
-        if values["q_bound_cap"] == 1 and values.get("q_0_ub") is None:
+        if values.get("q_bound_cap") is not None and values.get("q_bound_cap") == 1 and values.get("q_0_ub") is None:
              raise ValueError("Conditional element q_0_ub is missing when q_bound_cap is 1")
-        if values["q_bound_cap"] != 1 and values.get("q_0_ub") is not None:
+        if values.get("q_bound_cap") is not None and values.get("q_bound_cap") != 1 and values.get("q_0_ub") is not None:
              raise ValueError("Conditional element q_0_ub is present when q_bound_cap is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_q_0_lb(cls, values):
-        if values["q_bound_cap"] == 1 and values.get("q_0_lb") is None:
+        if values.get("q_bound_cap") is not None and values.get("q_bound_cap") == 1 and values.get("q_0_lb") is None:
              raise ValueError("Conditional element q_0_lb is missing when q_bound_cap is 1")
-        if values["q_bound_cap"] != 1 and values.get("q_0_lb") is not None:
+        if values.get("q_bound_cap") is not None and values.get("q_bound_cap") != 1 and values.get("q_0_lb") is not None:
              raise ValueError("Conditional element q_0_lb is present when q_bound_cap is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_beta_ub(cls, values):
-        if values["q_bound_cap"] == 1 and values.get("beta_ub") is None:
+        if values.get("q_bound_cap") is not None and values.get("q_bound_cap") == 1 and values.get("beta_ub") is None:
              raise ValueError("Conditional element beta_ub is missing when q_bound_cap is 1")
-        if values["q_bound_cap"] != 1 and values.get("beta_ub") is not None:
+        if values.get("q_bound_cap") is not None and values.get("q_bound_cap") != 1 and values.get("beta_ub") is not None:
              raise ValueError("Conditional element beta_ub is present when q_bound_cap is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_beta_lb(cls, values):
-        if values["q_bound_cap"] == 1 and values.get("beta_lb") is None:
+        if values.get("q_bound_cap") is not None and values.get("q_bound_cap") == 1 and values.get("beta_lb") is None:
              raise ValueError("Conditional element beta_lb is missing when q_bound_cap is 1")
-        if values["q_bound_cap"] != 1 and values.get("beta_lb") is not None:
+        if values.get("q_bound_cap") is not None and values.get("q_bound_cap") != 1 and values.get("beta_lb") is not None:
              raise ValueError("Conditional element beta_lb is present when q_bound_cap is not 1")
         return values
 
@@ -571,30 +571,30 @@ class ACTransmissionLineBase(BidDSJsonBaseModel):
 
     @root_validator(pre=False)
     def check_conditional_g_fr(cls, values):
-        if values["additional_shunt"] == 1 and values.get("g_fr") is None:
+        if values.get("additional_shunt") is not None and values.get("additional_shunt") == 1 and values.get("g_fr") is None:
              raise ValueError("Conditional element g_fr is missing when additional_shunt is 1")
-        if values["additional_shunt"] != 1 and values.get("g_fr") is not None:
+        if values.get("additional_shunt") is not None and values.get("additional_shunt") != 1 and values.get("g_fr") is not None:
              raise ValueError("Conditional element g_fr is present when additional_shunt is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_b_fr(cls, values):
-        if values["additional_shunt"] == 1 and values.get("b_fr") is None:
+        if values.get("additional_shunt") is not None and values.get("additional_shunt") == 1 and values.get("b_fr") is None:
              raise ValueError("Conditional element b_fr is missing when additional_shunt is 1")
-        if values["additional_shunt"] != 1 and values.get("b_fr") is not None:
+        if values.get("additional_shunt") is not None and values.get("additional_shunt") != 1 and values.get("b_fr") is not None:
              raise ValueError("Conditional element b_fr is present when additional_shunt is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_g_to(cls, values):
-        if values["additional_shunt"] == 1 and values.get("g_to") is None:
+        if values.get("additional_shunt") is not None and values.get("additional_shunt") == 1 and values.get("g_to") is None:
              raise ValueError("Conditional element g_to is missing when additional_shunt is 1")
-        if values["additional_shunt"] != 1 and values.get("g_to") is not None:
+        if values.get("additional_shunt") is not None and values.get("additional_shunt") != 1 and values.get("g_to") is not None:
              raise ValueError("Conditional element g_to is present when additional_shunt is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_b_to(cls, values):
-        if values["additional_shunt"] == 1 and values.get("b_to") is None:
+        if values.get("additional_shunt") is not None and values.get("additional_shunt") == 1 and values.get("b_to") is None:
              raise ValueError("Conditional element b_to is missing when additional_shunt is 1")
-        if values["additional_shunt"] != 1 and values.get("b_to") is not None:
+        if values.get("additional_shunt") is not None and values.get("additional_shunt") != 1 and values.get("b_to") is not None:
              raise ValueError("Conditional element b_to is present when additional_shunt is not 1")
         return values
 
@@ -709,30 +709,30 @@ class TwoWindingTransformerBase(BidDSJsonBaseModel):
 
     @root_validator(pre=False)
     def check_conditional_g_fr(cls, values):
-        if values["additional_shunt"] == 1 and values.get("g_fr") is None:
+        if values.get("additional_shunt") is not None and values.get("additional_shunt") == 1 and values.get("g_fr") is None:
              raise ValueError("Conditional element g_fr is missing when additional_shunt is 1")
-        if values["additional_shunt"] != 1 and values.get("g_fr") is not None:
+        if values.get("additional_shunt") is not None and values.get("additional_shunt") != 1 and values.get("g_fr") is not None:
              raise ValueError("Conditional element g_fr is present when additional_shunt is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_b_fr(cls, values):
-        if values["additional_shunt"] == 1 and values.get("b_fr") is None:
+        if values.get("additional_shunt") is not None and values.get("additional_shunt") == 1 and values.get("b_fr") is None:
              raise ValueError("Conditional element b_fr is missing when additional_shunt is 1")
-        if values["additional_shunt"] != 1 and values.get("b_fr") is not None:
+        if values.get("additional_shunt") is not None and values.get("additional_shunt") != 1 and values.get("b_fr") is not None:
              raise ValueError("Conditional element b_fr is present when additional_shunt is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_g_to(cls, values):
-        if values["additional_shunt"] == 1 and values.get("g_to") is None:
+        if values.get("additional_shunt") is not None and values.get("additional_shunt") == 1 and values.get("g_to") is None:
              raise ValueError("Conditional element g_to is missing when additional_shunt is 1")
-        if values["additional_shunt"] != 1 and values.get("g_to") is not None:
+        if values.get("additional_shunt") is not None and values.get("additional_shunt") != 1 and values.get("g_to") is not None:
              raise ValueError("Conditional element g_to is present when additional_shunt is not 1")
         return values
     @root_validator(pre=False)
     def check_conditional_b_to(cls, values):
-        if values["additional_shunt"] == 1 and values.get("b_to") is None:
+        if values.get("additional_shunt") is not None and values.get("additional_shunt") == 1 and values.get("b_to") is None:
              raise ValueError("Conditional element b_to is missing when additional_shunt is 1")
-        if values["additional_shunt"] != 1 and values.get("b_to") is not None:
+        if values.get("additional_shunt") is not None and values.get("additional_shunt") != 1 and values.get("b_to") is not None:
              raise ValueError("Conditional element b_to is present when additional_shunt is not 1")
         return values
 
