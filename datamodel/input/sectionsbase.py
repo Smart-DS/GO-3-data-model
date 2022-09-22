@@ -10,8 +10,8 @@ from typing import Dict, List, Optional, Union, Tuple
 
 from datamodel.base import BidDSJsonBaseModel
 import datamodel.input.static
-import datamodel.input.timeseries
 import datamodel.input.reliability
+import datamodel.input.timeseries
 
 class NetworkBase(BidDSJsonBaseModel):
 
