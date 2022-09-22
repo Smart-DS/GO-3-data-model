@@ -4,14 +4,14 @@ import json
 import os
 from pathlib import Path
 
-from pydantic import BaseModel, Field, root_validator, StrictInt
+from pydantic import BaseModel, Field, root_validator, StrictInt, conint, confloat
 from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
 from datamodel.base import BidDSJsonBaseModel
-import datamodel.input.static
 import datamodel.input.reliability
 import datamodel.input.timeseries
+import datamodel.input.static
 
 class NetworkBase(BidDSJsonBaseModel):
 

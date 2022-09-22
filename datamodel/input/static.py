@@ -123,16 +123,17 @@ class Shunt(ShuntBase):
 
 class DispatchableDevices_SimpleProducingConsumingDevices(DispatchableDevices_SimpleProducingConsumingDevicesBase):
 
-    @validator("startup_states")
-    def startup_states_entry0_ge_0(cls, data):
+    ### This one is incorrect
+    # @validator("startup_states")
+    # def startup_states_entry0_ge_0(cls, data):
 
-        num_states = len(data)
-        idx_err = [i for i in range(num_states) if data[i][0] < 0.0]
-        errs = [(i, data[i][0]) for i in idx_err]
-        if len(idx_err) > 0:
-            msg = "fails states have entry 0 >= 0. failures (index, entry 0): {}".format(errs)
-            raise ValueError(msg)
-        return data
+    #     num_states = len(data)
+    #     idx_err = [i for i in range(num_states) if data[i][0] < 0.0]
+    #     errs = [(i, data[i][0]) for i in idx_err]
+    #     if len(idx_err) > 0:
+    #         msg = "fails states have entry 0 >= 0. failures (index, entry 0): {}".format(errs)
+    #         raise ValueError(msg)
+    #     return data
 
     @validator("startups_ub")
     def startups_ub_entry0_ge_0(cls, data):
