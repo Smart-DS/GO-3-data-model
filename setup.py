@@ -7,9 +7,9 @@ with open(here / "README.md", encoding="utf-8") as f:
     readme = f.read()
 
 setup(
-    name="Bid-DS-data-model",
+    name="GO-3-data-model",
     version="1.0.0",
-    description="Pydantic model of Bid-DS json format. Support for loading, validation, editing, saving.",
+    description="Repository for model formulation of Grid Optimization Competition #3",
     long_description=readme,
     long_description_content_type="text/markdown",
     author="NREL",
