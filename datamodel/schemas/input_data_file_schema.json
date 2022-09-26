@@ -398,7 +398,9 @@
                 "on_status": {
                     "title": "on_status",
                     "description": "On status indicator for initial time step ",
-                    "type": "boolean"
+                    "minimum": 0,
+                    "maximum": 1,
+                    "type": "integer"
                 },
                 "p": {
                     "title": "p",
@@ -607,12 +609,16 @@
                 "q_linear_cap": {
                     "title": "q_linear_cap",
                     "description": "Device has additional reactive constraint ",
-                    "type": "boolean"
+                    "minimum": 0,
+                    "maximum": 1,
+                    "type": "integer"
                 },
                 "q_bound_cap": {
                     "title": "q_bound_cap",
                     "description": "Device has additional reactive bounds ",
-                    "type": "boolean"
+                    "minimum": 0,
+                    "maximum": 1,
+                    "type": "integer"
                 },
                 "p_reg_res_up_ub": {
                     "title": "p_reg_res_up_ub",
@@ -724,7 +730,9 @@
                 "on_status": {
                     "title": "on_status",
                     "description": "Connection status ",
-                    "type": "boolean"
+                    "minimum": 0,
+                    "maximum": 1,
+                    "type": "integer"
                 }
             },
             "required": [
@@ -804,7 +812,9 @@
                 "additional_shunt": {
                     "title": "additional_shunt",
                     "description": "Branch has additional shunt components ",
-                    "type": "boolean"
+                    "minimum": 0,
+                    "maximum": 1,
+                    "type": "integer"
                 },
                 "g_fr": {
                     "title": "g_fr",
@@ -851,7 +861,9 @@
                 "on_status": {
                     "title": "on_status",
                     "description": "Connection status ",
-                    "type": "boolean"
+                    "minimum": 0,
+                    "maximum": 1,
+                    "type": "integer"
                 },
                 "tm": {
                     "title": "tm",
@@ -963,7 +975,9 @@
                 "additional_shunt": {
                     "title": "additional_shunt",
                     "description": "Transformer has additional shunt components ",
-                    "type": "boolean"
+                    "minimum": 0,
+                    "maximum": 1,
+                    "type": "integer"
                 },
                 "g_fr": {
                     "title": "g_fr",
@@ -1338,7 +1352,9 @@
                     "description": "{On status indicator upper bound ",
                     "type": "array",
                     "items": {
-                        "type": "boolean"
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1
                     }
                 },
                 "on_status_lb": {
@@ -1346,7 +1362,9 @@
                     "description": "{On status indicator lower bound ",
                     "type": "array",
                     "items": {
-                        "type": "boolean"
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1
                     }
                 },
                 "p_ub": {

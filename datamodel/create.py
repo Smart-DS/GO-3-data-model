@@ -30,17 +30,10 @@ def create_objects(format_docs_dir):
         "static": {},
         "staticinner": {},
         "timeseries": {},
-        "timeseriesinner": {},
         "reliability": {},
-        "reliabilityinner": {}
     }
     output_objects = {
-        "static": {},
-        "staticinner": {},
-        "timeseries": {},
-        "timeseriesinner": {},
-        "reliability": {},
-        "reliabilityinner": {}
+        "timeseries": {}
     }
     with open(format_docs_dir / "main.tex", encoding="utf8") as f:
         main_file = f.read()
@@ -115,7 +108,7 @@ def create_objects(format_docs_dir):
 
 def get_objects_from_table(object_name, astr):
     static_result = ""
-    static_conditinal_result = ""
+    static_conditional_result = ""
     timeseries_result = ""
     timeseries_conditional_result = ""
     reliability_result = ""
@@ -201,7 +194,7 @@ def get_objects_from_table(object_name, astr):
                     field_name = field.strip().split(':')[0]
                     if sec == 'S' or sec == 'B':
                         static_conditional_elements[field_name] = conditional_attribute
-                        static_conditinal_result += field
+                        static_conditional_result += field
                     if sec == 'T' or sec == 'B':
                         timeseries_conditional_elements[field_name] = conditional_attribute
                         timeseries_conditional_result += field
@@ -263,7 +256,7 @@ def get_objects_from_table(object_name, astr):
             timeseries_result += f"\n    # {meta}\n"
             continue
 
-    static_result += static_conditinal_result
+    static_result += static_conditional_result # fix bug here - misspelling conditional - eh, not actually a bug, just confusing
     timeseries_result += timeseries_conditional_result
 
     if not has_static:
@@ -272,7 +265,9 @@ def get_objects_from_table(object_name, astr):
     else:
         if len(static_conditional_elements) > 0:
             for conditional_element, dependency in static_conditional_elements.items():
-                static_result+= f"""\n    @root_validator(pre=False)\n    def check_conditional_{conditional_element}(cls, values):\n        if values["{dependency}"] == 1 and values["{conditional_element}"] is None:\n             raise ValueError("Conditional element {conditional_element} is missing when {dependency} is 1")\n        if values["{dependency}"] != 1 and values["{conditional_element}"] is not None:\n             raise ValueError("Conditional element {conditional_element} is present when {dependency} is not 1")\n        return values"""
+                # values is a dict. need to use values.get(key), not values[key]
+                #static_result+= f"""\n    @root_validator(pre=False)\n    def check_conditional_{conditional_element}(cls, values):\n        if values["{dependency}"] == 1 and values["{conditional_element}"] is None:\n             raise ValueError("Conditional element {conditional_element} is missing when {dependency} is 1")\n        if values["{dependency}"] != 1 and values["{conditional_element}"] is not None:\n             raise ValueError("Conditional element {conditional_element} is present when {dependency} is not 1")\n        return values"""
+                static_result+= f"""\n    @root_validator(pre=False)\n    def check_conditional_{conditional_element}(cls, values):\n        if values.get("{dependency}") is not None and values.get("{dependency}") == 1 and values.get("{conditional_element}") is None:\n             raise ValueError("Conditional element {conditional_element} is missing when {dependency} is 1")\n        if values.get("{dependency}") is not None and values.get("{dependency}") != 1 and values.get("{conditional_element}") is not None:\n             raise ValueError("Conditional element {conditional_element} is present when {dependency} is not 1")\n        return values"""
                              
     if not has_timeseries:
         timeseries_result = None
@@ -280,7 +275,7 @@ def get_objects_from_table(object_name, astr):
     else:
         if len(timeseries_conditional_elements) > 0:
             for conditional_element, dependency in timeseries_conditional_elements.items():
-                static_result+= f"""\n    @root_validator(pre=False)\n    def check_conditional_{conditional_element}(cls, values):\n        if values["{dependency}"] == 1 and values["{conditional_element}"] is None:\n             raise ValueError("Conditional element {conditional_element} is missing when {dependency} is 1")\n        if values["{dependency}"] != 1 and values["{conditional_element}"] is not None:\n             raise ValueError("Conditional element {conditional_element} is present when {dependency} is not 1")\n        return values"""
+                static_result+= f"""\n    @root_validator(pre=False)\n    def check_conditional_{conditional_element}(cls, values):\n        if values.get("{dependency}") is not None and values.get("{dependency}") == 1 and values.get("{conditional_element}") is None:\n             raise ValueError("Conditional element {conditional_element} is missing when {dependency} is 1")\n        if values.get("{dependency}") is not None and values.get("{dependency}") != 1 and values.get("{conditional_element}") is not None:\n             raise ValueError("Conditional element {conditional_element} is present when {dependency} is not 1")\n        return values"""
 
     if not has_reliability:
         reliability_result = None
@@ -293,19 +288,21 @@ def get_objects_from_table(object_name, astr):
 
 # Gets extended with internal json objects
 types_map = {
-    "Array of Int": "List[int]",
-    "Array of Float": "List[float]",
-    "Array of Binary": "List[bool]",
+    "Array of Int": "List[StrictInt]",
+    "Array of Float": "List[confloat(gt=-float('inf'), lt=float('inf'), strict=False)]",
+    #"Array of Binary": "List[bool]",
+    "Array of Binary": "List[conint(ge=0, le=1, strict=True)]",
     "Array of String": "List[str]",
-    "Array of Float Float": "List[Tuple[float,float]]",
-    "Array of Array of Float Float": "List[List[Tuple[float,float]]]",
-    "Array of Float Float Float": "List[Tuple[float,float,float]]",
-    "Array of Float Float Int": "List[Tuple[float,float,int]]",
+    "Array of Float Float": "List[Tuple[confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False)]]",
+    "Array of Array of Float Float": "List[List[Tuple[confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False)]]]",
+    "Array of Float Float Float": "List[Tuple[confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False)]]",
+    "Array of Float Float Int": "List[Tuple[confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False), StrictInt]]",
     "String": "str",
     "Timestamp": "str",
-    "Int": "int",
-    "Float": "float",
-    "Binary": "bool"
+    "Int": "StrictInt",
+    "Float": "confloat(gt=-float('inf'), lt=float('inf'), strict=False)",
+    #"Binary": "bool",
+    "Binary": "conint(ge=0, le=1, strict=True)",
 }
 
 def parse_field(ln,object_name,is_conditional=False):
@@ -348,8 +345,7 @@ def parse_field(ln,object_name,is_conditional=False):
             # to be that Enum
             type_name = "str"
         elif type_name.startswith("Binary:"):
-            choices = [0,1]
-            type_name = "int"
+            type_name = "bool"
         else:
             logger.warning(f"Unable to extract type_name from {type_name!r}")
             return sec, ""
@@ -411,6 +407,9 @@ def create_models(format_docs_dir, input_objects, output_objects):
             elif file.startswith("reliability"):
                 object_ref = object_refs["reliability"]
                 object_preamble += ".reliability"
+            elif file.startswith("solution"):
+                object_ref = object_refs["timeseries"]
+                object_preamble += ".timeseries"
             elif file.startswith("parsing_mapping"):
                 object_ref = object_store
                 object_preamble = ""
@@ -614,7 +613,7 @@ import json
 import os
 from pathlib import Path
 
-from pydantic import BaseModel, Field, root_validator
+from pydantic import BaseModel, Field, root_validator, StrictInt, conint, confloat
 from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
@@ -653,22 +652,20 @@ if __name__ == "__main__":
 
     format_docs_dir = input_path / args.format_version
     if not format_docs_dir.exists():
-        raise ValueError(f"{format_docs_dir} does not exist")
+        format_docs_dir_orig = format_docs_dir
+        format_docs_dir = Path(args.format_version).resolve()
+        if not format_docs_dir.exists():
+            msg = f"format_docs_dir not found. {format_docs_dir_orig} does not exist and {format_docs_dir} does not exist"
+            raise ValueError(msg)
+    #print("format_docs_dir: {}".format(format_docs_dir))
 
     input_objects, output_objects = create_objects(format_docs_dir)
     object_files = {
         ("input", "static"): (input_objects["static"], ["from datamodel.input.staticinner import *"]),
         ("input", "staticinner"): (input_objects["staticinner"], []),
-        ("input", "timeseries"): (input_objects["timeseries"], ["from datamodel.input.timeseriesinner import *"]),
-        ("input", "timeseriesinner"): (input_objects["timeseriesinner"], []),
-        ("input", "reliability"): (input_objects["reliability"], ["from datamodel.input.reliabilityinner import *"]),
-        ("input", "reliabilityinner"): (input_objects["reliabilityinner"], []),
-        ("output", "static"): (output_objects["static"], ["from datamodel.output.staticinner import *"]),
-        ("output", "staticinner"): (output_objects["staticinner"], []),
-        ("output", "timeseries"): (output_objects["timeseries"], ["from datamodel.output.timeseriesinner import *"]),
-        ("output", "timeseriesinner"): (output_objects["timeseriesinner"], []),
-        ("output", "reliability"): (output_objects["reliability"], ["from datamodel.output.reliabilityinner import *"]),
-        ("output", "reliabilityinner"): (output_objects["reliabilityinner"], []),
+        ("input", "timeseries"): (input_objects["timeseries"], []),
+        ("input", "reliability"): (input_objects["reliability"], []),
+        ("output", "timeseries"): (output_objects["timeseries"], []),
     }
     for dirs, data in object_files.items():
         objs, imports = data

@@ -4,12 +4,11 @@ import json
 import os
 from pathlib import Path
 
-from pydantic import BaseModel, Field, root_validator
+from pydantic import BaseModel, Field, root_validator, StrictInt, conint, confloat
 from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
 from datamodel.base import BidDSJsonBaseModel
-from datamodel.input.reliabilityinner import *
 
 class ContingencyBase(BidDSJsonBaseModel):
 

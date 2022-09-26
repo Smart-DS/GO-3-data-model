@@ -46,6 +46,7 @@ class BidDSJsonBaseModel(BaseModel):
         finally:
             os.chdir(orig)
 
+
     def save(cls, filename):
         """
         Save a data model to a file
@@ -54,10 +55,40 @@ class BidDSJsonBaseModel(BaseModel):
         ----------
         filename : str
         """
+
+        def bools_to_int(dic):
+            """
+            Convert all the boolean types in a dictionary or list input to be 0/1 instead
+            Works recursively using pass by reference
+            Parameters
+            ----------
+            dic: dictionary or list
+    
+            Returns
+            --------
+            dic: dictionary
+                """
+
+            if isinstance(dic,dict):
+                for key,value in dic.items():
+                    if isinstance(value,bool):
+                        dic[key] = int(value)
+                    if isinstance(value,dict) or isinstance(value,list):
+                        bools_to_int(value)
+        
+            if isinstance(dic,list):
+                for i in range(len(dic)):
+                    value = dic[i]
+                    if isinstance(value,bool):
+                        dic[i] = int(value)
+                    if isinstance(value,dict) or isinstance(value,list):
+                        bools_to_int(value)
+
         filename = Path(filename)
         try:
             # TODO: Check if this validates. If not do a validation
             json_model = cls.dict(exclude_unset=True)
+            bools_to_int(json_model)
             with open(filename,'w') as file_pointer:
                 json.dump(json_model,file_pointer,indent=4)
         except ValidationError:

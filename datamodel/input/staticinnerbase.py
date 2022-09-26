@@ -4,7 +4,7 @@ import json
 import os
 from pathlib import Path
 
-from pydantic import BaseModel, Field, root_validator
+from pydantic import BaseModel, Field, root_validator, StrictInt, conint, confloat
 from pydantic.json import isoformat, timedelta_isoformat
 from typing import Dict, List, Optional, Union, Tuple
 
@@ -12,12 +12,12 @@ from datamodel.base import BidDSJsonBaseModel
 
 class BusInitialStatusBase(BidDSJsonBaseModel):
 
-    vm: float = Field(
+    vm: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "vm",
         description = "Bus voltage magnitude in p.u. "
     )
 
-    va: float = Field(
+    va: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "va",
         description = "Bus voltage angle     in radian "
     )
@@ -25,7 +25,7 @@ class BusInitialStatusBase(BidDSJsonBaseModel):
 
 class ShuntInitialStatusBase(BidDSJsonBaseModel):
 
-    step: int = Field(
+    step: StrictInt = Field(
         title = "step",
         description = "Number of step "
     )
@@ -33,27 +33,27 @@ class ShuntInitialStatusBase(BidDSJsonBaseModel):
 
 class DispatchableDevices_SimpleProducingConsumingDevicesInitialStatusBase(BidDSJsonBaseModel):
 
-    on_status: bool = Field(
+    on_status: conint(ge=0, le=1, strict=True) = Field(
         title = "on_status",
         description = "On status indicator for initial time step "
     )
 
-    p: float = Field(
+    p: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "p",
         description = "{ (Case: producer) Active production for initial time step in p.u. (Float) } { (Case: consumer) Active consumption for initial time step in p.u. "
     )
 
-    q: float = Field(
+    q: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "q",
         description = "{ (Case: producer) Reactive production for initial time step in p.u. (Float) } { (Case: consumer) Reactive consumption for initial time step in p.u. "
     )
 
-    accu_down_time: float = Field(
+    accu_down_time: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "accu_down_time",
         description = "Accumulated down time in hr "
     )
 
-    accu_up_time: float = Field(
+    accu_up_time: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "accu_up_time",
         description = "Accumulated up time in hr "
     )
@@ -61,7 +61,7 @@ class DispatchableDevices_SimpleProducingConsumingDevicesInitialStatusBase(BidDS
 
 class ACTransmissionLineInitialStatusBase(BidDSJsonBaseModel):
 
-    on_status: bool = Field(
+    on_status: conint(ge=0, le=1, strict=True) = Field(
         title = "on_status",
         description = "Connection status "
     )
@@ -69,17 +69,17 @@ class ACTransmissionLineInitialStatusBase(BidDSJsonBaseModel):
 
 class TwoWindingTransformerInitialStatusBase(BidDSJsonBaseModel):
 
-    on_status: bool = Field(
+    on_status: conint(ge=0, le=1, strict=True) = Field(
         title = "on_status",
         description = "Connection status "
     )
 
-    tm: float = Field(
+    tm: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "tm",
         description = "Off-nominal tap ratio in p.u. "
     )
 
-    ta: float = Field(
+    ta: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "ta",
         description = "Phase shifting angle in radian "
     )
@@ -87,17 +87,17 @@ class TwoWindingTransformerInitialStatusBase(BidDSJsonBaseModel):
 
 class DCLineInitialStatusBase(BidDSJsonBaseModel):
 
-    pdc_fr: float = Field(
+    pdc_fr: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "pdc_fr",
         description = "Active power flow in p.u. "
     )
 
-    qdc_fr: float = Field(
+    qdc_fr: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "qdc_fr",
         description = "Reactive power flow, from bus in p.u. "
     )
 
-    qdc_to: float = Field(
+    qdc_to: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "qdc_to",
         description = "Reactive power flow, to bus in p.u. "
     )
