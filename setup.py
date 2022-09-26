@@ -8,7 +8,7 @@ with open(here / "README.md", encoding="utf-8") as f:
 
 setup(
     name="Bid-DS-data-model",
-    version="0.1.0",
+    version="1.0.0",
     description="Pydantic model of Bid-DS json format. Support for loading, validation, editing, saving.",
     long_description=readme,
     long_description_content_type="text/markdown",
