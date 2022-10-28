@@ -1,0 +1,388 @@
+{
+    "title": "OutputDataFile",
+    "description": "Base data model for all dsgrid data models",
+    "type": "object",
+    "properties": {
+        "time_series_output": {
+            "title": "time_series_output",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/TimeSeriesOutput"
+                }
+            ]
+        }
+    },
+    "required": [
+        "time_series_output"
+    ],
+    "additionalProperties": false,
+    "definitions": {
+        "Bus": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "Bus unique identifier ",
+                    "type": "string"
+                },
+                "vm": {
+                    "title": "vm",
+                    "description": "Voltage magnitude in p.u. ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "va": {
+                    "title": "va",
+                    "description": "Voltage angle in radian ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                }
+            },
+            "required": [
+                "uid",
+                "vm",
+                "va"
+            ],
+            "additionalProperties": false
+        },
+        "Shunt": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "Shunt unique identifier ",
+                    "type": "string"
+                },
+                "step": {
+                    "title": "step",
+                    "description": "Number of step ",
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "required": [
+                "uid",
+                "step"
+            ],
+            "additionalProperties": false
+        },
+        "DispatchableDevices_SimpleProducingConsumingDevices": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "Device unique identifier ",
+                    "type": "string"
+                },
+                "on_status": {
+                    "title": "on_status",
+                    "description": "Connection status ",
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1
+                    }
+                },
+                "p_on": {
+                    "title": "p_on",
+                    "description": "{ (Case: producer) Active production in p.u. (Array of Float) }  { (Case: consumer) Active consumption in p.u. ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "q": {
+                    "title": "q",
+                    "description": "{ (Case: producer) Reactive production in p.u. (Array of Float)} { (Case: consumer) Reactive consumption in p.u. ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "p_reg_res_up": {
+                    "title": "p_reg_res_up",
+                    "description": "Regulation up reserve in p.u. ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "p_reg_res_down": {
+                    "title": "p_reg_res_down",
+                    "description": "Regulation down reserve in p.u. ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "p_syn_res": {
+                    "title": "p_syn_res",
+                    "description": "Synchronized reserve in p.u. ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "p_nsyn_res": {
+                    "title": "p_nsyn_res",
+                    "description": "Non-synchronized reserve in p.u. ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "p_ramp_res_up_online": {
+                    "title": "p_ramp_res_up_online",
+                    "description": "Ramp up reserve when online in p.u. ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "p_ramp_res_down_online": {
+                    "title": "p_ramp_res_down_online",
+                    "description": "Ramp down reserve when online in p.u. ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "p_ramp_res_up_offline": {
+                    "title": "p_ramp_res_up_offline",
+                    "description": "Ramp up reserve when offline in p.u. ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "p_ramp_res_down_offline": {
+                    "title": "p_ramp_res_down_offline",
+                    "description": "Ramp down reserve when offline in p.u. ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "q_res_up": {
+                    "title": "q_res_up",
+                    "description": "Reactive reserve up in p.u. ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "q_res_down": {
+                    "title": "q_res_down",
+                    "description": "Reactive reserve down in p.u. ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                }
+            },
+            "required": [
+                "uid",
+                "on_status",
+                "p_on",
+                "q",
+                "p_reg_res_up",
+                "p_reg_res_down",
+                "p_syn_res",
+                "p_nsyn_res",
+                "p_ramp_res_up_online",
+                "p_ramp_res_down_online",
+                "p_ramp_res_up_offline",
+                "p_ramp_res_down_offline",
+                "q_res_up",
+                "q_res_down"
+            ],
+            "additionalProperties": false
+        },
+        "ACTransmissionLine": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "AC line unique identifier ",
+                    "type": "string"
+                },
+                "on_status": {
+                    "title": "on_status",
+                    "description": "Connection status ",
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1
+                    }
+                }
+            },
+            "required": [
+                "uid",
+                "on_status"
+            ],
+            "additionalProperties": false
+        },
+        "TwoWindingTransformer": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "Transformer line unique identifier ",
+                    "type": "string"
+                },
+                "tm": {
+                    "title": "tm",
+                    "description": "Off-nominal taps ratio in p.u. ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "ta": {
+                    "title": "ta",
+                    "description": "Phase shifting angle in radian ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "on_status": {
+                    "title": "on_status",
+                    "description": "Connection status ",
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1
+                    }
+                }
+            },
+            "required": [
+                "uid",
+                "tm",
+                "ta",
+                "on_status"
+            ],
+            "additionalProperties": false
+        },
+        "DCLine": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "uid": {
+                    "title": "uid",
+                    "description": "DC line unique identifier ",
+                    "type": "string"
+                },
+                "pdc_fr": {
+                    "title": "pdc_fr",
+                    "description": "Active power flow in p.u. ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "qdc_fr": {
+                    "title": "qdc_fr",
+                    "description": "Reactive power flow, from bus in p.u. ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "qdc_to": {
+                    "title": "qdc_to",
+                    "description": "Reactive power flow, to bus in p.u. ",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                }
+            },
+            "required": [
+                "uid",
+                "pdc_fr",
+                "qdc_fr",
+                "qdc_to"
+            ],
+            "additionalProperties": false
+        },
+        "TimeSeriesOutput": {
+            "title": "BidDSJsonModel",
+            "description": "Base data model for all dsgrid data models",
+            "type": "object",
+            "properties": {
+                "bus": {
+                    "title": "bus",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Bus"
+                    }
+                },
+                "shunt": {
+                    "title": "shunt",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Shunt"
+                    }
+                },
+                "simple_dispatchable_device": {
+                    "title": "simple_dispatchable_device",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/DispatchableDevices_SimpleProducingConsumingDevices"
+                    }
+                },
+                "ac_line": {
+                    "title": "ac_line",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ACTransmissionLine"
+                    }
+                },
+                "two_winding_transformer": {
+                    "title": "two_winding_transformer",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TwoWindingTransformer"
+                    }
+                },
+                "dc_line": {
+                    "title": "dc_line",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/DCLine"
+                    }
+                }
+            },
+            "required": [
+                "bus",
+                "shunt",
+                "simple_dispatchable_device",
+                "ac_line",
+                "two_winding_transformer",
+                "dc_line"
+            ],
+            "additionalProperties": false
+        }
+    }
+}

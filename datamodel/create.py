@@ -685,3 +685,6 @@ if __name__ == "__main__":
 
     from datamodel.input.data import InputDataFile
     InputDataFile.save_schema(p / "input_data_file_schema.json", indent=4)
+
+    from datamodel.output.data import OutputDataFile
+    OutputDataFile.save_schema(p / "output_data_file_schema.json", indent=4)
