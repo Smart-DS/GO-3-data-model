@@ -2,7 +2,9 @@
 
 [![PyPI](https://img.shields.io/pypi/v/GO-3-data-model.svg)](https://pypi.org/project/GO-3-data-model/)
 
-Pydantic models for the GO Competition Challenge 3 json format. Support for loading, validation, editing, saving.
+Pydantic models for the [GO Competition Challenge 3](https://gocompetition.energy.gov/challenges/challenge-3) [json format](https://gocompetition.energy.gov/challenges/challenge-3/data_format). Support for loading, validation, editing, saving. 
+
+Should often be used in conjunction with [C3DataUtilities](https://github.com/GOCompetition/C3DataUtilities).
 
 ## Install
 
