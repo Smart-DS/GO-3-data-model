@@ -169,12 +169,18 @@
                     "title": "s_vio_cost",
                     "description": "Branch violation costs for thermal violation in \\$/pu-h ",
                     "type": "number"
+                },
+                "e_vio_cost": {
+                    "title": "e_vio_cost",
+                    "description": "Energy violation costs for energy constraint violation in \\$/pu-h ",
+                    "type": "number"
                 }
             },
             "required": [
                 "p_bus_vio_cost",
                 "q_bus_vio_cost",
-                "s_vio_cost"
+                "s_vio_cost",
+                "e_vio_cost"
             ],
             "additionalProperties": false
         },
@@ -1401,7 +1407,7 @@
                 },
                 "cost": {
                     "title": "cost",
-                    "description": "Array of cost blocks, where   each cost block is an array with exactly two elements:     1) marginal cost in \\$/p.u.-hr (Float), and 2) block size in p.u. (Float) ",
+                    "description": "A time series array of cost functions, where each function is represented as an array of cost block.  A cost block is an array (pair) with exactly two elements: 1) marginal cost in \\$/p.u.-hr (Float), and 2) block size in p.u. (Float) ",
                     "type": "array",
                     "items": {
                         "type": "array",

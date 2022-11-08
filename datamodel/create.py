@@ -294,7 +294,7 @@ types_map = {
     "Array of Binary": "List[conint(ge=0, le=1, strict=True)]",
     "Array of String": "List[str]",
     "Array of Float Float": "List[Tuple[confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False)]]",
-    "Array of Array of Float Float": "List[List[Tuple[confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False)]]]",
+    "Array of Array of Array of Float Float": "List[List[Tuple[confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False)]]]",
     "Array of Float Float Float": "List[Tuple[confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False)]]",
     "Array of Float Float Int": "List[Tuple[confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False), StrictInt]]",
     "String": "str",
