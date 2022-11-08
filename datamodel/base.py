@@ -125,7 +125,6 @@ class BidDSJsonBaseModel(BaseModel):
             # TODO: Check if this validates. If not do a validation
             json_model = cls.dict(exclude_unset=True)
             bools_to_int(json_model)
-            round_floats(json_model,4)
             with open(filename,'w') as file_pointer:
                 json.dump(json_model,file_pointer,indent=4)
         except ValidationError:
