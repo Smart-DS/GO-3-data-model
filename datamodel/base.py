@@ -84,6 +84,42 @@ class BidDSJsonBaseModel(BaseModel):
                     if isinstance(value,dict) or isinstance(value,list):
                         bools_to_int(value)
 
+        def round_floats(dic,dec_places):
+            """
+            Convert all the floats to a certain decimal accuracy
+            Works recursively using pass by reference
+            Parameters
+            ----------
+            dic: dictionary or list
+    
+            Returns
+            --------
+            dic: dictionary
+            """
+            if isinstance(dic,dict):
+                for key,value in dic.items():
+                    if isinstance(value,float):
+                        dic[key] = round(value,dec_places)
+                    if isinstance(value,dict) or isinstance(value,list):
+                        round_floats(value,dec_places)
+        
+            if isinstance(dic,list):
+                for i in range(len(dic)):
+                    value = dic[i]
+                    if isinstance(value,float):
+                        dic[i] = round(value,dec_places)
+                    if isinstance(value,tuple):
+                        tmp = list(value)
+                        for j in range(len(tmp)):
+                            if isinstance(tmp[j],float):
+                                tmp[j] = round(tmp[j],dec_places)
+                        value = tuple(tmp)
+                        dic[i] = value
+                    if isinstance(value,dict) or isinstance(value,list):
+                        round_floats(value,dec_places)
+
+
+
         filename = Path(filename)
         try:
             # TODO: Check if this validates. If not do a validation

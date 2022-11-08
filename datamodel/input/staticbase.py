@@ -102,6 +102,11 @@ class ViolationCostsParametersBase(BidDSJsonBaseModel):
         description = "Branch violation costs for thermal violation in \$/pu-h "
     )
 
+    e_vio_cost: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
+        title = "e_vio_cost",
+        description = "Energy violation costs for energy constraint violation in \$/pu-h "
+    )
+
 
 class BusBase(BidDSJsonBaseModel):
 
@@ -358,8 +363,6 @@ class DispatchableDevices_SimpleProducingConsumingDevicesBase(BidDSJsonBaseModel
     )
 
     # Device attributes
-
-    # 
 
     # Reserve attributes
 

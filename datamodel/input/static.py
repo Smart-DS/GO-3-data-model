@@ -45,6 +45,15 @@ class ViolationCostsParameters(ViolationCostsParametersBase):
             raise ValueError(msg)
         return data            
 
+    @validator("e_vio_cost")
+    def e_vio_cost_ge_0(cls, data):
+
+        if not (data >= 0):
+            msg = "fails {} >= 0. {}: {}".format(
+                "e_vio_cost", "e_vio_cost", data)
+            raise ValueError(msg)
+        return data          
+
 class Bus(BusBase):
     
     @validator("vm_lb")

@@ -74,11 +74,9 @@ class DispatchableDevices_SimpleProducingConsumingDevicesBase(BidDSJsonBaseModel
         description = "{ (Case: producer) Lower bound of reactive dispatch in p.u. (Array of Float)  } { (Case: consumer) Lower bound of reactive demand in p.u.  "
     )
 
-    # 
-
     cost: List[List[Tuple[confloat(gt=-float('inf'), lt=float('inf'), strict=False), confloat(gt=-float('inf'), lt=float('inf'), strict=False)]]] = Field(
         title = "cost",
-        description = "Array of cost blocks, where   each cost block is an array with exactly two elements:     1) marginal cost in \$/p.u.-hr (Float), and 2) block size in p.u. (Float) "
+        description = "A time series array of cost functions, where each function is represented as an array of cost block.  A cost block is an array (pair) with exactly two elements: 1) marginal cost in \$/p.u.-hr (Float), and 2) block size in p.u. (Float) "
     )
 
     # Reserve attributes

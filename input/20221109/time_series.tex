@@ -1,0 +1,316 @@
+\label{sec:time_series}
+This section presents the latest data format in JSON for the
+time series input data for the competition.
+The section first presents the global time-series JSON object --- the
+top level JSON object for storing all the time series data
+(attributes marked with `T'/`B' in Section~\ref{sec:naming})
+for each network component.
+JSON objects associated with each individual component will be presented afterwards.
+
+
+\subsection{Time series input}
+\label{sec:input_data}
+The time series JSON object consists of:
+\begin{itemize}
+    \item A \texttt{general} object\\
+    The object contains general data listed
+    in Section~\ref{nom:top-level}.
+    For time series, these include the number of time periods (\texttt{time\_periods}) and the duration
+    between each of the time point (\texttt{interval\_duration}).
+    \item A \texttt{"simple\_dispatchable\_device"} array\\
+    The object contains a JSON array of simple producing \& consuming devices, defined in~\ref{sec:generator_time}.
+    % \item A \texttt{"multi\_mode\_dispatchable\_device"} \hl{array} \\
+    % The object contains a JSON array of multi-mode producing \& consuming devices, defined in~\ref{sec:multi-generator_time}.
+    % \item A \texttt{"subdevice"} \hl{array}\\
+    % The object contains a JSON array of subdevices, defined in~\ref{sec:subdevice_time}.
+    % \item A \texttt{"storage"} \hl{array}\\
+    % The object contains a JSON array of storage devices, defined in~\ref{sec:storage_time}.
+    \item A \texttt{"active\_zonal\_reserve"} array\\
+    The object contains a list of active regional/zonal reserve requirements, defined in~\ref{sec:reserve_time}.
+    \item A \texttt{"reactive\_zonal\_reserve"} array\\
+    The object contains a list of reactive regional/zonal reserve requirements, defined in~\ref{sec:reserve_time}.
+    \item A \texttt{"development"} object\\
+    The object contains development data for ARPA-E Dataset Teams. This section is primarily reserved for development and competitors are not required to process the JSON object. The object may or may not be presented.
+    % \item A \texttt{regional\_reserve} object\\
+    % The object contains a list of regional reserve objects, defined in~\ref{sec:reserve_time}
+\end{itemize}
+
+% \begin{verbatim}
+% "time_series_input”: {
+%   "general" : {"time_periods": 3, "interval_duration": [1.0, 2.0, 1.0]},
+%   "simple_dispatchable_device" : [ ... ],
+%   "multi_mode_dispatchable_device" : [ ... ],
+%   "subdevice" : [ ... ],
+%   "storage" : [ ... ],
+%   "active_regional_reserve" : [ ... ],
+%   "reactive_regional_reserve" : [ ... ],
+%   "development" : { ... }
+% }
+% \end{verbatim}
+\begin{verbatim}
+"time_series_input”: {
+   "general" : {"time_periods": 3, "interval_duration": [1.0, 1.0, 1.0]},
+   "simple_dispatchable_device" : [ ... ],
+   "active_zonal_reserve" : [ ... ],
+   "reactive_zonal_reserve" : [ ... ],
+   "development" : { ... }
+}
+\end{verbatim}
+
+
+% \subsection{Bus}
+% \label{sec:bus_time}
+% Below shows a schematic example on time varying parameters for buses.
+% \begin{verbatim}
+% {
+%   "uid" : "IDB0001",
+%   "vm" : [1.01,  1.02,  1.03],
+%   "va" : [0.000, 0.013, 0.0015]   
+% },
+% ...
+% \end{verbatim}
+
+\subsection{Dispatchable Devices: Simple Producing \& Consuming Devices}
+\label{sec:generator_time}
+Below shows a schematic example on the time varying parameters for simple producing \& consuming devices.
+\begin{verbatim}
+{
+    "uid": "IDG0001",
+    "on_status_ub" : [1, 1, 1],
+    "on_status_lb" : [0, 0, 1],
+    "p_lb" : [0.0, 0.0, 0.0], "p_ub" : [0.0, 5.0, 10.0],
+    "q_lb" : [0.0, 0.0, 0.0], "q_ub" : [0.0, 5.0, 10.0],
+    "cost" : [
+               [[0.0, 0.0]],
+               [[0.1, 5.0]],
+               [[0.1, 5.0], [0.3, 5.0]]
+             ],
+    "p_reg_res_up_cost" : [1244.0, 1244.0, 0.0], 
+    "p_reg_res_down_cost" : [1244.0, 1244.0, 0.0],
+    "p_syn_res_cost"    : [305.0, 305.0, 0.0], 
+    "p_nsyn_res_cost" : [24.0, 24.0, 0.0], 
+    "p_ramp_res_up_online_cost" : [0.1, 0.1, 0.1], 
+    "p_ramp_res_down_online_cost" : [0.1, 0.1, 0.1],
+    "p_ramp_res_up_offline_cost" : [0.1, 0.1, 0.1], 
+    "p_ramp_res_down_offline_cost" : [0.1, 0.1, 0.1],
+    "q_res_up_cost" : [24.0, 24.0, 0.0], 
+    "q_res_down_cost" : [24.0, 24.0, 0.0]
+},
+...
+\end{verbatim}
+
+% \subsection{Dispatchable Devices: Multi-mode Producing \& Consuming Devices}
+% \label{sec:multi-generator_time}
+% Below shows a schematic example on the time-varying parameters for multi-mode producing \& consuming devices.
+% \begin{verbatim}
+% {
+%     "uid": "IDG0015",
+%     "on_status_ub" : [1, 1, 1],
+%     "on_status_lb" : [0, 0, 0],
+%     "modes" : [
+%         {
+%         "uid" : "IDG0015-M1",
+%         "select_ub" : [1, 1, 1],
+%         "select_lb" : [0, 0, 0],
+%         "p_lb" : [0.0, 0.0, 0.0], "p_ub" : [20.0, 20.0, 20.0],
+%         "q_lb" : [0.0, 0.0, 0.0], "q_ub" : [20.0, 20.0, 20.0],
+%         "cost" : [
+%               [[1.0, 20.0]],
+%               [[1.0, 20.0]],
+%               [[1.0, 20.0]]
+%              ],
+%         "p_reg_res_up_cost" : [1300.0, 200.0, 100.0], 
+%         "p_reg_res_down_cost" : [1300.0, 200.0, 100.0],
+%         "p_syn_res_cost" : [300.0, 100.0, 1.0], 
+%         "p_nsyn_res_cost" : [20.0, 10.0, 0.0], 
+%         "p_ramp_res_up_online_cost" : [0.1, 0.1, 0.1], 
+%         "p_ramp_res_down_online_cost" : [0.1, 0.1, 0.1],
+%         "p_ramp_res_up_offline_cost" : [0.1, 0.1, 0.1], 
+%         "p_ramp_res_down_offline_cost" : [0.1, 0.1, 0.1],
+%         "q_res_up_cost" : [20.0, 10.0, 0.0], 
+%         "q_res_down_cost" : [20.0, 10.0, 0.0]     
+%         },
+%         {
+%         "uid" : "IDG0015-M1",
+%         "select_ub" : [1, 1, 1],
+%         "select_lb" : [0, 0, 0],
+%         "p_lb" : [0.0, 0.0, 0.0], "p_ub" : [5.0, 10.0, 8.0],
+%         "q_lb" : [0.0, 0.0, 0.0], "q_ub" : [5.0, 10.0, 8.0],
+%         "cost" : [
+%               [[0.1, 5.0]],
+%               [[0.1, 5.0], [0.2, 5.0]],
+%               [[0.1, 5.0], [0.2, 3.0]]
+%              ],
+%         "p_reg_res_up_cost" : [1000.0, 100.0, 50.0], 
+%         "p_reg_res_down_cost" : [1000.0, 100.0, 50.0],
+%         "p_syn_res_cost" : [200.0, 10.0, 0.0], 
+%         "p_nsyn_res_cost" : [0.0, 0.0, 0.0], 
+%         "p_ramp_res_up_online_cost" : [0.1, 0.1, 0.1], 
+%         "p_ramp_res_down_online_cost" : [0.1, 0.1, 0.1],
+%         "p_ramp_res_up_offline_cost" : [0.1, 0.1, 0.1], 
+%         "p_ramp_res_down_offline_cost" : [0.1, 0.1, 0.1],
+%         "q_res_up_cost" : [0.0, 0.0, 0.0], 
+%         "q_res_down_cost" : [0.0, 0.0, 0.0]
+%         }
+%     ]
+% },
+% ...
+% \end{verbatim}
+
+% \subsection{Producing Devices: Subdevice Units}
+% \label{sec:subdevice_time}
+% Below shows a schematic example on the time-varying parameters for subdevice units.
+% \begin{verbatim}
+% {
+%     "uid": "IDG0015-SD1",
+%     "on_status_ub" : [1, 1, 1],
+%     "on_status_lb" : [0, 0, 0]
+% },
+% ...
+% \end{verbatim}
+
+% \subsection{Storage Devices}
+% \label{sec:storage_time}
+% Below shows a schematic example on the time-varying parameters for storage units.
+% \begin{todo}[]{}
+% TBD
+% \end{todo}
+
+\subsection{Regional Reserve}
+\label{sec:reserve_time}
+% \begin{itemize}
+%     \item A \texttt{"uid"} object\\
+%     The value of the object must be a unique ID (string) identifying the reserve region.
+%     \item A \texttt{"type"} object\\
+%     The value of the object is a string indicating the type of the reserve: SPIN for spinning reserve, RAMP-UP for ramp up reserve, RAMP-DOWN for ramp down reserve, REG-UP for regulation up reserve, REG-DOWN for regulation down reserve, CONT for contingency reserve, REACT-UP for reactive up reserve, and REACT-DOWN for reactive down reserve.
+%     \item A \texttt{"reserve\_required"} object\\
+%     The value of the object specifies the amount of active reserves required.
+%     \item A \texttt{"res\_vio\_block"} object\\
+%     The violation cost blocks for describing the penalties when violating reserve products.
+% \end{itemize}
+Below shows a schematic example on the time-varying parameters for the active reserve zones.
+%Time varying parameters will be shown in the next section.
+
+\begin{verbatim}
+{
+  "uid" : "IDRES0001",
+  "RAMPING_RESERVE_UP" : [1.00, 1.00, 2.00],
+  "RAMPING_RESERVE_DOWN" : [1.00, 1.00, 0.50]
+},
+...
+\end{verbatim}
+
+% \begin{verbatim}
+% {
+%   "uid" : "IDRES0001",
+%   "REG_UP" : 0.03,
+%   "REG_DOWN" : 0.03,
+%   "SPIN" : 0.30,
+%   "NON_SPIN" : 0.70,
+%   "FLEXI_RAMP_UP" : ,
+%   "FLEXI_RAMP_DOWN" : ,
+%   "REG_UP_cost" : ,
+%   "REG_DOWN_cost" : ,
+%   "SPIN_cost" : ,
+%   "NON_SPIN_cost" : ,
+%   "FLEXI_RAMP_UP_online_cost" : ,
+%   "FLEXI_RAMP_DOWN_online_cost" : ,
+%   "FLEXI_RAMP_UP_offline_cost" : ,
+%   "FLEXI_RAMP_DOWN_offline_cost" :
+% },
+% ...
+% \end{verbatim}
+
+Below shows a schematic example on the time-varying parameters for the reactive reserve zones.
+\begin{verbatim}
+{
+  "uid" : "IDRES0010",
+  "REACT_UP" : [0.01, 0.01, 0.005],
+  "REACT_DOWN" : [0.01, 0.01, 0.005]
+},
+...
+\end{verbatim}
+
+% \begin{verbatim}
+% {
+% "uid": "IDG0001",
+% "on_status_ub" : [1, 1, 1],
+% "on_status_lb" : [0, 0, 0],
+% "config" : [
+%  {"uid" : "IDG0001-C1",
+%  "select_ub" : [1, 1, 1],
+%  "select_lb" : [0, 0, 0],
+%  "pg_lb" : [0.0, 0.0, 0.0], "pg_ub" : [0.0, 1.0, 5.0],
+%  "qg_lb" : [0.0, 0.0, 0.0], "qg_ub" : [0.0, 0.5, 2.5],
+%  "cost" : [ [[0.0, 0.0]],
+%             [[0.1, 1.0]],
+%             [[0.05, 4.0], [0.1, 1.0]] ],
+%  "energy_ub" : [0.0, 0.0, 0.0],
+%  "energy_lb" : [0.0, 0.0, 0.0],
+%  "pg_ext"    : [0.0, 0.0, 0.0]
+%  },
+%  {"uid" : "IDG0001-C2",
+%  "select_ub" : [0, 1, 1],
+%  "select_lb" : [0, 0, 0],
+%  "pg_lb" : [0.0, -2.0, -7.0], "pg_ub" : [0.0, 2.0, 7.0],
+%  "qg_lb" : [0.0, -1.0, -4.0], "qg_ub" : [0.0, 1.0, 4.0],
+%  "cost" : [ [[0.0, 0.0]],
+%             [[0.05, 2.0], [0.1, 2.0]],
+%             [[0.05, 7.0], [0.1, 7.0]] ],
+%  "energy_ub" : [10.0, 12.0, 13.0],
+%  "energy_lb" : [0.0, 0.0, 0.0],
+%  "pg_ext"    : [0.0, 0.0, 0.5]
+%  }
+% ]
+% },
+% ...
+% \end{verbatim}
+
+
+% \section{Market Components}
+% {\color{red} Market draft example for discussion ... }
+
+% \subsection{Top-level Market}
+% \begin{verbatim}
+% "market”: {
+%     "generator" : { ... },
+%     "load" : { ... },
+% }
+% \end{verbatim}
+% \subsection{Generator}
+% \begin{verbatim}
+% "IDG0001" : {
+%     "startup_costs": [300.0, 400.0, 500.0],
+%     "startup_delays": [4, 6, 8],
+%     "bids": [{
+%         "start_time": "2021-04-30T14:00",
+%         "production_levels": [1.00, 1.10, 1.30, 1.35],
+%         "production_costs": [1400.0, 1600.0, 2200.0, 2400.0],
+%     },{
+%         "start_time": "2021-04-30T15:00",
+%         "production_levels": [1.00, 1.10, 1.30, 1.35],
+%         "production_costs": [1460.0, 1670.0, 2250.0, 2430.0],
+%     }]
+% },
+% "IDG0002” : { … },
+% "IDG0003” : { … },
+% …
+% \end{verbatim}
+% \subsection{Load}
+% \begin{verbatim}
+% "IDL0001" : {
+%     "bids": [{
+%         "start_time": "2021-04-30T14:00",
+%         "demand_levels": [0.10, 0.11, 0.15, 1.00],
+%         "demand_price": [140.0, 150.0, 160.0, 200.0],
+%     },{
+%         "start_time": "2021-04-30T15:00",
+%         "demand_levels": [0.10, 0.11, 0.15, 1.00],
+%         "demand_price": [150.0, 170.0, 200.0, 220.0],
+%     }]
+% },
+% "IDL0002” : { … },
+% "IDL0003” : { … },
+% …
+% \end{verbatim}
+
