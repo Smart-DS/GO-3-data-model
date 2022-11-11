@@ -181,11 +181,6 @@ class BusBase(BidDSJsonBaseModel):
 
     # Operations information
 
-    con_loss_factor: Optional[confloat(gt=-float('inf'), lt=float('inf'), strict=False)] = Field(
-        title = "con_loss_factor",
-        description = "Contingency participation loss factor "
-    )
-
     base_nom_volt: confloat(gt=-float('inf'), lt=float('inf'), strict=False) = Field(
         title = "base_nom_volt",
         description = "Bus nominal voltage "
